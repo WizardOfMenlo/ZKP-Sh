@@ -1,0 +1,427 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[nottoc]{tocbibind}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{appendix}
+
+\title{Zero Knowledge Proofs: Theory and Applications}
+\author{Giacomo Fenzi}
+\date{September 2019}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{proof}{Proof}
+\newtheorem{example}{Example}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+\section{Motivation}
+
+\section{Preliminaries}
+\subsection{Mathematical Notation}
+We start by defining some crucial sets of string \footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set. We don't make too much use of it in this text tough.}.
+\begin{definition}
+$\{0, 1\}^n = \{ a_1 a_2 \dots a_n \mid a_i \in \{0, 1\}\}$
+\end{definition}
+\begin{definition}
+$\{0, 1\}^* = \{ a_1 a_2 \dots a_n \mid a_i \in \{0, 1\} \text{ \normalfont{ and }} n \in \mathbb{N} \}$ \\
+\end{definition}
+
+It is important to stress that $\{0, 1\}^*$ is the set of all \textit{finite} strings, and also that the empty string, denoted $\epsilon \in \{0, 1\}^*$.
+
+\begin{definition}
+A \textbf{language} $L$ is a subset of $\{0, 1\}^*$, i.e. $L \subseteq \{0, 1\}^*$
+\end{definition}
+
+Examples of languages include 
+\[ \{ x \in \{0, 1\}^* \mid |x| = 2 \}, \{ \langle(x, y, z)\rangle \mid x^2 + y^2 = z^2 \}, \dots \]
+Note in particular the use of $\langle \cdot \rangle$ to denote the binary representation of the inner element. In general, as long as the element can be encoded in binary in polynomial space, we will not concern ourselves too much with said representation, and sometime even omit the brackets. In particular note that, unless specified otherwise, integers are encoded in binary and without brackets.  \\
+
+Now, a couple of utilities for talking about the asymptotic complexity of various functions.
+
+\begin{definition} We define the following sets:
+\[O(f) = \{ g \mid \exists r \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : g(n) \leq r f(n)  \}\]
+\[\Omega(f) = \{ g \mid \exists r \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : r g(n) \geq f(n)  \}\]
+\[\Theta(f) = \{ g \mid \exists r_1,r_2 \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : r_1 g(n) \leq f(n) \leq r_2 g(n)  \}\]
+\end{definition}
+We also allow for two slight relaxation of notation, writing for example $O(f)$ as $O(f(n))$ and $f \in O(g)$ as $f = O(g)$. Furthermore, we define the following useful set:
+\begin{definition} We define
+\[\text{\normalfont{poly}} = \bigcup_{i = 0}^\infty O(n^i)\]
+as the set of all functions bounded above by a polynomial. 
+\end{definition}
+As before, we will allow a slight relaxation and use $\text{poly}(\cdot)$ to specify some fixed but unspecified polynomial. \\
+
+\begin{definition}
+Let $\mu : \mathbb{N} \to \mathbb{R}$. We say $\mu$ is \textbf{negligible} if for every positive polynomial $p(\cdot)$ there exist a $N \in \mathbb{N}$ s.t for every $n > N$ we have:
+\[\mu(n) < \frac{1}{p(n)}\]
+\end{definition}
+As an example, functions such $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of poly. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. 
+
+\subsection{Computational Setting}
+The computational model used in this paper is that of Turing Machines (TMs) \cite{turing1937computable}. We will not discuss the inner definition of deterministic and non deterministic TMs, as, within the category, changes in definition do not create more than polynomial slowdowns, and as such for all intents and purposes can be considered the same \cite{arora2009computational}. 
+
+In particular, we will be providing an uniform probability based definition for the complexity classes. The traditional (and equivalent) definitions are in the appendix.
+
+The Turing machine that we will be using have a slightly relaxed transition function, which allows for two different actions to be taken on the same step (as in a non deterministic machine). Also, for a polynomial time Turing Machine $M$ we will write $M_r(x)$ for the output of $M$ on $x$, where $r$ is a binary string, where the $i$-th character specifies which action the machine should take on step $i$\footnote{Note the polynomial bound, this is needed since in theory decisions taken early in the string can effect the running time and such the length of the string. If the machine $M$ is always polynomial time we can then find a bound $p$ s.t. $\forall r, T(M_r(x))) \leq p(|x|) $, and as such having $r \in \{0,1\}^{p(|x|)}$ will be enough}. We can then let $l$ be the maximum length that $r$ can take and define the probability of $M$ outputting $y$ on input $x$ to be:
+
+\begin{definition} The probability of machine $M$ outputting $y$ on input $x$
+\[ \Pr[M(x) = y] = \frac{|\{r \in \{0, 1\}^{l} \mid M_r(x) = y \}|}{2^{l}}\]
+\end{definition}
+
+Using this definition, we can then define our complexity classes. 
+
+\begin{definition}
+We say that a language $L \in \mathcal{P}$ if there exist a probabilistic polynomial time TM $M$ such that:
+\[x \in L \iff \Pr[M(x) = 1] = 1\]
+\end{definition}
+
+The complexity class $\mathcal{P}$ is the one we most closely associate with "efficient" computation. Notable examples of languages which belong in $\mathcal{P}$ are finite languages, regular languages, context free languages, and more. For example, the following are all in $\mathcal{P}$ : 
+\[ \{(a_1, ... a_n) \, | \, n \in \mathbb{N} \text{ and } a_i \leq a_{i+1} \}\]
+\[ \{ p \,|\, p \in \mathbb{N} \text{ and } p \text{ prime } \}\]
+
+In general, a language being in $\mathcal{P}$ implies there exist a machine such that all the computation paths recognize the input if the input is indeed in the language. \\
+
+Compare this to the definition of $\mathcal{NP}$.
+
+\begin{definition}
+We say that a language $L \in \mathcal{NP}$ if there exist a probabilistic polynomial time TM $M$ such that:
+\[x \in L \iff \Pr[M(x) = 1] > 0\]
+\end{definition}
+
+The definition implies that there is at least one path for which the input is accepted. It is easy to see that $\mathcal{P} \subseteq \mathcal{NP}$, but the question of $\mathcal{P} =_? \mathcal{NP}$ is still open \cite{cook1971complexity} \cite{jaffe2006millennium}. There are many $\mathcal{NP}$ problems for which there is no evidence of their belonging in $\mathcal{P}$, such as the following:
+\[ \texttt{INT\_FACT} = \{ (n, k) \, | \, \exists f : 1 < f < k \text { and } f \text{ divides } n\}\]
+\[\texttt{SUB\_SUM} = \{ G \subset_{fin} \mathbb{Z} \, | \, n \in \mathbb{N} \exists S \subseteq G : \sum_{i \in S} i = 0  \} \}\]
+\[ \texttt{SAT} = \{ \phi : \{0,1\}^n \to {0,1} \, | \, n \in \mathbb{N} \text{ and } \exists a_1 \dots a_n : \phi(a_1, \dots a_n) = 1 \} \]
+\[ \texttt{GRAPH\_HOM} = \{ (G, H) \, | \, \exists \phi : G \to H \text{ s.t. $\phi$ is a graph homomorphism} \}\]
+
+In particular, the last three languages are instances of $\mathcal{NP}$-complete problems, i.e. problems that are conceptually as hard as any problem in $\mathcal{NP}$ (more on this in the appendix). It is interesting to see that each of this problem involves some sort of search over an exponentially large possibility space, and the correctness can be easily verified by the result of such search. We associate thus $\mathcal{NP}$ class with problems that can be efficiently verified.
+
+\begin{definition}
+We say that a language $L \in \mathcal{BPP}$ if there exist a probabilistic polynomial time TM $M$ such that the following hold
+\begin{enumerate}
+    \item $x \in L \iff \Pr[M(x) = 1] \geq \frac{2}{3}$
+    \item $x \notin L \iff \Pr[M(x) = 0] \geq \frac{2}{3}$
+\end{enumerate}
+In this case we say that $L$ is \textbf{recognizable in probabilistic polynomial time}
+\end{definition}
+
+Note in particular that we can replace the $\frac{2}{3}$ constant with $\frac{1}{2} + \epsilon$ for any $0 < \epsilon < \frac{1}{2}.$\footnote{This can be done by running the machine multiples times and taking majority vote}
+
+$\mathcal{BPP}$ is referred to as the class of bounded polynomial time languages. It is evident that $\mathcal{P} \subseteq \mathcal{BPP}$ but, while it is believed that the classes are equal, no proof was yet found. This class is significant, as it is intrinsically associated with efficient computation. This is because of a few factors, first of all because the probabilistic computation closely mimics the capabilities of general purpose computer, which can use the external environment as a source of randomness. Secondly, polynomial time computation is feasible, and, as long as Moore's law holds, modern computer can every year improve faster than one can increase the problem size\footnote{What I mean is, if an algorithm takes $poly(|x|)$ steps, and on year $n$ a computer can perform $O(2^n)$ steps, }. Let us have an example to clarify:
+\begin{example}
+Consider three matrices, $A, B, C$ where $A \in \mathbb{F}^{n \times m}$, $B \in \mathbb{F}^{n \times k}$, $C \in \mathbb{F}^{k \times m}$. We want to solve the question $A =_? B C$. Of course, in a deterministic setting, we can simply multiply the two matrices (taking $O(nkm)$ steps) and compare it with the first (in $O(nm)$ steps), in a total of $O(nmk + nm))$ steps. We can do better if we allow for some probabilistic error. Take the following procedure.
+\begin{enumerate}
+    \item Take a random vector $x \in \mathbb{F}^m$
+    \item Compute $Ax$ and $BCx$.
+    \item Compare the two resulting vectors (in $\mathbb{F}^n$). If they are the same return true, else return false. 
+\end{enumerate}
+Computationally wise, this requires less calculations. Let's assume you can select a random $k$-vector in $O(k)$ steps, then the first step is $O(m)$, the two computations take respectively $O(nm)$ and $O(k (n + m))$\footnote{This is optimized computing $(B(Cx))$} and the comparison will be $O(n)$. So in total the operation is $O(nm + kn + mk + n)$. We claim that, trivially, if $A = BC$ then the algorithm always answer correctly. Furthermore if $A \neq BC$ then the algorithm answers correctly in the majority of cases. Let $D = BC$ Note that if the algorithm is to output incorrectly, it must be that $Ax = Dx$. Then it must be that $(A - D) x = 0$, and as such $x \in \ker(A - D)$. Note that $A - D \in \mathbb{F}^{n \times m}$ and as such $A - D$ can be seen as a linear transformation from $\mathbb{F}^m \to \mathbb{F}^n$. The whole problem reduces to finding the probability that a vector picked at random belongs to the kernel of a linear transformation. First of all note that since $A \neq D$ at least one of the of the row of the matrix is non zero, and as such $\dim \ker (A - D) < m$. As such the probability of a random vector belonging to the kernel is at most $\frac{m-1}{m}$. We can then calculate that, repeating the algorithm $l$ times the probability of getting at least one vector not in the kernel is $1 - \left(\frac{m-1}{m}\right)^l$ and if we want to ensure that this probability is greater than $\frac{2}{3}$ we can then set:
+\[l > \frac{\log \frac{1}{3}}{\log \frac{m-1}{m}}\]
+Finally, we can see that repeating the procedure $l$ times (call this $M$) will have the following result:
+\begin{itemize}
+    \item $A = BC \implies \Pr[M(A, B,C) = 1] = 1$
+    \item $A \neq BC \implies \Pr[M(A, B,C) = 0] > \frac{2}{3}$
+\end{itemize}
+
+Note that that brings the final complexity to $O(l(nm + kn + mk + n))$ so for some values of $l$ this might actually be slower than the deterministic algorithm\footnote{Also, it is to be noted that $l$ seems to be approximately $O(m)$, which makes the final complexity $O(m^2(n + k))$}. 
+
+\end{example}
+
+
+\subsection{Adversarial Settings}
+In cryptography, in order to achieve sound schemes, it is common to work in what is commonly referred to as an adversarial setting. Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently well endowed attacker might take. \\
+
+The capability of the attacker will vary depending on the level of security that the protocol needs to be hold to. For example, the computational power that the adversary has will affect the class of problems that it can solve.
+As an instance, if a construction relies on (hard) instances of an $\mathcal{NP}$-complete problem (and if $\mathcal{P} \neq \mathcal{NP}$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \mathcal{NP}$ there exist a deterministically recognizable $R_L \subseteq \{0, 1\}^* \times \{0, 1\}^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \text{poly}(|x|)$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
+
+
+\subsection{Notion of Proof}
+The notion of a proof has extremely overloaded meaning, as it used in many disparate fields. In particular, the notion of a proof in Mathematics most closely comes to mind and, while mathematical proofs and ZKP ultimately aim to ascertain the validity of a statement, the way that they achieve that result varies. In formal logic, a proof is a fixed sequence of steps (derivations) that, from commonly agreed statement (axioms), reach the statement that we are wanting to prove. In contrast, in a ZKP the process is a dynamic interaction between multiple parties, more akin to the notion of proof in law or debating. 
+
+\section{Proof Requirements}
+In order to start visualizing the concept of ZKP, we can start with a couple of toy examples that are helpful. Here and in the rest of text we will refer to the prover as Peggy and to the verifier as Victor.
+\begin{example}
+Assume that Victor is completely colorblind\footnote{i.e. that he cannot distinguish object based on color alone}. Peggy wants to prove to Victor that she is not colorblind, so she devises an experiment. Peggy takes two balls completely identical, save for their colour, and gives them to Victor, one in his left and one in his right hand. Peggy asks Victor to put the balls behind his back, and to decide whether to swap them or not, without telling her. She then asks Victor to show the two balls. Peggy concludes by telling Victor whether she swapped the balls or not.\\
+This is a zero knowledge proof in the sense that:
+\begin{enumerate}
+    \item If Peggy were not colorblind, she would not be able to tell whether Victor switched the balls or not, and so the best she could do is guess, getting it right $\frac{1}{2}$ of the time\footnote{And as such repeating the experiment $n$ times will bring her probability of always guessing right to $\frac{1}{2^n}$}.
+    \item If Peggy is not colorblind, she will be able to answer correctly every time, and thus convince Victor
+    \item Victor does not learn anything else about his environment, apart from the fact that Peggy is not colorblind. 
+\end{enumerate}
+\end{example}
+
+\begin{example}
+This proof is due to Jean-Jacques Quisquater \cite{quisquater1989explain}.
+Consider a cave shaped like a ring, with a single entrance. On the side opposite to the entrance, there is a gate that divides the cave into two. The gate can only be opened by a secret word, that only Peggy knows. Peggy wants to prove to Victor that she possesses this secret word, without of course letting him in on the secret. She devises and experiment as follows. She tells Victor to wait at the entrance of the cave, and she goes by one of the two possible paths (without letting Victor know which one she took) to the gate, where she can utter the secret word without being heard. Then she asks Victor to name one of the two paths, and she goes back trough the named path. 
+As before:
+\begin{enumerate}
+    \item If Peggy did not know the secret word, she would not be able to go back on a path different from the one she initially took, and as such has only a $\frac{1}{2}$ chance of getting it right.
+    \item Instead, if Peggy does indeed know the secret word, she will be able to always take the path that Victor names, and as such convince him
+    \item Furthermore, Victor does not gain any knowledge of the secret key, apart from the fact that Peggy knows it. 
+\end{enumerate}
+\end{example}
+
+This illustrates the general idea of Zero Knowledge Proofs. The proof part is devised as an experiment or challenge from the verifier to the prover, that the prover can only answer by having the necessary piece of information or "power". The prover cannot fool the verifier consistently and an honest prover and honest verifier will agree on the fact. Furthermore no new information is learned by the verifier. Also, if external observers were to have witnessed the exchange they would not be convinced of the the fact (as Peggy and Victor could have coordinated their answers). 
+We seek to formalize this next. 
+
+\subsection{Parties in play}
+In the sequel, we will have two parties interacting, the \textit{prover} and the \textit{verifier} that will be colloquially referred to as Peggy and Victor. In mathematical notation we will have $P, V$ always referring, respectively, to prover and verifier. As in math, we aim to have the verification procedure be as efficient as possible, while most of the computational burden will be placed on the prover. This in some way mirrors the alternative definition of $\mathcal{NP}$, as the class of all problems whose solution can be efficiently verified. Furthermore, it is crucial to understand that the verifier inherently does not trust the prover (otherwise there would not be need for the proof to be provided), and as such the Victor will be skeptical of everything that Peggy says. The general situation will be Peggy and Victor having access to some common input, plus each one possibly having access to some additional private input, which will often be related from the shared input.
+
+\subsection{Soundness}
+The condition of soundness asserts that a honest verifier cannot be tricked into accepting a false statement by a possibly cheating prover. In the first example, this is equivalent to stating that, if Peggy is indeed colorblind, then she cannot convince Victor that she is not. In the second one, if Peggy were not to know the password to the gate, then she would not be able to convince Victor which will then not be fooled. It is important to note that in the above example we actually allow for a dishonest prover to be able to successfully fool Victor with a bounded above probability\footnote{And this probability can be made negligible thanks to repeating the experiment multiple times}.
+\subsection{Completeness}
+Conversely, the condition of completeness states that an honest prover will be able to convince a honest verifier of the veracity of the claim, if the claim is indeed true. So, moving back to the first example, Peggy will be able to prove she is not colorblind if that is indeed true and Victor acts honestly satisfying the protocol. While in the examples Victor is always positively convinced at the end of the interaction, this is not a strict requirement, instead (similarly as in Soundness) we just require the interaction to succeed with a strictly bounded below probability\footnote{And again this probability can be increased by repeating the experiment and taking the majority answer}. As an example of when this might be the case, consider the following \begin{example}
+Peggy claims that coffee tastes differently when brewed by an espresso machine compared to one made in a cup. Victor wants to verify that claim, so he brews a coffee choosing randomly between the two options (in way that Peggy does not see which is which). Peggy then tastes the coffee, and gives her opinion on how it was brewed. The experiment is repeated $n$ times\footnote{According to \cite{medicine}, and assuming Peggy weighs around 70kg, we would not recommend for $n$ to be greater than 75-100}, and Victor is convinced if Peggy is right more than $c$ times, where $c$ depends on how certain we want to be of Peggy's ability. 
+\end{example}
+
+This is the exact subject of hypothesis testing, in particular it reduces to the exact problem of finding whether a coin is biased. This can be modeled by a binomial distribution with mean $\mu = n/2$ and standard deviation $\sigma = \frac{\sqrt{n}}{2}$. In particular, if we apply the central limit theorem (and as such have $n > 30$) we can model it as a normal distribution, then using the $3\sigma$ rule\footnote{i.e. that three standard deviations include 99.7\% of the data} we can see that if $|c - \frac{n}{2}| \geq 3\frac{\sqrt{n}}{2}$ then we can affirm that with a more than 99\% chance Peggy can distinguish the two. For example, if we set $n = 100$ and Peggy guesses right more than $c = 65 = \frac{100}{2} + 3 \frac{\sqrt{100}}{2}$ times (or less than 35 times) then we can be certain that Peggy is truthful (and in the other case that she can distinguish it but for some reasons she is convinced the espresso machine coffee is brewed in cup and viceversa). 
+
+\subsection{Zero Knowledge}
+Formalizing the notion of zero knowledge requires a bit more work. We would like to be able to say that in any interaction with the prover the verifier does not gain any knowledge that it did not posses already. That shifts the conversation to what it means to gain knowledge. Let us consider for example the interaction of a prover and a verifier with a common input of a suitably large graph. If the prover reveals to the verifier whether the graph is connected or Eulerian or the average degree of its vertexes then in a sense the verifier does not gain any knowledge, as these are all easily (polynomial time) computable without any additional information. Instead if the prover reveals whether the graph is Hamiltonian, or the chromatic number of the graph, or a $k$-coloring of it\footnote{And of course assuming $\mathcal{P} \neq \mathcal{NP}$ and that the corresponding problems cannot be solved in polynomial time} then the verifier gains knowledge, as it would have not been able to answer that question itself using an efficient procedure. This gives us an hint of what gaining knowledge can entail. In particular, we say that the verifier gains knowledge from an interaction with the prover if, after the interaction, it can efficiently compute something which it would have not been able to before. How to rigorously express this is non trivial, and we defer the discussion to the following sections.
+
+\section{Proof Systems}
+In our drive to formalize the intuition that we gained in the previous sections, we will start by extending the model of a Turing Machine to allow for two Turing Machines to interact. Then we will define formally interactive proofs and give examples.
+
+\subsection{Interactive Turing Machine}
+First of all, we can start by extending the traditional randomized Turing Machine. It is of note that in interactive Turing Machines (ITMs) we are almost never interested in the execution of a single machine, but rather in the interconnected operation of the two machines. As such, it makes it easier to describe the behaviour of a pair of ITMs rather than of a single one. First of all, with this model we aim to preserve the following notions:
+\begin{itemize}
+    \item Exclusivity, so that, before termination, exactly one of the two machines is executing at a point in time
+    \item Privacy, so each of the two machines can withold some information from the other\footnote{There are some cases in which this requirement might be lifted, in so called public coin protocols, but we will not discuss them here}
+    \item Communication, each of the two machines can choose to let some information (often related to their private information) to the other, using communication tapes
+\end{itemize}
+To fulfill those goals, we define a pair of interactive machines as follows:
+\begin{definition}
+A pair of interactive Turing Machines $A, B$ have the following characteristics:
+\begin{itemize}
+    \item Each machine is a randomized Turing machine in its own right i.e. it has a input tape, an output tape, and a random tape\footnote{This is an alternate equivalent definition of randomized Turing Machines, it just makes the explanation easier}. 
+    \item Neither machine can access the other's aforementioned tapes. 
+    \item The system has two additional tapes, called communications tapes. For the sake of the argument, call them $T_1, T_2$. $A$ can read from $T_1$ and write to $T_2$, while $B$ can write to $T_1$ and read from $T_2$. 
+    \item Each machine has an access to a number of additional switch states, $\delta_S$, where $S$ is a state of the machine in question. If a transition sets the state to one of these $\delta$-states, then the current machine becomes idle, and execution is resumed on the other machine. When execution is resumed on a machine, the state it is in depends on the last suspension. If it was suspended in state $\delta_S$, then it will resume execution in state $S$. Of course, if no suspension occurred, the machine will start from the initial state. 
+    \item The interconnected randomized Turing machine pair terminates when either of the two machines terminates. 
+    \item An interactive proof system runs on some common input, which is initially written on both machines' input tape. 
+    \item By convention, $A$ is initially running, and $B$ is idle. 
+\end{itemize}
+\end{definition}
+
+It is to be noted that there is an alternative an ultimately equivalent model that allows each machine to have an additional private input tape, which allows for both machine to be polynomial time. For simplicity here we work with the definition with less tapes, but it is good to be aware of it. 
+
+Using the above definition, we can go and define notation for the output of an execution of a pair of ITMs. 
+
+\begin{definition}
+Let $A, B$ be interconnected randomized Turing machines, such that both $A$ and $B$ always terminate in finitely many steps. Then we define $\left<A, B \right>(x)$ to be a random variable modeling the output of machine $B$ after interacting with machine $A$ on common input $x$ (with the computation path string uniformly and independently selected). 
+\end{definition}
+
+Note that the definition is asymmetric, as it only accounts for the output of $B$, however, for all our intents or purposes, this should suffice. 
+Furthermore, we need to accurately represent time complexity in this model, and we say that:
+
+\begin{definition}
+An ITM $A$ has time complexity $t: \mathbb{N} \to \mathbb{N}$ if, for any string $x$ and every linked ITM $B$, and any computation path, it halts within $t(|x|)$ steps. 
+\end{definition}
+
+In a nutshell, the above implies that, regardless of the messages that machine $B$ sends, machine $A$ always terminates quickly enough. 
+
+\subsection{Interactive Proof Systems}
+With the above machinery, we can now start introducing Interactive Proofs. 
+\begin{definition}
+A pair of ITMs $(P, V)$ are an \textbf{interactive proof system} for a language $L$ if $V$ is polynomial time and the following hold:
+\begin{itemize}
+    \item \textbf{Soundness} if $x \notin L$, for every ITM $E$:
+        \[ \Pr[\left<E,V \right>(x) = 1] \leq \frac{1}{3} \]
+    \item \textbf{Completeness} if $x \in L$ then:
+        \[ \Pr[\left<P, V\right>(x) = 1 ] \geq \frac{2}{3}\]
+\end{itemize}
+\end{definition}
+There are some things to note in the above definition. First of all, note that only the verifier is required to be computationally bound, while the prover has no such limit. This is required in the general case, as we will see in the next example, but often in the practical application we can make the prover polynomially bound by resorting to a similar model which makes use of auxiliary input. Secondly, as in many other examples, the bounds of $\frac{1}{3}$, $\frac{2}{3}$ can be replaced\footnote{By essentially repeating the procedure and taking majority votes} by $\frac{1}{2} \pm \epsilon$ for $\frac{1}{2} > \epsilon > 0$. From the above definition, we can prove that any language in $\mathcal{NP}$ has an interactive proof system. Letting $\mathcal{IP}$ be the set of all languages with an interactive proof system:
+\begin{theorem}
+$\mathcal{NP} \subseteq \mathcal{IP}$ \\
+\end{theorem}
+\begin{proof}
+If $L$ is in $\mathcal{NP}$ then\footnote{Here we are using the certificate definition of $\mathcal{NP}$, see the appendix for details} there exists a polynomially recognizable relation $R_L$ such that $x \in L \iff \exists y : (x, y) \in R_L$. Also, such a $y$ satisfies $|y| < p(|x|)$ for some polynomial $p$. \\
+We design the following interactive system, which has as common input $x$. 
+First of all, the prover finds such $y$. This can be done by searching for any string $s$ in $ \bigcup_{i = 0}^{p(|x|)} \{0, 1\}^i$ that satisfies $(x, s) \in R_L$. Since the prover has no computational bound this can be done without issues. The prover then sends this $s$ to the verifier. On a message $s$ the verifier accepts if $(x, s) \in R_L$, rejects otherwise. Since $R_L$ is recognizable in polynomial time, the verifier runs in polynomial time as required.  \\ 
+Completeness is easily verified, as in fact the verifier will accept with probability 1. Soundness requires a little more thought, but essentially since $x \notin L \implies \forall y : (x, y) \notin R_L $ then the verifier will never accept. This combined implies that the above is an interactive proof system for $L$. Since $L$ was an arbitrary element of $\mathcal{NP}$, then $\mathcal{NP} \subseteq \mathcal{IP}$ .
+\end{proof}
+In fact, as we will see next, $\mathcal{IP}$ actually contains languages that are not believed to be in $\mathcal{NP}$. We will not prove this, but it turns out $\mathcal{IP} = \mathcal{PSPACE}$, i.e. the set of all languages that use polynomial space\footnote{And this class is considered to be much bigger than $\mathcal{NP}$}. Also note that in the case of $\mathcal{NP}$ problems we can even make the prover machine polynomial time, if we use the additional input model and give the prover the certificate. 
+\subsection{An Example: GNI}
+Let us consider the Graph Non Isomorphism problem, a decision problem which is not known to be in $\mathcal{BPP} \cup \mathcal{NP}$. Recall that, for two graphs $G_1 = (V_1, E_1)$, $G_2 = (V_2, E_2)$ are isomorphic if there exists a bijection $\phi: V_1 \to V_2$ such that $(v, v') \in E_1 \implies (\phi(v), \phi(v')) \in E_2$ . The graph non isomorphism problem concerns deciding whether two graphs are not isomorphic.
+Before, presenting the system, let us try to give some intuition onto how we will be approaching the problem. As in the coffee problem that we examined in the completeness section, we will have the verifier issuing challenges to the prover, which will use its superior computational abilities to solve. In particular, we rely on the fact if the two graphs are not isomorphic then it will always be possible to distinguish the two. 
+Here is a interactive proof system that decides this problem.
+\begin{example}
+Let the common input be a pair of graphs, $G_1, G_2$ such that $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$.
+\begin{itemize}
+    
+    \item The verifier starts the interaction, uniformly selecting at random $i \in {1, 2}$ and then randomly selects a permutation $\pi: V_i \to V_i$. It constructs the edge set 
+    \[ F_i = \{ (\pi(e), \pi(e')) | (e, e') \in E_i \} \]
+    Finally, it sends the graph $F = (V_i, F_i)$ to the prover. 
+    \item The prover finds which of the two input graphs $F$ is isomorphic to, and sends the answer $j$ to the verifier
+    \item If $i = j$ the verifier accepts (concludes that the two graphs are not isomorphic), else it rejects (is not convinced that the graphs are not isomorphic). 
+\end{itemize}
+\end{example}
+
+We now set to prove that the above is a interactive system proof. First of all note that the verifier program can be implemented in probabilistic polynomial time. We do not know of any algorithm allowing the prover to be implemented in probabilistic polynomial time, but luckily that is not needed\footnote{The prover can do this by alternatively trying each of the $n!$ possible permutations on $V_1$ (if $n = |V_1|$) and checking for isomorphism, outputting 1 if one found and 2 if none (of course this relies on the verifier being honest which for completeness and soundness is always the case). }. Now let us check the two conditions of soundness and completeness. 
+\begin{theorem}
+If $G_1$ and $G_2$ are not isomorphic, the above procedure always accept. 
+\end{theorem}
+\begin{proof}
+If $(G_1, G_2) \in GNI$ then there does not exists a graph $F$ s.t. $G_1 \cong F \cong G_2$, (since otherwise $G_1 \cong G_2$ by transitivity). By construction then the graph $F$ constructed by the verifier will always be isomorphic to only one of the two input graphs, and as such the prover always has an unique choice of $j$, which must equal the $i$ that the verifier chose. As such the verifier always accept and the completeness bound is 1. 
+\end{proof}
+
+Intuitively, for the soundness bound, we claim that a possibly malicious prover cannot convince the verifier that the graphs are isomorphic while indeed they are not. In particular, we claim that in case they are isomorphic, the best the prover can do is guess what the verifier chose, with probability $\frac{1}{2}$.
+First of all let us introduce the notation: 
+\begin{definition}
+Let $G = (V, E)$ be a graph, and $\pi \in S_V$ be a permutation on $V$. Then we define 
+\[ \pi(G) = (V, \{ (\pi(v), \pi(v')) | (v, v') \in E \} \]
+\end{definition}
+
+Then we start by proving this preliminary claim:
+
+\begin{theorem}
+Let $I$ be random variable uniformly selected from $\{1, 2\}$. Let $G_1, G_2$ be two graphs such that $G_1 \cong G_2$. We also let $\Pi$ be a random variable uniformly distributed over the set of permutations of the vertex set of $G_1$ (which without loss of generality we assume being equal to the vertex set of $G_2$). Then we want to show, for every graph $F \cong G_1 \cong G_2$ the following hold:
+\[ \Pr[I = 1 | \Pi(G_I) = F] = \Pr[I = 2 | \Pi(G_I) = F] = \frac{1}{2} \]
+\end{theorem}
+\begin{proof}
+First of all let $F$ be a graph isomorphic to $G_1, G_2$. 
+Then consider the sets $S_1, S_2$ defined by $S_\delta = \{ \pi : \pi(G_\delta) = F \}$. We first claim that $|S_1| = |S_2|$. To see this, note that $G_1 \cong G_2 \implies \exists \phi : G_1 = \phi(G_2) $. Then $\pi \in S_1 \implies \pi(G_1) = F \implies \pi(\phi(G_2)) = F \implies \pi \circ \phi \in S_2$, where the last step is justified since $\alpha(\beta(G)) = (\alpha \circ \beta) (G)$. So we can see that $f: S_1 \to S_2$ defined as $f(\sigma) = \sigma \circ \phi$ is well defined, and we can prove that it is a bijection\footnote{Injectivity: $f(\sigma) = f(\sigma') \implies \sigma \phi = \sigma' \phi \implies \sigma = \sigma'$. Surjectivity: $\pi \in S_2 \implies \pi(G_2) = F \implies \pi (\phi ^ {-1} (G_1)) = F \implies \pi \circ \phi^{-1} \in S_1$. Then $f(\pi \circ \phi^{-1}) = \pi \circ \phi^{-1} \circ \phi = \pi$}. and as such $|S_1| = |S_2|$. Now using this fact we have that:
+\[ \Pr[I = 1 | \Pi(G_I) = F] = \Pr[\Pi(G_1) = F ] \]
+\[ = \Pr[\Pi \in S_1] = \Pr[\Pi \in S_2] \]
+\[ = \Pr[\Pi(G_2) = F ] =  \Pr[I = 2 | \Pi(G_I) = F]  \]
+
+Now using Bayes' rule\footnote{And using the facts that $ \Pr[\Pi(G_I) = F | I = 1 ] = \Pr[\Pi(G_1) = F] = \Pr[\Pi \in S_1]$ and that 
+$\Pr[\Pi(G_I) = F] = \frac{Pr[\Pi(G_I) = F | I = 1 + Pr[\Pi(G_I) = F | I = 2]}{2} = \frac{1}{2}(\Pr[\Pi \in S_1] + \Pr[\Pi \in S_2])) = \Pr[\Pi \in S_1]$}:
+\[ \Pr[I = 1 | \Pi(G_I) = F] = \frac{\Pr[\Pi(G_I) = F | I = 1 ]\Pr[I = 1]}{\Pr[\Pi(G_I) = F]}  = \Pr[I = 1] = \frac{1}{2}\] 
+
+\end{proof}
+
+Using this, proving the soundness property is not too hard. 
+\begin{theorem}
+    Let $V$ be the verifier in the above protocol, then for any  prover $E$ and any $G_1  \cong G_2$ we have \[ \Pr[\left<E, V\right>(G_1, G_2) = 1] \leq \frac{1}{2} \] 
+\end{theorem}
+\begin{proof}
+    We see that, in the protocol, the verifier only ever accepts if the prover successfully figures out which graph was permuted and sent to it. Using the notation of the above discussion, we have that the permuted graph is represented by the random variable $\Pi(G_I)$. Letting $E$ be a random process, we see that the verifier accepts if $E(\Pi(G_I)) = I$. Then:
+    \[ \Pr[E(\Pi(G_i)) = I] = \sum_{G'} \Pr[\Pi(G_I) = G'] \Pr[E(G') = I | \Pi(G_I) = G'] \]
+    We now can use the proof from before and conclude that, for any $G'$
+    \[ \Pr[E(G') = I | \Pi(G_I) = G'] = \sum_i \Pr[E(G') = i \; \land \; I = i | \Pi(G_I) = G' ] \]
+    \[ = \sum_i \Pr[E(G') = i ] \Pr[ I = i | \Pi(G_I) = G' ] \]
+    Here we can use the fact proved before, and for $i \in \{1, 2\}$ we have that the rigth expression is equal to $\frac{1}{2}$ and as such
+    \[ \sum_i \Pr[E(G') = i ] \Pr[ I = i | \Pi(G_I) = G' ] \]
+    \[ = \frac{\Pr[E(G') = 1 ] + \Pr[E(G') = 2]}{2} \]
+    \[ = \frac{\Pr[E(G') \in \{ 1, 2\}]}{2} \]
+    \[ \leq \frac{1}{2} \] 
+    Where the last inequality is taking the case $E$ always outputs an element of $ \{ 1, 2\}$. Going back to the original equation:
+    \[\Pr[E(\Pi(G_i)) = I] \leq \frac{1}{2} \sum_{G'} \Pr[\Pi(G_I) = G'] = \frac{1}{2} \]
+    Since $E$ was arbitrary, this implies that any possible prover can fool the verifier with maximum probability $\frac{1}{2}$.
+\end{proof}
+
+This shows that the soundness bound of the protocol is $\frac{1}{2}$, and repeating the protocol twice yields an interactive proof with completeness bound $1$ and soundness bound $\frac{1}{4}$. 
+
+
+\section{Zero Knowledge Proof}
+Now that we have introduced interactive proofs, we can naturally extend them to encompass the idea of zero knowledge. In the previous sections we have given some intuition on what gaining knowledge does mean, and now we aim to formalize this. As before, we consider an interactive proof system, composed of a prover and a verifier, respectively $P, V$. The first observation is that in an interactive proof system the prover usually (either by being more powerful computationally or by having some additional information) has a "knowledge advantage" over the verifier. With zero knowledge we aim to make so that this advantage does not transfer to the verifier, no matter what clever things it may do. From this we can conclude that being zero knowledge is strictly a property of the prover in the interaction, in the same way that soundness is a property of verifier. Secondly, in a sense, we can express the zero knowledge requirement as the fact that any verifier $V'$, when interacting with prover on input $x$, will not be able to compute anything that it wouldn't have been able to compute on input $x$ alone. In order to formalize this, we turn to the idea of a simulation of the interaction of $P, V'$. \\
+In particular, the idea is that a language $L$ is zero knowledge if it has an interactive proof system $P, V$ such that, for every possible verifier $V'$, there exists a probabilistic polynomial time Turing machine $M_{V'}$ that for any $x \in L$ satisfies that $\left<P, V\right>(x)$ and $M_{V'}(x)$ are similary distributed\footnote{More on this later, essentially the level of similarity of the two distributions yields the definition of \textit{perfect}, \textit{statistical} and \textit{computational} zero knowledge.}
+Using this intuition and playing around with the loose parts of it, we can start defining the interesting classes of zero knowledge proofs. 
+\subsection{Perfect Zero Knowledge}
+The first and stricter class of zero knowledge proofs are the so called perfect zero knowledge proofs. Ideally, according to the above definition we would like the definition of zero knowledge proof to simply require that the ensembles $\left<P, V\right>(x)$ and $M_{V'}(x)$ are identically distributed. However, as far as we know, no non trivial\footnote{Here, trivial means in $\mathcal{BPP}$, as every language in that class trivially satisfies the definition} languages satisfy that requirement. The underlying problem is that often the simulator is not able to answer the queries of the verifier and needs to be able to give up. Using this we can give to following definition of Perfect Zero Knowledge Proof.
+\begin{definition}
+Let $L$ be a language. Then $L$ has a \textbf{perfect zero knowledge proof system} if there exist $P, V$ such that:
+\begin{itemize}
+    \item $P, V$ is an interactive proof system for $L$
+    \item For any probabilistic polynomial time ITM $V'$, there exists a probabilistic polynomial time TM $M_{V'}$ such that, for any $x \in L$ the following two hold:
+    \begin{enumerate}
+        \item The machine $M_{V'}$ outputs the special symbol $\bot$ with probability: \[\Pr[M_{V'}(x) = \bot] \leq \frac{1}{2}\]
+        \item Letting $m_{V'}$ be a variable describing the output of $M_{V'}$ conditioned on the output of $M_{V'} \neq \bot$ (i.e. $\Pr[m_{V'}(x) = \alpha] = \Pr[M_{V'}(x) = \alpha | M_{V'}(x) \neq \bot]$), we must have that $\left<P, V\right>(x)$ and $m_{V'}(x)$ are identically distributed
+    \end{enumerate}
+\end{itemize}
+\end{definition}
+
+As always, the bound on how often the simulator is allowed to fail can be made negligible. Perfect 
+
+\subsection{Computational Zero Knowledge}
+\subsection{Bit Commitment}
+\subsection{Examples: GI}
+\subsection{Examples: Graph Coloring}
+
+\section{Applications}
+\subsection{Schnorr Signatures}
+
+\appendix
+\section{Important Assumptions}
+\section{Complexity Classes}
+\begin{definition}
+We say that a language $L \in \mathcal{P}$ if there exist a deterministic TM $M$ and a polynomial $p(\cdot)$ such that both the following hold true:
+\begin{enumerate}
+    \item On input $x \in \{0, 1\}^*$, $M$ halts within $p(|x|)$ steps.
+    \item $x \in L \iff M(x) = 1$
+\end{enumerate}
+Also, if $L \in \mathcal{P}$ we say that $L$ is \textbf{recognizable in polynomial time}
+\end{definition}
+
+We can now prove the equivalence of our two definition of $\mathcal{P}$, let us call the probabilistic definition as $\mathcal{P}_{prob}$ and the classical as simply $\mathcal{P}$.
+
+\begin{proof}
+Let $L \in \mathcal{P}$, then there exist a Turing Machine $M$ such that the machine outputs one for each $x \in L$ and always halts in polynomially many steps. Construct a probabilistic TM $M_1$ as follows: copy everything from $M$, except the transition function, replacing each transition of the form $\phi(s, i) = x$ with $\phi_1(s, i) = (x, x)$. Recall from the definition that on each step the machine $M_1$ will randomly choose between left and right transition. Since for each transition left and right are always equal, the choice is meaningless and for each transition it will take the same action as $M$ (taking of course the same exact number of steps). Since $M$ recognized $L$, then $M_1$ will also, and as such $L \in \mathcal{P}_{prob}$, which implies $\mathcal{P} \subseteq \mathcal{P}_{prob}$. \\
+
+Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \Pr[M(x) = 1] = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in {0,1}^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \mathcal{P}$, which in turn implies $\mathcal{P}_{prob} \subseteq \mathcal{P}$ \\
+
+So, since $\mathcal{P} \subseteq \mathcal{P}_{prob}$ and $\mathcal{P}_{prob} \subseteq \mathcal{P}$, it must be that $\mathcal{P} = \mathcal{P}_{prob}$
+\end{proof}
+
+\begin{definition}
+We say that a language $L \in \mathcal{NP}$ if there exist a relation $R_L \subseteq \{0, 1\}^* \times \{0, 1\}^*$ and a polynomial $p(\cdot)$ such that the following hold: 
+\begin{enumerate}
+    \item $R_L$ is recognizable in polynomial time
+    \item $x \in L \iff$ there exists $y$ s.t. $|y| \leq p(|x|)$ and $(x, y) \in R_L$
+\end{enumerate}
+Such a $y$ is a \textbf{witness for membership of } $x \in L$
+\end{definition}
+In particular, note the bound requirement on the witness $y$. This ensures that the certificate is not more than polynomially bigger than the problem statement. If this were not the case, then let us take for example the language \[TAUT = \{ \phi : \{0,1\}^n \to \{0,1\} | n \in \mathbb{N}, \forall (x_1, \dots x_n): \phi(x_1, \dots, x_n) = 1\}\]
+i.e. the language of all boolean formulas that return true for every input. If the bounds on the polynomial size of the certificate were to be lifted, then we could allow for a relation language $R_{TAUT} = \{ (\phi, 1^{2n}) | n \in \mathbb{N}, \phi : \{0,1\}^n \to \{0,1\}, \phi \in TAUT  \}$. Such language is recognizable in polynomial time in the certificate (as evaluating a boolean formula of $n$ variable takes polynomial time in the formula length, and enumerating all possible $n$ boolean variables takes $O(2^n)$ which is polynomial in the length of the certificate), however, if the bound is upheld we have no evidence of the belonging of $TAUT$ in $\mathcal{NP}$ (in fact, we know that $TAUT \in \text{co-}\mathcal{NP}$, and the relation between the two classes is still not clear).
+
+We can similarly prove that our antecedent definition of $\mathcal{NP}$ (call it $\mathcal{NP}_{prob}$) is the same as the classical one. 
+
+\begin{proof}
+Let $L \in \mathcal{NP}$, then there exist a relation $R_L$ s.t. that $R_L$ is recognizable in polynomial time, $x \in L \iff \exists (x, y) \in R_L$ and that $y$ is at most polynomial in the size of $x$. Consider a probabilistic time machine $M$ as follows: 
+\begin{enumerate}
+    \item On each step randomly guess a bit of the certificate $y$
+    \item Randomly decide whether to generate another bit or to run a polynomial time algorithm to decide whether $(x, y) \in R_L$
+    \item If we recognized $(x, y) \in R_L$, accept, else reject. 
+\end{enumerate}
+
+Since the certificate exists, and it is polynomial in the size of $x$, there will always be at least one extremely lucky machine that will guess it, and as such $\Pr[M(x) = 1] > 0$ for $x \in L$. So $L \in \mathcal{NP}_{prob}$, which implies $\mathcal{NP} \subseteq \mathcal{NP}_{prob}$. \\
+
+Conversely, let $L \in \mathcal{NP}_{prob}$. Then there exist a probabilistic time machine $M$ s.t. $x \in L \iff \Pr[M(x) = y] > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \{ (x, r) | x \in L \text { and } M_r(x) = 1 \}$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existance is met by our above reasoning. Finally, since $r$ is bound by the bound on the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \mathcal{NP}$, which in turn implies $\mathcal{NP}_{prob} \subseteq \mathcal{NP}$. \\
+
+So, since $\mathcal{NP} \subseteq \mathcal{NP}_{prob}$ and $\mathcal{NP}_{prob} \subseteq \mathcal{NP}$, it must be that $\mathcal{NP} = \mathcal{NP}_{prob}$
+
+
+\end{proof}
+
+It is also to be noted that $\mathcal{NP}$ has also a different but equivalent definition as the set of all languages recognized in non deterministic polynomial time. \\
+
+Next, we can move to $\mathcal{NP}$ completeness. 
+\begin{definition}
+A language $L$ is polynomial time reducible to a language $M$ if there exists a polynomial time computable function s.t. $x \in L \iff f(x) \in M$. We write in this case $L \leq M$.
+\end{definition}
+\begin{definition}
+We say a language $L$ is $\mathcal{NP}$-Hard, if $\forall M \in \mathcal{NP}, M \leq L$.
+\end{definition}
+\begin{definition}
+We say a language $L$ is $\mathcal{NP}$-Complete if $L \in \mathcal{NP}$ and $L$ is $\mathcal{NP}$-Hard.
+\end{definition}
+
+In particular, problems that are $\mathcal{NP}$-Complete are considered to be the hardest to find solutions to. The classical $\mathcal{NP}$-Complete problem is \texttt{SAT}, i.e. the language of all satisfiable boolean formulae, but the class of such problems is constantly growing \cite{karp1972reducibility}. 
+
+
+\bibliographystyle{unsrt}
+\bibliography{bibliography}
+
+\end{document}
