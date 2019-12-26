@@ -27,6 +27,7 @@
 
 \section{Motivation}
 
+
 \section{Preliminaries}
 \subsection{Mathematical Notation}
 We start by defining some crucial sets of string \footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set. We don't make too much use of it in this text tough.}.
@@ -68,7 +69,7 @@ Let $\mu : \mathbb{N} \to \mathbb{R}$. We say $\mu$ is \textbf{negligible} if fo
 As an example, functions such $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of poly. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. 
 
 \subsection{Computational Setting}
-The computational model used in this paper is that of Turing Machines (TMs) \cite{turing1937computable}. We will not discuss the inner definition of deterministic and non deterministic TMs, as, within the category, changes in definition do not create more than polynomial slowdowns, and as such for all intents and purposes can be considered the same \cite{arora2009computational}. 
+The computational model used in this paper is that of Turing Machines (TMs) \cite{turingComputableNumbersApplication1937}. We will not discuss the inner definition of deterministic and non deterministic TMs, as, within the category, changes in definition do not create more than polynomial slowdowns, and as such for all intents and purposes can be considered the same \cite{aroraComputationalComplexityModern2009}. 
 
 In particular, we will be providing an uniform probability based definition for the complexity classes. The traditional (and equivalent) definitions are in the appendix.
 
@@ -98,7 +99,7 @@ We say that a language $L \in \mathcal{NP}$ if there exist a probabilistic polyn
 \[x \in L \iff \Pr[M(x) = 1] > 0\]
 \end{definition}
 
-The definition implies that there is at least one path for which the input is accepted. It is easy to see that $\mathcal{P} \subseteq \mathcal{NP}$, but the question of $\mathcal{P} =_? \mathcal{NP}$ is still open \cite{cook1971complexity} \cite{jaffe2006millennium}. There are many $\mathcal{NP}$ problems for which there is no evidence of their belonging in $\mathcal{P}$, such as the following:
+The definition implies that there is at least one path for which the input is accepted. It is easy to see that $\mathcal{P} \subseteq \mathcal{NP}$, but the question of $\mathcal{P} =_? \mathcal{NP}$ is still open \cite{cookComplexityTheoremprovingProcedures1971} \cite{jaffeMillenniumGrandChallenge2006}. There are many $\mathcal{NP}$ problems for which there is no evidence of their belonging in $\mathcal{P}$, such as the following:
 \[ \texttt{INT\_FACT} = \{ (n, k) \, | \, \exists f : 1 < f < k \text { and } f \text{ divides } n\}\]
 \[\texttt{SUB\_SUM} = \{ G \subset_{fin} \mathbb{Z} \, | \, n \in \mathbb{N} \exists S \subseteq G : \sum_{i \in S} i = 0  \} \}\]
 \[ \texttt{SAT} = \{ \phi : \{0,1\}^n \to {0,1} \, | \, n \in \mathbb{N} \text{ and } \exists a_1 \dots a_n : \phi(a_1, \dots a_n) = 1 \} \]
@@ -161,7 +162,7 @@ This is a zero knowledge proof in the sense that:
 \end{example}
 
 \begin{example}
-This proof is due to Jean-Jacques Quisquater \cite{quisquater1989explain}.
+This proof is due to Jean-Jacques Quisquater \cite{quisquaterHowExplainZeroknowledge1989}.
 Consider a cave shaped like a ring, with a single entrance. On the side opposite to the entrance, there is a gate that divides the cave into two. The gate can only be opened by a secret word, that only Peggy knows. Peggy wants to prove to Victor that she possesses this secret word, without of course letting him in on the secret. She devises and experiment as follows. She tells Victor to wait at the entrance of the cave, and she goes by one of the two possible paths (without letting Victor know which one she took) to the gate, where she can utter the secret word without being heard. Then she asks Victor to name one of the two paths, and she goes back trough the named path. 
 As before:
 \begin{enumerate}
@@ -181,7 +182,7 @@ In the sequel, we will have two parties interacting, the \textit{prover} and the
 The condition of soundness asserts that a honest verifier cannot be tricked into accepting a false statement by a possibly cheating prover. In the first example, this is equivalent to stating that, if Peggy is indeed colorblind, then she cannot convince Victor that she is not. In the second one, if Peggy were not to know the password to the gate, then she would not be able to convince Victor which will then not be fooled. It is important to note that in the above example we actually allow for a dishonest prover to be able to successfully fool Victor with a bounded above probability\footnote{And this probability can be made negligible thanks to repeating the experiment multiple times}.
 \subsection{Completeness}
 Conversely, the condition of completeness states that an honest prover will be able to convince a honest verifier of the veracity of the claim, if the claim is indeed true. So, moving back to the first example, Peggy will be able to prove she is not colorblind if that is indeed true and Victor acts honestly satisfying the protocol. While in the examples Victor is always positively convinced at the end of the interaction, this is not a strict requirement, instead (similarly as in Soundness) we just require the interaction to succeed with a strictly bounded below probability\footnote{And again this probability can be increased by repeating the experiment and taking the majority answer}. As an example of when this might be the case, consider the following \begin{example}
-Peggy claims that coffee tastes differently when brewed by an espresso machine compared to one made in a cup. Victor wants to verify that claim, so he brews a coffee choosing randomly between the two options (in way that Peggy does not see which is which). Peggy then tastes the coffee, and gives her opinion on how it was brewed. The experiment is repeated $n$ times\footnote{According to \cite{medicine}, and assuming Peggy weighs around 70kg, we would not recommend for $n$ to be greater than 75-100}, and Victor is convinced if Peggy is right more than $c$ times, where $c$ depends on how certain we want to be of Peggy's ability. 
+Peggy claims that coffee tastes differently when brewed by an espresso machine compared to one made in a cup. Victor wants to verify that claim, so he brews a coffee choosing randomly between the two options (in way that Peggy does not see which is which). Peggy then tastes the coffee, and gives her opinion on how it was brewed. The experiment is repeated $n$ times\footnote{According to \cite{chambersChemIDplus0000302272XFSBVAOIAHNAPCNPVHKAFCSAN}, and assuming Peggy weighs around 70kg, we would not recommend for $n$ to be greater than 75-100}, and Victor is convinced if Peggy is right more than $c$ times, where $c$ depends on how certain we want to be of Peggy's ability. 
 \end{example}
 
 This is the exact subject of hypothesis testing, in particular it reduces to the exact problem of finding whether a coin is biased. This can be modeled by a binomial distribution with mean $\mu = n/2$ and standard deviation $\sigma = \frac{\sqrt{n}}{2}$. In particular, if we apply the central limit theorem (and as such have $n > 30$) we can model it as a normal distribution, then using the $3\sigma$ rule\footnote{i.e. that three standard deviations include 99.7\% of the data} we can see that if $|c - \frac{n}{2}| \geq 3\frac{\sqrt{n}}{2}$ then we can affirm that with a more than 99\% chance Peggy can distinguish the two. For example, if we set $n = 100$ and Peggy guesses right more than $c = 65 = \frac{100}{2} + 3 \frac{\sqrt{100}}{2}$ times (or less than 35 times) then we can be certain that Peggy is truthful (and in the other case that she can distinguish it but for some reasons she is convinced the espresso machine coffee is brewed in cup and viceversa). 
@@ -418,7 +419,7 @@ We say a language $L$ is $\mathcal{NP}$-Hard, if $\forall M \in \mathcal{NP}, M 
 We say a language $L$ is $\mathcal{NP}$-Complete if $L \in \mathcal{NP}$ and $L$ is $\mathcal{NP}$-Hard.
 \end{definition}
 
-In particular, problems that are $\mathcal{NP}$-Complete are considered to be the hardest to find solutions to. The classical $\mathcal{NP}$-Complete problem is \texttt{SAT}, i.e. the language of all satisfiable boolean formulae, but the class of such problems is constantly growing \cite{karp1972reducibility}. 
+In particular, problems that are $\mathcal{NP}$-Complete are considered to be the hardest to find solutions to. The classical $\mathcal{NP}$-Complete problem is \texttt{SAT}, i.e. the language of all satisfiable boolean formulae, but the class of such problems is constantly growing \cite{karpReducibilityCombinatorialProblems1972}. 
 
 
 \bibliographystyle{unsrt}
