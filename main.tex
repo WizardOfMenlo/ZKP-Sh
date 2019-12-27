@@ -140,7 +140,8 @@ Note that that brings the final complexity to $O(l(nm + kn + mk + n))$ so for so
 
 
 \subsection{Adversarial Settings}
-In cryptography, in order to achieve sound schemes, it is common to work in what is commonly referred to as an adversarial setting. Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently well endowed attacker might take. \\
+In cryptography, in order to achieve sound schemes, it is common to work in what is commonly referred to as an adversarial setting.
+Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently well endowed attacker might take. \\
 
 The capability of the attacker will vary depending on the level of security that the protocol needs to be hold to. For example, the computational power that the adversary has will affect the class of problems that it can solve.
 As an instance, if a construction relies on (hard) instances of an $\mathcal{NP}$-complete problem (and if $\mathcal{P} \neq \mathcal{NP}$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \mathcal{NP}$ there exist a deterministically recognizable $R_L \subseteq \{0, 1\}^* \times \{0, 1\}^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \text{poly}(|x|)$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
@@ -287,7 +288,7 @@ Let $G = (V, E)$ be a graph, and $\pi \in S_V$ be a permutation on $V$. Then we 
 Then we start by proving this preliminary claim:
 
 \begin{theorem}
-Let $I$ be random variable uniformly selected from $\{1, 2\}$. Let $G_1, G_2$ be two graphs such that $G_1 \cong G_2$. We also let $\Pi$ be a random variable uniformly distributed over the set of permutations of the vertex set of $G_1$ (which without loss of generality we assume being equal to the vertex set of $G_2$). Then we want to show, for every graph $F \cong G_1 \cong G_2$ the following hold:
+Let $I$ be a random variable uniformly selected from $\{1, 2\}$. Let $G_1, G_2$ be two graphs such that $G_1 \cong G_2$. We also let $\Pi$ be a random variable uniformly distributed over the set of permutations of the vertex set of $G_1$ (which without loss of generality we assume being equal to the vertex set of $G_2$). Then we want to show, for every graph $F \cong G_1 \cong G_2$ the following hold:
 \[ \Pr[I = 1 | \Pi(G_I) = F] = \Pr[I = 2 | \Pi(G_I) = F] = \frac{1}{2} \]
 \end{theorem}
 \begin{proof}
@@ -345,6 +346,40 @@ Let $L$ be a language. Then $L$ has a \textbf{perfect zero knowledge proof syste
 \end{definition}
 
 As always, the bound on how often the simulator is allowed to fail can be made negligible. 
+Let us give now an example of a Perfect Zero Knowledge Proof for the language of Graph Isomorphism.
+\begin{example}
+    First of all, let us define the language \texttt{GI}.
+    \[ \texttt{GI} = \{ (G, H) | G \cong H \}\]
+    Note that \texttt{GI} is\footnote{In the most general case, as we actually do know polynomial time algorithm for special cases such as trees}, as far as we know, not $\mathcal{NP}$-complete nor in $\mathcal{BPP}$. 
+    This is important since every language in $\mathcal{BPP}$ has a trivial proof, while known ZKP languages that are $\mathcal{NP}$-complete require further assumptions.
+    The following algorithm is a Perfect Zero Knowledge Proof System for \texttt{GI}.
+    \begin{enumerate}
+        \item Let the common inputs of $P, V$ be two graphs $G_1, H_2$ s.t. $G_i = (V_i, E_i)$.
+              Also if $(G_1, G_2) \in \texttt{GI}$ it must be that $G_1 \cong G_2$ and as such there exists an 
+              isomorphism $\phi : V_1 \to V_2$. We stress that this $\phi$ is not publicly know\footnote{By this we mean that the prover either uses its superior computational ability to find $\phi$, or that it is only known to the prover. Strictly speaking the second formulation requires a slightly different formulation of ZKP, but the proof follows similarly }.
+        \item On the first step, $P$ uniformly randomly selects a permutation $\sigma \in_R S_{V_2}$, and computes the graph $G' = \sigma(G_2)$.
+              Then $P$ sends such graph to $V$. 
+        \item Once $V$ receives the graph $G'$ from $P$, it randomly selects an $i \in_R \{1, 2\}$, and sends it to $P$. 
+        \item When $P$ receives $i$, it acts as follows. If $i = 2$, then $P$ sends $\sigma$, else it sends $\sigma \circ \phi$.
+        \item Finally, if the permutation received from $P$ is an isomorphism between $G_i$ and $G'$, then $V$ accepts, else it rejects.
+    \end{enumerate}
+    The rationale behind this is quite straightforward. On the first step, the prover generates a challenge graph, that it claims is isomorphic to both of the input graphs.
+    Of course, if the two graphs are non isomorphic no graph can satisfy this claim. On receiving this graph, the verifier issues a challenge, asking to receive an isomorphism between the received graph and one of the two inputs.
+    If the graphs are isomorphic, then the prover can always easily (if the isomorphism $\phi$ is know) answer the query. Else, it must fail with some probability.
+    \begin{proof}
+        First of all, note that the verifier can easily be implemented in polynomial time. We do not know of a way to similarly implement the prover,
+        but luckily this is not a requirement. If the permutation $\phi$ is known by $P$ a priori then we can actually find such an implementation.
+        First of all, we aim to show that $P, V$ is an interactive proof system.
+        \begin{itemize}
+            \item Completeness. If $(G_1, G_2) \in \texttt{GI}$, then $P$ is always able to find $\phi$ such that
+                  $\phi(G_1) = G_2$. Then $G' = \sigma(G_2) = \sigma \circ \phi G_1$. Then the prover can always satisfy the verifier challenge,
+                  and as such the completeness bound is 1.
+            \item Soundness. If $(G_1, G_2) \notin \texttt{GI}$, then there is no isomorphism between the two input graphs. Therefore for any $G'$ that a 
+                    possibly cheating prover $E$ might choose, there exists a $j \in \{1, 2\}$ such that $G_j \ncong G'$. So, since the verifier chooses $i \in_R \{1, 2\}$ after $G'$ is fixed, $\Pr[i = j] = \frac{1}{2}$ and as such the prover will fail to convince the verifier 
+                    at least $\frac{1}{2}$ of the times, and that is the soundness bound.
+        \end{itemize}
+    \end{proof}
+\end{example}
 
 \subsection{Computational Zero Knowledge}
 Perfect Zero Knowledge Proofs have the extremely strong requirement that the simulation and the actual interaction yields the same identical distribution (of course when the simulator is able to answer accurately i.e. does not output $\bot$). However, this requirement is quite stringent, and as such we can relax it by borrowing from pseudorandom generators. In particular, the key insight is that for a generator to be such, it is not necessary for it to be truly random, but only for it to be impossible for a polynomial time procedure to distinguish it from a truly random sequence. In particular, we can formalize this as follows:
@@ -353,7 +388,7 @@ Two random variable ensembles\footnote{An ensemble $\{A_n\}_{n \in \mathbb{N}}$ 
 \[ \delta(n) = \left| \; \Pr[D(A_n, 1^n) = 1] - \Pr[D(B_n, 1^n) = 1] \;  \right|  \] is a negligible function of $n$.
 \end{definition}
 A couple of notes are, as usual, in order. First of all, the $1^n$ parameter are used to rule out degenerate cases where the two distributions yields strings logarithmic in the size of $n$, and as such the $D$ algorithm is unable to run in polynomial time of $n$. The $\delta$ function is often referred to as the attackers advantage. The idea is that this metric can measure how much better the attacker can do over the general strategy of always accepting, rejecting or guessing, which always yield an advantage of\footnote{For example, if an algorithm $D$ always accepts then $\delta(n) = |1 - 1| = 0$} 0. 
-In order to further explain how this is useful let us consider the following two examples.
+In order to further explain how this is useful let us consider the following two examples \cite{ProvableSecurityComputational}.
 
 \begin{example}
 Consider the two ensembles $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ where $\Pr[A_n = n] = \Pr[A_n = n+1] = \frac{1}{2}$, and $\Pr[B_n = n] = 1$. So $A_n$ is either $n$ or $n+1$, while $B_n$ always equals $n$. Then $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{not} computationally indistinguishable
