@@ -416,7 +416,7 @@ Let $L$ be a language. Then $L$ has a \textbf{computational zero knowledge proof
         
 \end{itemize}
 \end{definition}
-
+As you can see, other then the different level of "closeness" of the two distributions, the main other difference is that we do not require bounded failure of the simulation by the $\bot$ symbol. The rationale between this is quite simple. First of all, remember that in perfect zero knowledge we can repeat the interaction multiple times \footnote{In order for this to be formal we would actually need to prove that sequential composition of zero knowledge proofs does not yield any knowledge, but for the sake of this discussion just know that the above holds} to reduce the probability of outputting $\bot$ to a negligible one (in the size of the input). In particular this implies that the simulator only differs from the interaction a negligible percentage of times, and the above example shows how two ensembles that only differ with negligible probability are computationally indistinguishable. Computational Zero Knowledge Proofs are in a sense more efficient then Perfect Zero Knowledge proofs, as in practical applications there is not need to perfectly simulate the interaction to guarantee zero knowledge. From an historical standpoint as well, the first proposed kinds of Zero Knowledge Proofs were computational, in particular regarding the quadratic residue problem \cite{goldwasserKnowledgeComplexityInteractive1989}. 
 
 
 \subsection{Bit Commitment}
