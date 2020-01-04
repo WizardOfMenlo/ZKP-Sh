@@ -66,7 +66,26 @@ As before, we will allow a slight relaxation and use $\text{poly}(\cdot)$ to spe
 Let $\mu : \mathbb{N} \to \mathbb{R}$. We say $\mu$ is \textbf{negligible} if for every positive polynomial $p(\cdot)$ there exist a $N \in \mathbb{N}$ s.t for every $n > N$ we have:
 \[\mu(n) < \frac{1}{p(n)}\]
 \end{definition}
-As an example, functions such $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of poly. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. 
+As an example, functions such $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of poly. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. \\
+
+Finally, a lot of our examples will deal with graphs and isomorphisms on graphs.
+
+\begin{definition}
+A \textbf{graph} $G = (V, E)$ is a pair of sets, where $V$ is referred to as the vertex set, and $E \subseteq V \times V$ is the set of edges.  
+\end{definition}
+
+\begin{definition}
+    Let $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$. A bijection $\phi: V_1 \to V_2$ is an \textbf{isomorphism} between $G_1, G_2$ iff 
+    \[ (v, v') \in E_1 \implies (\phi(v), \phi(v')) \in E_2 \] 
+    In the case such an isomorphism exists, the two graphs are said to be isomorphic, and we write this as $G_1 \cong G_2$. 
+\end{definition}
+
+Finally, we introduce the following useful notation, for the graph obtained by permuting all vertexes of another graph.
+\begin{definition}
+    Let $G = (V, E)$, and $\pi \in S_V$, i.e. a permutation on the set $V$. Then we define $\pi(G) = (V, E')$ where:
+    \[ E' = \{ (\pi(v), \pi(v')) | (v, v') \in E \} \]
+    Clearly, $G \cong \pi(G)$.
+\end{definition}
 
 \subsection{Computational Setting}
 The computational model used in this paper is that of Turing Machines (TMs) \cite{turingComputableNumbersApplication1937}. We will not discuss the inner definition of deterministic and non deterministic TMs, as, within the category, changes in definition do not create more than polynomial slowdowns, and as such for all intents and purposes can be considered the same \cite{aroraComputationalComplexityModern2009}. 
@@ -255,16 +274,15 @@ Completeness is easily verified, as in fact the verifier will accept with probab
 \end{proof}
 In fact, as we will see next, $\mathcal{IP}$ actually contains languages that are not believed to be in $\mathcal{NP}$. We will not prove this, but it turns out $\mathcal{IP} = \mathcal{PSPACE}$, i.e. the set of all languages that use polynomial space\footnote{And this class is considered to be much bigger than $\mathcal{NP}$}. Also note that in the case of $\mathcal{NP}$ problems we can even make the prover machine polynomial time, if we use the additional input model and give the prover the certificate. 
 \subsection{An Example: GNI}
-Let us consider the Graph Non Isomorphism problem, a decision problem which is not known to be in $\mathcal{BPP} \cup \mathcal{NP}$. Recall that, for two graphs $G_1 = (V_1, E_1)$, $G_2 = (V_2, E_2)$ are isomorphic if there exists a bijection $\phi: V_1 \to V_2$ such that $(v, v') \in E_1 \implies (\phi(v), \phi(v')) \in E_2$ . The graph non isomorphism problem concerns deciding whether two graphs are not isomorphic.
+Let us consider the Graph Non Isomorphism problem, a decision problem which is not known to be in $\mathcal{BPP} \cup \mathcal{NP}$. This quite aptly named problem concerns deciding whether two graphs are not isomorphic.
 Before, presenting the system, let us try to give some intuition onto how we will be approaching the problem. As in the coffee problem that we examined in the completeness section, we will have the verifier issuing challenges to the prover, which will use its superior computational abilities to solve. In particular, we rely on the fact if the two graphs are not isomorphic then it will always be possible to distinguish the two. 
 Here is a interactive proof system that decides this problem.
 \begin{example}
 Let the common input be a pair of graphs, $G_1, G_2$ such that $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$.
 \begin{itemize}
     
-    \item The verifier starts the interaction, uniformly selecting at random $i \in {1, 2}$ and then randomly selects a permutation $\pi: V_i \to V_i$. It constructs the edge set 
-    \[ F_i = \{ (\pi(e), \pi(e')) | (e, e') \in E_i \} \]
-    Finally, it sends the graph $F = (V_i, F_i)$ to the prover. 
+    \item The verifier starts the interaction, uniformly selecting at random $i \in {1, 2}$ and then randomly selects a permutation $\pi \in S_{V_i}$.
+          It then sends the the graph $F = \pi(G_i)$ to the prover.
     \item The prover finds which of the two input graphs $F$ is isomorphic to, and sends the answer $j$ to the verifier
     \item If $i = j$ the verifier accepts (concludes that the two graphs are not isomorphic), else it rejects (is not convinced that the graphs are not isomorphic). 
 \end{itemize}
@@ -279,13 +297,8 @@ If $(G_1, G_2) \in GNI$ then there does not exists a graph $F$ s.t. $G_1 \cong F
 \end{proof}
 
 Intuitively, for the soundness bound, we claim that a possibly malicious prover cannot convince the verifier that the graphs are isomorphic while indeed they are not. In particular, we claim that in case they are isomorphic, the best the prover can do is guess what the verifier chose, with probability $\frac{1}{2}$.
-First of all let us introduce the notation: 
-\begin{definition}
-Let $G = (V, E)$ be a graph, and $\pi \in S_V$ be a permutation on $V$. Then we define 
-\[ \pi(G) = (V, \{ (\pi(v), \pi(v')) | (v, v') \in E \} \]
-\end{definition}
 
-Then we start by proving this preliminary claim:
+We start by proving this preliminary claim:
 
 \begin{theorem}
 Let $I$ be a random variable uniformly selected from $\{1, 2\}$. Let $G_1, G_2$ be two graphs such that $G_1 \cong G_2$. We also let $\Pi$ be a random variable uniformly distributed over the set of permutations of the vertex set of $G_1$ (which without loss of generality we assume being equal to the vertex set of $G_2$). Then we want to show, for every graph $F \cong G_1 \cong G_2$ the following hold:
@@ -346,7 +359,10 @@ Let $L$ be a language. Then $L$ has a \textbf{perfect zero knowledge proof syste
 \end{definition}
 
 As always, the bound on how often the simulator is allowed to fail can be made negligible. 
-Let us give now an example of a Perfect Zero Knowledge Proof for the language of Graph Isomorphism.
+Furthermore, we can make the observation that, for any verifier $V'$, its execution is completely determined by the contents of its random tape and the messages that
+are sent on the communication tape by $P$. Knowing this we can define a random variable $\text{view}^{P}_{V'}(x)$ to describe the transcript of the interaction between $P$ and $V'$, including the contents of $V'$ random tape and all the messages sent from $P$ to $V'$. 
+Using this, we can replace the $\left<P, V\right>(x)$ by $\text{view}^{P}_{V'}(x)$ and obtain an equivalent definition that is slightly easier to work with, as it allows to account for verifiers that arbitrarly deviate from the protocol (e.g. some that terminate between steps). 
+With this definition, let us give now an example of a Perfect Zero Knowledge Proof for the language of Graph Isomorphism.
 \begin{example}
     First of all, let us define the language \texttt{GI}.
     \[ \texttt{GI} = \{ (G, H) | G \cong H \}\]
@@ -354,31 +370,66 @@ Let us give now an example of a Perfect Zero Knowledge Proof for the language of
     This is important since every language in $\mathcal{BPP}$ has a trivial proof, while known ZKP languages that are $\mathcal{NP}$-complete require further assumptions.
     The following algorithm is a Perfect Zero Knowledge Proof System for \texttt{GI}.
     \begin{enumerate}
-        \item Let the common inputs of $P, V$ be two graphs $G_1, H_2$ s.t. $G_i = (V_i, E_i)$.
+        \item Let the common inputs of $P, V$ be two graphs $G_1, G_2$ s.t. $G_i = (V_i, E_i)$.
               Also if $(G_1, G_2) \in \texttt{GI}$ it must be that $G_1 \cong G_2$ and as such there exists an 
               isomorphism $\phi : V_1 \to V_2$. We stress that this $\phi$ is not publicly know\footnote{By this we mean that the prover either uses its superior computational ability to find $\phi$, or that it is only known to the prover. Strictly speaking the second formulation requires a slightly different formulation of ZKP, but the proof follows similarly }.
-        \item On the first step, $P$ uniformly randomly selects a permutation $\sigma \in_R S_{V_2}$, and computes the graph $G' = \sigma(G_2)$.
+        \item On the first step, $P$ uniformly randomly selects a permutation $\sigma \in S_{V_2}$, and computes the graph $G' = \sigma(G_2)$.
               Then $P$ sends such graph to $V$. 
-        \item Once $V$ receives the graph $G'$ from $P$, it randomly selects an $i \in_R \{1, 2\}$, and sends it to $P$. 
+        \item Once $V$ receives the graph $G'$ from $P$, it randomly selects an $i \in \{1, 2\}$, and sends it to $P$. 
         \item When $P$ receives $i$, it acts as follows. If $i = 2$, then $P$ sends $\sigma$, else it sends $\sigma \circ \phi$.
         \item Finally, if the permutation received from $P$ is an isomorphism between $G_i$ and $G'$, then $V$ accepts, else it rejects.
     \end{enumerate}
     The rationale behind this is quite straightforward. On the first step, the prover generates a challenge graph, that it claims is isomorphic to both of the input graphs.
     Of course, if the two graphs are non isomorphic no graph can satisfy this claim. On receiving this graph, the verifier issues a challenge, asking to receive an isomorphism between the received graph and one of the two inputs.
     If the graphs are isomorphic, then the prover can always easily (if the isomorphism $\phi$ is know) answer the query. Else, it must fail with some probability.
+    \begin{theorem}
+        The above is an Perfect Zero Knowledge Proof for \texttt{GI}.
+    \end{theorem}
     \begin{proof}
         First of all, note that the verifier can easily be implemented in polynomial time. We do not know of a way to similarly implement the prover,
         but luckily this is not a requirement. If the permutation $\phi$ is known by $P$ a priori then we can actually find such an implementation.
         First of all, we aim to show that $P, V$ is an interactive proof system.
         \begin{itemize}
             \item Completeness. If $(G_1, G_2) \in \texttt{GI}$, then $P$ is always able to find $\phi$ such that
-                  $\phi(G_1) = G_2$. Then $G' = \sigma(G_2) = \sigma \circ \phi G_1$. Then the prover can always satisfy the verifier challenge,
+                  $\phi(G_1) = G_2$. Then $G' = \sigma(G_2) = (\sigma \circ \phi) (G_1)$. Then the prover can always satisfy the verifier challenge,
                   and as such the completeness bound is 1.
             \item Soundness. If $(G_1, G_2) \notin \texttt{GI}$, then there is no isomorphism between the two input graphs. Therefore for any $G'$ that a 
                     possibly cheating prover $E$ might choose, there exists a $j \in \{1, 2\}$ such that $G_j \ncong G'$. So, since the verifier chooses $i \in_R \{1, 2\}$ after $G'$ is fixed, $\Pr[i = j] = \frac{1}{2}$ and as such the prover will fail to convince the verifier 
                     at least $\frac{1}{2}$ of the times, and that is the soundness bound.
         \end{itemize}
-    \end{proof}
+        Now, for the arguably more challenging section of the proof let us prove that the above protocol is indeed zero knowledge.
+        We show a simulator \footnote{In fact, a family of simulators dependant on verifiers} that satisfies the zero knowledge condition. 
+        Let $V'$ be an arbitrary polynomial time randomized ITM. We define the following simulator $M_V'$, that runs on input $x \equiv (G_1, G_2)$:
+        \begin{enumerate}
+            \item First of all, let $q(|x|)$ be a polynomial bound on the running time of $V'$. We will be simulating $V'$ on $M_V'$, and to do so we will first allocate a string of $q(|x|)$ random bits to be used\footnote{An alternative would be interactively answering $V'$ queries for random bits, but this is conceptually easier}. We call such bits $r$. 
+            \item The simulator randomly selects $j \in \{1, 2 \}$, and permutation $\pi \in S_{V_j}$, computes the graph $H = \pi(G_j)$. 
+            \item The simulator now starts simulating $V'$, giving it $x$ as common input, $r$ as the random tape, $H$ in the incoming message tape.
+            \item After polynomially many steps, $V'$ will place a message $i$ on its outgoing message tape. The simulator reads this value, normalizes it\footnote{This makes the discussion easier, also if $V'$ terminated we can still apply the normalization and proceed as before} by setting $i = 1$ if $i \neq 2$. 
+            \item If $i = j$ then the simulator outputs $(x, r, H, \pi)$.
+            \item Else (i.e. $i \neq j$), the simulator fails and outputs $\bot$.
+        \end{enumerate}
+        A couple of notes are in order. First of all, as long as the verifier is polynomial time, the above simulator can be implemented in polynomial time. 
+        Secondly, the simulator does not follow exactly the steps of the prover, of course since it is required to run in polynomial time. 
+        Thirdly, the simulator is not able to perfectly answer the query every time, as it does not know $\phi$ as the prover does, and as such it is required to fail some times. 
+        Now onto proving that this simulator satisfies the requirement.
+        Let $x \equiv (G_1, G_2) \in \texttt{GI}$.
+        We first show that: 
+        \[ \Pr[M_{V'}(x) = \bot] \leq \frac{1}{2} \]
+        Recall that \footnote{In proving the soundness bound for the interactive proof of \texttt{GNI}} we showed that, for any randomized algorithm $E$, any two isomorphic graph $G_1, G_2$, and with the variables $\Pi \in_R S_{V_1}, I \in_R \{1, 2\}$ we have that:
+        \[ \Pr[E(\Pi(G_I)) = I] \leq \frac{1}{2} \]
+        Since we see that $\Pr[M_{V'}(x) = \bot] \leq \Pr[E(\Pi(G_I)) = I]$ (as the simulation only fails when $V'$ is able to find out $i$ from $H = \pi(G_i)$), the claim is proved. \\
+        Using now the alternative characterization of zero knowledge, we aim to show that $\text{view}^{P}_{V'}(x)$ and $m_{V'}(x)$ are identically distributed.
+        First of all, note that both deal with quadruples of the form $(x, r, \cdot, \cdot)$, with $r$  in both cases randomly and uniformly selected. As such, we can move on to consider only the next two components, namely the first and second message sent by the prover to the verifier.
+        We aim to first show that, for $I \in_R \{1, 2\}$, $\Pi \in_R S_{V_2}$ the random variables $\Pi(G_2)$ (sent by the prover) and $\Pi(G_I)$ (computed by the simulator) are identically distributed. 
+        This is not too bad, since we have shown before that $\Pr[\Pi(G_1) = G'] = \Pr[\Pi(G_2) = G']$ and as such 
+
+        \begin{align*} 
+            \Pr[\Pi(G_I) = G'] & \\
+            &= \sum_{i \in \{1, 2\}} \Pr[\Pi(G_I) = G' | I = i]\Pr[I = i] \\
+            &= \frac{1}{2}(\Pr[\Pi(G_1) = G'] + \Pr[\Pi(G_2) = G'])  \\
+            &= \Pr[\Pi(G_2) = G']
+        \end{align*}
+        \end{proof}
 \end{example}
 
 \subsection{Computational Zero Knowledge}
@@ -414,7 +465,7 @@ Then we can split the case of $D$ accepting $A_n$ into two branches:
 \[ \Pr[D(A_n, 1^n) = 1] = \Pr[D(A_n, 1^n) = 1 \land A_n \neq 0^n] + \Pr[D(A_n, 1^n) = 1 \land A_n = 0^n]   \]
 Now note that the second term is greater than 0, and as such:
 \[ \Pr[D(A_n, 1^n) = 1] \geq \Pr[D(A_n, 1^n) = 1 \land A_n \neq 0^n]   \]
-\[ = \Pr[D(A_n, 1^n) = 1 | A_n \neq O^n] \Pr[A_n \neq 0^n] \]
+\[ = \Pr[D(A_n, 1^n) = 1 | A_n \neq 0^n] \Pr[A_n \neq 0^n] \]
 \[ = \Pr[D(B_n, 1^n) = 1] \Pr[A_n \neq 0^n] \] 
 \[ = \Pr[D(B_n, 1^n) = 1] (1 - 2^{-n}) \] 
 Using this we can bound the $\phi$ from above: 
@@ -426,14 +477,14 @@ Using this we can bound the $\phi$ from above:
 Similarly we can use the fact that $\Pr[A \land B] \leq \Pr[A]$ to conclude that:
 \[ \Pr[D(A_n, 1^n) = 1] = \Pr[D(A_n, 1^n) = 1 \land A_n \neq 0^n] + \Pr[D(A_n, 1^n) = 1 \land A_n = 0^n]   \]
 \[ \leq \Pr[A_n \neq 0^n] + \Pr[D(A_n, 1^n) = 1 \land A_n = 0^n] \]
-\[ = 2^{-n} + \Pr[D(A_n, 1^n) = 1 | A_n \neq O^n] \Pr[A_n \neq 0^n] \]
+\[ = 2^{-n} + \Pr[D(A_n, 1^n) = 1 | A_n \neq 0^n] \Pr[A_n \neq 0^n] \]
 \[ = 2^{-n} + \Pr[D(B_n, 1^n) = 1] (1 - 2^{-n}) \]
 And conclude that $\phi$ is bounded below by:
 \[ \phi(n) =  \Pr[D(B_n, 1^n) = 1] - \Pr[D(A_n, 1^n) = 1] \] 
 \[ \geq  \Pr[D(B_n, 1^n) = 1] - 2^{-n} - \Pr[D(B_n, 1^n) = 1] (1 - 2^{-n}) \]
 \[ =  - 2 ^ {-n} + 2^{-n} \Pr[D(B_n, 1^n) = 1]  \geq - 2^{-n}  \]
 Where the last inequality follows since $\Pr[D(B_n, 1^n) = 1] \geq 0$.
-Now, since $\delta(n) = |\phi| \leq  2 ^ {-n} $, it follows that $\delta$ is a negligible function of $n$, and as such $A_n, B_n$ are computationally indistinguishable. 
+Now, since $\delta(n) = |\phi(n)| \leq  2 ^ {-n} $, it follows that $\delta$ is a negligible function of $n$, and as such $A_n, B_n$ are computationally indistinguishable. 
 
 \end{proof}
 \end{example}
