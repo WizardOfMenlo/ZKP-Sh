@@ -368,7 +368,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
     \[ \texttt{GI} = \{ (G, H) | G \cong H \}\]
     Note that \texttt{GI} is\footnote{In the most general case, as we actually do know polynomial time algorithm for special cases such as trees}, as far as we know, not $\mathcal{NP}$-complete nor in $\mathcal{BPP}$. 
     This is important since every language in $\mathcal{BPP}$ has a trivial proof, while known ZKP languages that are $\mathcal{NP}$-complete require further assumptions.
-    The following algorithm is a Perfect Zero Knowledge Proof System for \texttt{GI}.
+    The following protocol \cite{goldreichFoundationsCryptographyVol2007} is a Perfect Zero Knowledge Proof System for \texttt{GI}.
     \begin{enumerate}
         \item Let the common inputs of $P, V$ be two graphs $G_1, G_2$ s.t. $G_i = (V_i, E_i)$.
               Also if $(G_1, G_2) \in \texttt{GI}$ it must be that $G_1 \cong G_2$ and as such there exists an 
@@ -420,19 +420,12 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
         Since we see that $\Pr[M_{V'}(x) = \bot] \leq \Pr[E(\Pi(G_I)) = I]$ (as the simulation only fails when $V'$ is able to find out $i$ from $H = \pi(G_i)$), the claim is proved. \\
         Using now the alternative characterization of zero knowledge, we aim to show that $\text{view}^{P}_{V'}(x)$ and $m_{V'}(x)$ are identically distributed.
         First of all, note that both deal with quadruples of the form $(x, r, \cdot, \cdot)$, with $r$  in both cases randomly and uniformly selected. As such, we can move on to consider only the next two components, namely the first and second message sent by the prover to the verifier.
-        We aim to first show that, for $I \in_R \{1, 2\}$, $\Pi \in_R S_{V_2}$ the random variables $\Pi(G_2)$ (sent by the prover) and $\Pi(G_I)$ (computed by the simulator) are identically distributed. 
-        This is not too bad, since we have shown before that $\Pr[\Pi(G_1) = G'] = \Pr[\Pi(G_2) = G']$ and as such 
-
-        \begin{align*} 
-            \Pr[\Pi(G_I) = G'] & \\
-            &= \sum_{i \in \{1, 2\}} \Pr[\Pi(G_I) = G' | I = i]\Pr[I = i] \\
-            &= \frac{1}{2}(\Pr[\Pi(G_1) = G'] + \Pr[\Pi(G_2) = G'])  \\
-            &= \Pr[\Pi(G_2) = G']
-        \end{align*}
-
-        As such $\Pi(G_I)$ is identically distributed as $\Pi(G_2)$, and we are motivated in defining $H = \Pi(G_I) = \Pi(G_2)$.
-        Now, given $x, r, H$, $V'$'s output is completely determined, and as such we can call it $v(x, r, H)$.
-        We want now to show that \[\Pr[ | v(x,r,H) = I] \]
+        Let us define $s(x,r)$ be the last two elements of the quadruple outputted by the simulator (as long as the simulation succeeds), and similarly $p(x,r)$ the same elements of the quadruple of the verifier's view of the interaction.
+        We aim to show these are identically distributed. First of all not that once $x,r,H$ are fixed, the output of $V'$, which we will call $v(x,r,H)$ is uniquely determined.
+        It turns out that $s(x,r)$, $p(x,r)$ are identically distributed over the set:
+        \[ C_{x,r} = \{ (H, \pi) | H = \pi(G_{v(x,r,H)}) \} \]
+        Unfortunately, the proof is rather tedious\footnote{The first element of the pair can be shown to be identically distributed easily, but the second part requires apparently at least a discussion of the authomorphisms of a graph, which I don't really get right now :)}, and not particularly related to cryptography, so for now I have decided to skip it until I find a simpler one.
+        This concludes out proof that the above is a valid Perfect Zero Knowledge simulator for the interactive proof system, and as such we are done.
         \end{proof}
 \end{example}
 
