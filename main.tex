@@ -529,14 +529,106 @@ As you can see, other then the different level of "closeness" of the two distrib
 
 
 
-\subsection{Bit Commitment}
-\subsection{Examples: Graph Coloring}
+\subsection{Zero Knowledge Proofs for $\mathcal{NP}$}
+After having defined Zero Knowledge Proofs, it is just natural to consider what types of languages have
+a ZKP. In this section we show a potentially surprising result, that, under some reasonable assumptions, every language in $\mathcal{NP}$ has 
+a Zero Knowledge Proof.
+\subsubsection{Bit Commitment}
+The machinery that we introduce is that of Bit Commitment. In a nutshell, the intuition behind this
+is to digitally simulate the action of receiving a sealed letter from someone, and knowing that its content will not have changed since it was written (while of course being unable to learn its contents until the seal is broken).
+Loosely speaking, a bit commitment algorithm works between two parties that do not trust each other.
+The first commits itself to a value, and sends to the second some sort of transcript. 
+Once the second requests the opening of the seal, the first party sends a certificate that, together with the certificate, reveals the commited value and proves that it was indeed commited.
+Formally, we define a bit commitment scheme as follows:
+\begin{definition}
+    A \textbf{bit commitment scheme} is a pair of probabilistic polynomial time interactive machines $(S, R)$ that,
+    on common security parameter $n$, satisfy the following requirements.
+    \begin{itemize}
+        \item \textbf{Secrecy}. For any probabilistic polynomial time interactive machine $E$, 
+            the ensembles $\{ \left<S(0), E\right>(1^n) \}_{n \in \mathbb{N}}$ and $\{ \left<S(1), E\right>(1^n) \}_{n \in \mathbb{N}}$ are computationally indistinguishable.
+        \item \textbf{Unambiguity} We let $(r, \bar{m})$ be, respectively, the random bits used by the receiver and the messages received by the sender. 
+                Then we say that $(r, \bar{m})$ is a $i$-commitment if for some random string $s$ the machine\footnote{Here we use the notation $M_r(x)$ to denote the machine $M$ running with local coins $r$ on input $x$} $S_s(i, 1^n)$ produces the sequence of messages $\bar{m}$ when interacting with $R$ with local coins $r$. 
+                If $(r, \bar{m})$ is both a 0-commitment and a 1-commitment, then it is ambiguos. 
+                We require that for all but a negligible fraction of $r \in {0, 1}^{\text{poly(n)}}$ there exists no $\bar{m}$ such that $(r, \bar{m})$ is ambiguos.
+    \end{itemize}
+\end{definition}
+As you can see, the unambiguity requirement is much more involved then the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
+In particular, note that once $S$ has commited a value, in order to verify it it can send its private input and the random coin it used to $R$, which can then
+run $S$'s algorithm to verify the certificate in polynomial time. \\
+As far as we know, the existance of bit commitment schemes requires some assumptions, namely the existance of one way functions, functions that are easy to compute but hard to invert.
+For a more trough description, look no further than the appendix. While the proof is not hard, it requires some discussion of pseudorandom generators, which are not particularly insightful.
+However, if we allow for a slightly stronger assumption, we can provide a succint proof of the existance of bit commitment schemes.
+\begin{theorem}
+    Let $f: \{0, 1\}^* \to \{0, 1\}^*$ be a one-way permutation. Let $b: \{0, 1\}^* \to \{0, 1\}$ be an hard-core of $f$. Then the following is a bit commitment scheme.
+    \begin{itemize}
+        \item \textbf{Commitment}. To commit the value $i$, uniformly select $s \in {0, 1}^n$. Send $(f(s), b(s) \oplus i)$ to the receiver.
+        \item \textbf{Reveal}. To reveal, the sender reveals $s, i$. The receiver, which had received commit $(\alpha, j)$, accepts if $f(s) = \alpha$ and $b(s) \oplus i = j$.
+    \end{itemize}
+\end{theorem}
+\begin{proof}
+    The secrecy requirement is a direct consequence of $f$ being one way, and $b$ being one of its hard cores.
+    The unambiguity requirement is a consequence of $f$ being injective, as no ambiguos view exists.
+\end{proof}
+
+\subsection{ZKP for $\mathcal{NP}$-complete problems}
+Now that we have defined our machinery, we can make use of the structure of problems in the $\mathcal{NP}$ space.
+In particular, as detailed in the appendix, there is a class of problems in $\mathcal{NP}$ known as the $\mathcal{NP}$-complete problems.
+These are problems that are efficiently reducible to any other problem in $\mathcal{NP}$, i.e. such that the existance of an efficient solution for any of them will imply efficient solutions to each problem in $\mathcal{NP}$.
+It follows that by finding a ZKP for a single one of these problems, we can show that any problem in the class has a Zero Knowledge Proof. 
+In particular, 
 
 \section{Applications}
 \subsection{Schnorr Signatures}
 
 \appendix
-\section{Important Assumptions}
+\section{One Way Functions}
+One way functions are, arguably, the basis of a great deal of cryptography.
+Conceptually, a function is one way if it is easy to compute (i.e. computable in polynomial time), yet hard to invert.
+Formally, we have two definition of one way functions:
+\begin{definition}
+    A function $f: {0, 1}^* \to {0, 1}^*$ is \textbf{strongly one way} if:
+    \begin{enumerate}
+        \item There exists a deterministic polynomial time algorithm $A$ such that $A(x) = f(x)$
+        \item For every probabilistic polynomial time algorithm $E$, every sufficiently large $n$, and $U^n$ uniformly distributed over ${0, 1}^n$ the following is negligible:
+            \[ \Pr[E(f(U^n), 1^n) \in f^{-1}(f(U^n))  ] \]
+    \end{enumerate}
+\end{definition}
+\begin{definition}
+    A function $f: {0, 1}^* \to {0, 1}^*$ is \textbf{weakly one way} if:
+    \begin{enumerate}
+        \item There exists a deterministic polynomial time algorithm $A$ such that $A(x) = f(x)$
+        \item For every probabilistic polynomial time algorithm $E$, every sufficiently large $n$, and $U_n$ uniformly distributed over ${0, 1}^n$ the following is non-negligible:
+            \[ \Pr[E(f(U_n), 1^n) \notin f^{-1}(f(U_n))  ] \]
+    \end{enumerate}
+\end{definition}
+In a nutshell, an algorithm that tries to invert a strongly one way function will succeed only with negligible probability.
+Conversely, an algorithm that tries to invert a weakly one way function will fail with noticeable probability.
+Surprisingly, at the moment we do not know of functions that are definitely one way, even tough we have some candidates such as:
+\begin{align*}
+    f_{mult}(x,y) &=  x \cdot y \\
+    f_{ssum}(x_1, \dots, x_N, I) &= (x_1, \dots, x_N, \sum_{i \in I} x_i)
+\end{align*}
+Where $f_{mult}$ is simply multiplying two integers together, and, assuming intractability of integer factorization, it is weakly one way.
+Instead, $f_{ssum}$ is very closely linked to the $\mathcal{NP}$-complete problem known as subset sum. 
+While it is true that if $\mathcal{P} = \mathcal{NP}$ then $f_{ssum}$ is not one way, the converse does not hold. To see this, note that subset sum could have \textit{worst case} exponentially running time, yet be polynomially solvable in the average case, and as such making $f_{ssum}$ not one way.
+In fact, $\mathcal{P} \neq \mathcal{NP}$ is necessary but not sufficient condition for one way functions to exist.
+It turns out \cite{goldreichFoundationsCryptographyVol2007} that the strongly one way functions exist if and only if weakly one way functions do. This justifies our assuming only the existance of vague one way functions, without specifying the type.
+While for one way functions it is hard to recover the complete input in general, there is nothing stopping a possible attacker from computing some partial information about the input.
+For example, if $f$ is one way we can define the function $g(x, r) = f(x) || r$ which will be one way, yet always leak half of its input to the attacker.
+On the other hand, there is some information that such $g$ does not leak, for example (if $f$ is strongly one way): $x \circ r$. 
+Using this we can define the following:
+\begin{definition}
+    Let $f: \{0, 1\}^* \to \{0, 1\}^*$ be a one way function. A predicate $b: \{0,1\}^* \to \{0, 1\}$ is 
+    a \textbf{hard-core of} $f$ if:
+    \begin{itemize}
+        \item $b$ is computable in polynomial time.
+        \item For every polynomial time probabilistic algorithm $E$, the following is negligible:
+        \[ \Pr[E(f(U_n)) = b(U_n)] - \frac{1}{2} \]
+    \end{itemize}
+\end{definition}
+In other words, any algorithm that aims to compute $b(x)$ by only having access to $f(x)$ will succeed with probability
+only negligibly better than guessing. As you have seen in the bit commitment section, hard cores are really useful, and it turns out \cite{goldreichFoundationsCryptographyVol2007} the the existance of one way functions implies the existance of such hard cores. 
+
 \section{Complexity Classes}
 \begin{definition}
 We say that a language $L \in \mathcal{P}$ if there exist a deterministic TM $M$ and a polynomial $p(\cdot)$ such that both the following hold true:
