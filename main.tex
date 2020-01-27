@@ -177,10 +177,10 @@ The notion of a proof has extremely overloaded meaning, as it used in many dispa
 \section{Proof Requirements}
 In order to start visualizing the concept of ZKP, we can start with a couple of toy examples that are helpful. Here and in the rest of text we will refer to the prover as Peggy and to the verifier as Victor.
 \begin{example}
-Assume that Victor is completely colorblind\footnote{i.e. that he cannot distinguish object based on color alone}. Peggy wants to prove to Victor that she is not colorblind, so she devises an experiment. Peggy takes two balls completely identical, save for their colour, and gives them to Victor, one in his left and one in his right hand. Peggy asks Victor to put the balls behind his back, and to decide whether to swap them or not, without telling her. She then asks Victor to show the two balls. Peggy concludes by telling Victor whether she swapped the balls or not.\\
+Assume that Victor is completely colorblind\footnote{i.e. that he cannot distinguish object based on color alone}. Peggy wants to prove to Victor that she is not colorblind, so she devises an experiment. Peggy takes two balls completely identical, save for their colour, and gives them to Victor, one in his left and one in his right hand. Peggy asks Victor to put the balls behind his back, and to decide whether to swap them or not, without telling her. She then asks Victor to show the two balls. Peggy concludes by telling Victor whether he swapped the balls or not.\\
 This is a zero knowledge proof in the sense that:
 \begin{enumerate}
-    \item If Peggy were not colorblind, she would not be able to tell whether Victor switched the balls or not, and so the best she could do is guess, getting it right $\frac{1}{2}$ of the time\footnote{And as such repeating the experiment $n$ times will bring her probability of always guessing right to $\frac{1}{2^n}$}.
+    \item If Peggy were colorblind, she would not be able to tell whether Victor switched the balls or not, and so the best she could do is guess, getting it right $\frac{1}{2}$ of the time\footnote{And as such repeating the experiment $n$ times will bring her probability of always guessing right to $\frac{1}{2^n}$}.
     \item If Peggy is not colorblind, she will be able to answer correctly every time, and thus convince Victor
     \item Victor does not learn anything else about his environment, apart from the fact that Peggy is not colorblind. 
 \end{enumerate}
