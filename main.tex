@@ -297,7 +297,7 @@ We now set to prove that the above is a interactive system proof. First of all n
 If $G_1$ and $G_2$ are not isomorphic, the above procedure always accept. 
 \end{theorem}
 \begin{proof}
-If $(G_1, G_2) \in GNI$ then there does not exists a graph $F$ s.t. $G_1 \cong F \cong G_2$, (since otherwise $G_1 \cong G_2$ by transitivity). By construction then the graph $F$ constructed by the verifier will always be isomorphic to only one of the two input graphs, and as such the prover always has an unique choice of $j$, which must equal the $i$ that the verifier chose. As such the verifier always accept and the completeness bound is 1. 
+If $(G_1, G_2) \in \texttt{GNI}$ then there does not exists a graph $F$ s.t. $G_1 \cong F \cong G_2$, (since otherwise $G_1 \cong G_2$ by transitivity). By construction then the graph $F$ constructed by the verifier will always be isomorphic to only one of the two input graphs, and as such the prover always has an unique choice of $j$, which must equal the $i$ that the verifier chose. As such the verifier always accept and the completeness bound is 1. 
 \end{proof}
 
 Intuitively, for the soundness bound, we claim that a possibly malicious prover cannot convince the verifier that the graphs are isomorphic while indeed they are not. In particular, we claim that in case they are isomorphic, the best the prover can do is guess what the verifier chose, with probability $\frac{1}{2}$.
@@ -570,12 +570,56 @@ However, if we allow for a slightly stronger assumption, we can provide a succin
     The unambiguity requirement is a consequence of $f$ being injective, as no ambiguos view exists.
 \end{proof}
 
+Furthermore, the above scheme has some additional desirable features, namely the fact that it only requires to interact one way (from the prover to the verifier).
+As such we define:
+\begin{definition}
+    A \textbf{one-way-interaction bit commitment scheme} is a polynomial time algorithm $F$ such that.
+    \begin{itemize}
+        \item For $s$ uniformly drawn from $\{0, 1\}^n$, the ensembles $\{ F_s(0, 1^n) \}_{n \in \mathbb{N}}$ and $\{ F_s(1, 1^n) \}_{n \in \mathbb{N}}$ are computationally indistinguishable.
+        \item There does not exists $s$ such that $F_s(0, 1^n) = F_s(1, 1^n)$.
+        \item For such a scheme, the (canonical) reveal of $F_s(i, 1^n)$ is $(i, s)$.
+    \end{itemize}
+\end{definition}
+With this we can see that the one-way permuation construction yields a one-way-interaction bit commitment scheme where $F_s(i, 1^n) = (f(s), b(s) \oplus i)$.
+
 \subsection{ZKP for $\mathcal{NP}$-complete problems}
 Now that we have defined our machinery, we can make use of the structure of problems in the $\mathcal{NP}$ space.
 In particular, as detailed in the appendix, there is a class of problems in $\mathcal{NP}$ known as the $\mathcal{NP}$-complete problems.
 These are problems that are efficiently reducible to any other problem in $\mathcal{NP}$, i.e. such that the existance of an efficient solution for any of them will imply efficient solutions to each problem in $\mathcal{NP}$.
 It follows that by finding a ZKP for a single one of these problems, we can show that any problem in the class has a Zero Knowledge Proof. 
-In particular, 
+In particular, the language that we will tackle is that of Graph Three Coloring.
+\begin{definition}
+    Let $G = (V, E)$ be a simple\footnote{Where by simple we disallow loops and parallel edges} finite graph. A \textbf{3-coloring} for the graph is a function $\pi: V \to \{1, 2, 3\}$
+    such that $(u, v) \in E \implies \pi(u) \neq \pi(v)$
+\end{definition}
+\begin{definition}
+    \[ \texttt{3COL} = \{ G \; | \; G \text{ has a valid 3-coloring} \} \]
+\end{definition}
+The language \texttt{3COL} as defined is $\mathcal{NP}$-complete. 
+Let us now present a computational ZKP \cite{goldreichProofsThatYield1991} for this language. We use a one-way-interaction bit commitment scheme which denotes by 
+$C_s(i)$ the commitment of value $i \in \{1, 2, 3\}$ using random coins $s$ (That is $C_s(i) = F_s(i, 1^n)$). 
+\begin{example}
+    Let the common input be $G = (V, E)$, where $V = \{1, \dots, n \}$.
+    This graph is 3-colorable, with coloring $\pi$, which is unknown to the verifier\footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}. 
+    \begin{enumerate}
+        \item The prover randomly uniformly selects $\sigma \in S_3$. It sets $\phi \equiv \sigma \circ \pi$.
+                For each $i \in V$, it generates a random string $s_i \in \{0, 1\}^n$ and computes $c_i \equiv C_{s_i}(\phi(i))$.
+                The prover the sends $c_1, \dots, c_n$ to the verifier.
+        \item The verifier uniformly selects a edge $(u, v) \in E$, and sends it to the prover
+        \item The prover sends $(s_u, \phi(u))$ and $(s_v, \phi(v))$ to the verifier
+        \item On the messages $(\alpha, i)$, $(\beta, j)$, with $\alpha, \beta \in \{0, 1\}^n$ and $i, j \in  \{1, 2, 3\}$, the verifier checks that $c_u = C_\alpha(i)$ and that 
+                $c_v = C_\beta(j)$. If not it rejects. Finally, it accepts if $i \neq j$.
+    \end{enumerate}
+    A small discussion is, of course, in order. The fundamental idea is that the prover creates $n$ boxes, each with a inside a color.
+    It locks these boxes and sends them to the verifier. The verifier then chooses two of these boxes, such that they are connected by an edge in the original graph.
+    It asks the prover to open the boxes, and after having verified that they haven't been tampered with, the verifier concludes that the coloring is valid if the two boxes it chose have different colors.
+    Intuitively, the verifier only ever learns that two vertexes have different colours, that of course is a requirement for any coloring.
+    \begin{theorem}
+        The above protocol is a computational zero knowledge proof for \texttt{3COL}.
+    \end{theorem}
+    \begin{proof}
+    \end{proof}
+\end{example}
 
 \section{Applications}
 \subsection{Schnorr Signatures}
