@@ -619,6 +619,51 @@ $C_s(i)$ the commitment of value $i \in \{1, 2, 3\}$ using random coins $s$ (Tha
         The above protocol is a computational zero knowledge proof for \texttt{3COL}.
     \end{theorem}
     \begin{proof}
+        First of all, we will verify that the above protocol is an interactive proof system for \texttt{3COL}.
+        \begin{itemize}
+            \item Completeness: If $G$ is indeed 3-colorable with coloring $\pi$, then the above protocol always accepts.
+            \item Soundness: Let us suppose that $G$ is not 3-colorable. Then the $n$ commited values cannot 
+                            correspond to a 3-coloring, and as such there must be at least one edge $(v, v')$ such that
+                            $c_v, c_{v'}$ are commitment of the same value $k \in \{1, 2, 3\}$. So no matter what the 
+                            prover commits, the verifier will reject with probability at least $\frac{1}{|E|}$
+        \end{itemize}
+        And so the protocol is an interactive proof system for \texttt{3COL}, with completeness bound $1$ and 
+        with a weak soundness bound $1/|E|$. Repeating the protocol yields an interactive proof as required
+        \footnote{The situation is a bit subtle as we would want to ensure that repeating the protocl does not yield any knowledge.
+        Luckily, the sequential composition lemma that we assumed earlier and here ensures that this is the case}. 
+        For any verifier $V'$, we show a simulator $M_{V'}$ that shows that the prover has the zero knowledge property.
+        \begin{itemize}
+            \item Let the input be $G = (V, E)$, where $V = \{1, \dots, n \}$.
+            \item Again, let $q(|G|)$ be a polynomial bound on the running time of $V'$. Allocate a uniformly randomly selected string $r \in \{0, 1\}^{q(|G|)}$ random bits to be used.
+            \item Uniformly select $e_i \in \{1, 2, 3\}$, and $s_i \in \{ 0, 1\}^n$, for $i \in V$. Compute $d_i \equiv C_{s_i}(e_i)$, 
+            \item Simulate $V'$ with $G$ as input, and $r$ as the random bits. Also, put the sequence of commitments $d_1, \dots d_n$ in $V'$ incoming messages tapes.
+            \item After $V'$ has been simulated, we can assume that it will have some message $m$ on its out message tape. We can also
+                  assume that $m \in E$, as if it is not we can adapt $M_{V'}$ so that is selected some edge in $E$ to be used.
+            \item Let $(u, v) = m$. Then if $e_u \neq e_v$ the simulator halts with output \[(G, r, (d_1, \dots, d_n), (s_u, e_u, s_v, e_v))\].
+            \item Else we output $\bot$
+        \end{itemize}
+        First of all, you might be puzzled by the presence of the $\bot$ symbol in this simulator. 
+        However, we noted before that computational proof do not need such help, as repeating the simulation often 
+        will result it in it failing negligibly often, and as such the interaction will still be computationally indistinguishable.
+        So, adding the capability of outputting $\bot$ does not "add" any extra power to the definition, and as such we
+        can use it here to simplify our life (requiring as always that it is not output too often).
+        So, we first show that. We note that the $\bot$ symbol is only output when 
+        the two edges that were selected by the verifier $V'$ have been assigned the same color. 
+        Intuitively, we would like to use the fact that commitments are computationally indistinguishable
+        in order to show that the verifier cannot do much better than to randomly pick two edges (in which 
+        case the probability of getting two edges with the color is $\frac{1}{3}$). This is easy to show,
+        as any $V'$ that is able to distinguish commitments will directly yield an algorithm that violates 
+        the secrecy property of the scheme\footnote{The full argument is not too complex, but long and not
+        insightful, using a classical reduction proof as many of those seen in cryptography}. 
+        Now, for the next step we aim to show that the view of the interaction of the prover and the verifier is 
+        computationally indistinguishable to the output of the simulator. In particular, let $m_{V'}(G)$ be the 
+        random variable denoting the output of $M_{V'}$ on input $G$ conditioned on it being different from $\bot$.
+        Let also $A$ be any probabilistic time algorithm.
+        We let:
+        \[ \epsilon_A(G) \equiv \left| \Pr[A(m_{V'}(G)) = 1] - \Pr[A(\text{view}^{P}_{V'}(x))] \right| \] 
+        We would like to show that $\epsilon_A(G)$ is a negligible function in $n$, where $n$ is the number 
+        of vertices in $G$.
+        
     \end{proof}
 \end{example}
 
