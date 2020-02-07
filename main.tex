@@ -597,7 +597,7 @@ In particular, the language that we will tackle is that of Graph Three Coloring.
     \[ \texttt{3COL} = \{ G \; | \; G \text{ has a valid 3-coloring} \} \]
 \end{definition}
 The language \texttt{3COL} as defined is $\mathcal{NP}$-complete. 
-Let us now present a computational ZKP \cite{goldreichProofsThatYield1991} for this language. We use a one-way-interaction bit commitment scheme which denotes by 
+Let us now present a computational ZKP \cite{goldreichProofsThatYield1991} \cite{goldreichMethodologyCryptographicProtocol} for this language. We use a one-way-interaction bit commitment scheme which denotes by 
 $C_s(i)$ the commitment of value $i \in \{1, 2, 3\}$ using random coins $s$ (That is $C_s(i) = F_s(i, 1^n)$). 
 \begin{example}
     Let the common input be $G = (V, E)$, where $V = \{1, \dots, n \}$.
@@ -662,13 +662,72 @@ $C_s(i)$ the commitment of value $i \in \{1, 2, 3\}$ using random coins $s$ (Tha
         We let:
         \[ \epsilon_A(G) \equiv \left| \Pr[A(m_{V'}(G)) = 1] - \Pr[A(\text{view}^{P}_{V'}(x))] \right| \] 
         We would like to show that $\epsilon_A(G)$ is a negligible function in $n$, where $n$ is the number 
-        of vertices in $G$.
+        of vertices in $G$. First of all, recall that both the view of the interaction of the machine $P$ with $V$ 
+        and the output of the simulator are distributed over tuples of the form $(r, (\alpha_1, \dots , \alpha_n), (s_u, e_u, s_v, e_v))$ where (at least in the view 
+        of the actual interaction)
+        we have $r$ as the random tape of the verifier, $\alpha_i$ as the commitment of the vertex colors, $e_i$ the color of the $i$ vertex and $s_i$ the 
+        random string used for committing it. First of all note that $r$ is in both cases uniformly distributed over $\{0, 1\}^q(n)$ where again we 
+        use $q$ as a polynomial bound on the runtime of $V'$. It suffices now to show that if the two distributions are
+        not computationally indistinguishable, then we will reach a contradiction with the properties of the commitment scheme. 
+        While the actual proof is quite technical, the main idea is that any verifier for any verifier $V'$ we can
+        define $p_{u, v}(G), q_{u,v}(G)$ as the probability of the verifier choosing edge $(u,v)$ on step 2 of the protocol.
+        Since the verifier gets computationally indistinguishable ensembles, the two probability cannot differ by a non negligible factor 
+        (as then $V'$ could yield an algorithm that contradicts the secrecy requirement of the scheme). One can refer to \cite{goldreichFoundationsCryptographyVol2007}
+        for a complete proof.
         
     \end{proof}
 \end{example}
 
+A couple of things are worth noting. First of all, the proof above has a weak soundness bound, and as such 
+a one round protocol has only a moderate change of convicing the verifier. However, as always repeating the 
+algorithm $k * |E|$ times yields a proof with error probability bounded by $e^{-k}$, and the sequential composition lemma will
+also guarantee that this is zero knowledge. Secondly, the main significance of this proof relies on the fact that 
+\texttt{3COL} is a $\mathcal{NP}$-complete language, and as such it is polynomial time reducible to any other problem in $\mathcal{NP}$.
+This in effect yields that, if one way functions exists, then every language in $\mathcal{NP}$ has a computational zero knowledge proof.
+
 \section{Applications}
+In the above sections, we discussed some of the mathematical definition of zero knowledge proofs, their properties and some basic
+proofs for languages such as \texttt{GI} and \texttt{3COL}. Of course, all would be for naught if Zero Knowledge Proofs
+did not have practical applications, and were not a capable tool for solving various problems. 
+Taking inspiration from \cite{moraisSurveyZeroKnowledge2019}, we hope to show a variety of proofs that 
+are applicable with real life problems. 
 \subsection{Schnorr Signatures}
+\subsection{Secure Remote Password}
+The Secure Remote Password protocol \cite{wuSecureRemotePassword1997}, or SRP for short, is the most common 
+example of zero knowledge proofs used for authentication. Common schemes usually use a plaintext approach,
+in which the user communicates an username and a password to a server, which is considered trusted and that 
+which then has burden of securely maintaining said information. On the other end, SRP only requires that 
+the user itself maintains a secret key, is resistant to dictionary attacks, and crucially requires no trusted party.
+In particular, one of its most attractive features is that it can work as a drop in replacement that does require users
+to change their workflows.
+SRP is based on Diffie Hellman, and as such it has some of the same cryptography requirement, namely the intractability
+of the discrete logarithm and the existance of one way functions.
+The protocol consists of two steps: the registration step and the authentication step. 
+\begin{itemize}
+    \item Preliminaries
+    \item Both parties need to agree on a large safe prime $N$, and consequently on a group $\mathbb{G} \cong \mathbb{Z_N}$. 
+          Also, they agree to a generator of the group $g$, and to a parameter $k \in \mathbb{G}$. 
+    \item Both parties select a cryptographically secure hash function $H$.
+    \item Finally, the parties agree to an identifier $I$ for the user $U$.
+\end{itemize}
+Next, the registration step:
+\begin{itemize}
+    \item The user selects a password $p$ and a random (usually small) salt $s$. 
+    \item It computes $x \equiv H(s, p)$. Also, it computes $v \equiv g^x$.
+    \item Finally, the user sends to the host the pair $(s, v)$
+    \item The host stores the triple $(I, s, v)$
+\end{itemize}
+Once this is done, the user can authenticate using the following protocol:
+\begin{itemize}
+    \item The user selects a random $a$, and computes $A \equiv g^a$, it then sends $(I, A)$ to the host.
+    \item The host lookups $(s,v)$ using $I$, selects a random $b$ and computes $B \equiv kv + g^b$. It then sends $(s, B)$ to the user.
+    \item Both parties set $u \equiv H(A, B)$
+    \item The user computes $x \equiv H(s, p)$, and from it the session key $S \equiv (B - kg^x)^{a + ux}$. Finally it computes the key
+          $K \equiv H(S)$. 
+    \item On its end the host computes the session key $S \equiv (Av^u)^b$. The final key is then $K \equiv H(S)$.
+\end{itemize}
+Finally, proof that the authentication succeeded is shown by the two parties comparing the final key.
+\subsection{Zero Knowledge Range Proofs}
 
 \appendix
 \section{One Way Functions}
