@@ -727,7 +727,46 @@ Once this is done, the user can authenticate using the following protocol:
     \item On its end the host computes the session key $S \equiv (Av^u)^b$. The final key is then $K \equiv H(S)$.
 \end{itemize}
 Finally, proof that the authentication succeeded is shown by the two parties comparing the final key.
+Technically speaking, SRP is a Zero Knowledge Password Proof, which is a more narrow class of Zero Knowledge proof,
+however you can see how the ideas that were developed in the previous sections are still easily transferrable.
+In particular, the prover is the user, that shows that it has knowledge of a value $x$ such that the equation 
+below holds for any random $a, b, u$, and for $v = g^x$:
+\[ (kv + g^b - kg^x)^{a + ux} =_? (g^a v^u)^b \]
+Of course, the security lies in the fact that assuming the hardness of the discrete logarithm, computing 
+$x$ from $g^x$ should be unfeasible.
 \subsection{Zero Knowledge Range Proofs}
+Let us consider an interesting class of problems. Imagine that a user has some sort of information associated
+with it say $x$. The other party in play would like to verify that the value $x \in_? [a, b]$, for some 
+interval $[a, b]$. How would the user be able to verify this, without leaking the value of $x$ to the 
+other party? Solving this kind of problem has many practical application. For example, if $x$ is to 
+understood as some sort of balance, a transaction can be executed without the receiving party knowing the 
+actual balance of the sender\footnote{In particular, this has many implications for crypto currency systems,
+as it allows system such as BitCoin to be truly anonymous and confidential. This is not the case currently
+as in every transaction the addresses of the parties in play are known, and the amount transferred as well}.
+An other idea is that, if $x$ is the date of birth of the user, he/she could 
+prove to some sort of service that he/she is over 18, without revealing any private information. The kind 
+of proofs that are used to solve this problem are referred to as Zero Knowledge Range Proofs. In particular,
+the proofs that we are most interested in this case are those referred to as Non Interactive. In this kind 
+of proof, the challenge and answer method that we presented before is kind of lost, as Peggy tends to 
+compile a "transcript" of a proof, that Victor can check on its own, of course while not leaking any information 
+as possible. These kind of proofs are particularly helpful in a network setting, in which communication can 
+be expensive. Let us look at a simple example. First of all we need to introduce the idea of Petersen Commitment \cite{pedersenNonInteractiveInformationTheoreticSecure1992}.
+\begin{definition}
+    Let $\mathbb{G}$ be a group in which the discrete log is hard, $g, h$ be two generators. 
+    For a secret $m$, and random bits $r$ we have the Pedersen Commitment of $m$ be:
+    \[ C_r(m) = g^m h^r \]
+\end{definition}
+Pedersen Commitments have the desirable property that they are homomorphic i.e. $C_{r_1 + r_2}(m_1 + m_2) = C_{r_1}(m_1) C_{r_2}(m_2)$.
+Now, suppose we want to show in one interaction the fact that $x \in [0, 2^N -1]$. A way to do that is to show
+that we can encode $x =\sum^N_{i=1} b_i 2^i$ where each $b_i \in [0, 1]$. A non interactive proof \cite{boudotEfficientProofsThat2000} for the fact is as follows:
+\begin{itemize}
+    \item Select a random value $r$, and random $r_i$ such that $\sum_{i = 1}^N r_i = r$.
+    \item Compute the commitment $c_i = C_{r_i}(b_i)$, and let $c = C_r(x)$.
+    \item Send to the verifier the commitments $c_i$ together with a proof $\pi$ that you know the discrete logarithm of $c_i$ base $h$ using something like \cite{schnorrEfficientSignatureGeneration1991}.
+    \item Finally, the verifier checks the proof $\pi$ and that $c = \prod_{i=1}^N c_i$
+\end{itemize}
+
+
 
 \appendix
 \section{One Way Functions}
