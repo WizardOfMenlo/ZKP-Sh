@@ -766,6 +766,10 @@ that we can encode $x =\sum^N_{i=1} b_i 2^i$ where each $b_i \in [0, 1]$. A non 
     \item Finally, the verifier checks the proof $\pi$ and that $c = \prod_{i=1}^N c_i$
 \end{itemize}
 
+While this particular proof is extremely simple, unfortunately it is not particularly efficient, in fact according to \cite{boudotEfficientProofsThat2000}
+proving that a particular $x$ belongs in the interval $[0, 511] = [0, 2^9 -1]$ while using an underlying group of size $2^10$ requires a proof 
+transcript of size $\approx 196.9$ kB. However, many examples in the literature improves this bound, and this paper gives 
+an excellent overview of what is the state of the art \cite{moraisSurveyZeroKnowledge2019}.
 
 
 \appendix
