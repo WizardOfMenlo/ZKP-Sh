@@ -801,7 +801,10 @@ Surprisingly, at the moment we do not know of functions that are definitely one 
     f_{ssum}(x_1, \dots, x_N, I) &= (x_1, \dots, x_N, \sum_{i \in I} x_i)
 \end{align*}
 Where $f_{mult}$ is simply multiplying two integers together, and, assuming intractability of integer factorization, it is weakly one way.
-Instead, $f_{ssum}$ is very closely linked to the $\mathcal{NP}$-complete problem known as subset sum. 
+Instead, $f_{ssum}$ is very closely linked to the $\mathcal{NP}$-complete problem known as subset sum\footnote{In fact, we
+report here $f_{ssum}$ only as for historical relevance, as it originally it was tought to be a good candidate, while nowadays 
+it is known that the \texttt{SSUM} problem is actually efficiently solved in many commonly arising cases \cite{flaxmanSolvingMediumDensitySubset2005}, and a such
+not a good candidate}. 
 While it is true that if $\mathcal{P} = \mathcal{NP}$ then $f_{ssum}$ is not one way, the converse does not hold. To see this, note that subset sum could have \textit{worst case} exponentially running time, yet be polynomially solvable in the average case, and as such making $f_{ssum}$ not one way.
 In fact, $\mathcal{P} \neq \mathcal{NP}$ is necessary but not sufficient condition for one way functions to exist.
 It turns out \cite{goldreichFoundationsCryptographyVol2007} that the strongly one way functions exist if and only if weakly one way functions do. This justifies our assuming only the existance of vague one way functions, without specifying the type.
@@ -834,7 +837,8 @@ Also, if $L \in \mathcal{P}$ we say that $L$ is \textbf{recognizable in polynomi
 We can now prove the equivalence of our two definition of $\mathcal{P}$, let us call the probabilistic definition as $\mathcal{P}_{prob}$ and the classical as simply $\mathcal{P}$.
 
 \begin{proof}
-Let $L \in \mathcal{P}$, then there exist a Turing Machine $M$ such that the machine outputs one for each $x \in L$ and always halts in polynomially many steps. Construct a probabilistic TM $M_1$ as follows: copy everything from $M$, except the transition function, replacing each transition of the form $\phi(s, i) = x$ with $\phi_1(s, i) = (x, x)$. Recall from the definition that on each step the machine $M_1$ will randomly choose between left and right transition. Since for each transition left and right are always equal, the choice is meaningless and for each transition it will take the same action as $M$ (taking of course the same exact number of steps). Since $M$ recognized $L$, then $M_1$ will also, and as such $L \in \mathcal{P}_{prob}$, which implies $\mathcal{P} \subseteq \mathcal{P}_{prob}$. \\
+Let $L \in \mathcal{P}$, then there exist a Turing Machine $M$ such that the machine outputs one for each $x \in L$ and always halts in polynomially many steps. 
+Construct a probabilistic TM $M_1$ as follows: copy everything from $M$, except the transition function, replacing each transition of the form $\phi(s, i) = x$ with $\phi_1(s, i) = (x, x)$. Recall from the definition that on each step the machine $M_1$ will randomly choose between left and right transition. Since for each transition left and right are always equal, the choice is meaningless and for each transition it will take the same action as $M$ (taking of course the same exact number of steps). Since $M$ recognized $L$, then $M_1$ will also, and as such $L \in \mathcal{P}_{prob}$, which implies $\mathcal{P} \subseteq \mathcal{P}_{prob}$. \\
 
 Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \Pr[M(x) = 1] = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in {0,1}^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \mathcal{P}$, which in turn implies $\mathcal{P}_{prob} \subseteq \mathcal{P}$ \\
 
