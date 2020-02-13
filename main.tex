@@ -555,10 +555,19 @@ Formally, we define a bit commitment scheme as follows:
 \end{definition}
 As you can see, the unambiguity requirement is much more involved then the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
 In particular, note that once $S$ has commited a value, in order to verify it it can send its private input and the random coin it used to $R$, which can then
-run $S$'s algorithm to verify the certificate in polynomial time. \\
+run $S$'s algorithm to verify the certificate in polynomial time. \par
 As far as we know, the existance of bit commitment schemes requires some assumptions, namely the existance of one way functions, functions that are easy to compute but hard to invert.
-For a more trough description, look no further than the appendix. While the proof is not hard, it requires some discussion of pseudorandom generators, which are not particularly insightful.
-However, if we allow for a slightly stronger assumption, we can provide a succint proof of the existance of bit commitment schemes.
+For a more trough description, look no further than the appendix.
+While a proof that uses solely those kind of function exists, it requires some discussion of pseudorandom generators, which are not particularly insightful nor too related.
+Instead, we can use the stronger assumption of the existance of one way permutations (i.e. one way functions that are also bijections), to result in a simpler proof.\par
+Let us first discuss the intuition that makes the following construction useful. Let us assume that we have access to a one way permutation $f$.
+We want to commit to a bit $b$. What we can do is select a random string. We can make use of a property of one way functions, that is the 
+property that they have hard cores. This is some property of the input of a one way function that cannot be guessed from the output. 
+Let us denote $h(\cdot)$ as one of those hard core. Then let us select some random string $s$ that we will call the certificate. We will be sending to 
+the other party the pair $(f(s), h(s) \oplus b)$. This has a double effect. First of all, since the function is one way, we won't be able to 
+efficiently find a $s'$ such that $f(s) = f(s')$, and so effectively we won't be able to find another certificate with which to trick the other party. 
+On the other hand, since $h$ is an hard core, the other party will not be able to guess it effectively from $f(s)$, and such $h(s) \oplus b$ and consequently $b$ cannot 
+be recovered by it. Of course, revealing $s, b$ will make the other party efficiently be able to verify that we did not cheat.
 \begin{theorem}
     Let $f: \{0, 1\}^* \to \{0, 1\}^*$ be a one-way permutation. Let $b: \{0, 1\}^* \to \{0, 1\}$ be an hard-core of $f$. Then the following is a bit commitment scheme.
     \begin{itemize}
