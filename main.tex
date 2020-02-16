@@ -69,7 +69,20 @@ As before, we will allow a slight relaxation and use $\text{poly}(\cdot)$ to spe
 Let $\mu : \mathbb{N} \to \mathbb{R}$. We say $\mu$ is \textbf{negligible} if for every positive polynomial $p(\cdot)$ there exist a $N \in \mathbb{N}$ s.t for every $n > N$ we have:
 \[\mu(n) < \frac{1}{p(n)}\]
 \end{definition}
-As an example, functions such $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of poly. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. \\
+As an example, functions such $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of poly. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. \par
+
+There a couple of notions of probability that we will most likely need.
+
+\begin{definition}
+    Suppose we have a series of $n$ independent event $X_i$, each one of them 
+    occurring with probability $\theta$. Then the probability of the total number of success $X$ being exactly equal to $k$ follows a binomial distribution and:
+    \[ \Pr[X = k] = \binom{n}{k} \theta^k (1 - \theta)^{n - k} \]
+\end{definition}
+In particular, we have that in those $n$ trials we expect $n\theta$ events to occurr. This is useful, expecially since 
+    we have that the probability of an event always occurring is $\Pr[X = n] = \theta^n$. This will be useful especially 
+    to  estimate the probability of some algorithm succeeding multiple times when it is not supposed to. 
+    Note in particular that if a algorithm spuriosly succeeds with probability $\theta \in [0, 1)$ then $\Pr[X = n]$ is a 
+    negligible function of $n$. \par
 
 Finally, a lot of our examples will deal with graphs and isomorphisms on graphs.
 
@@ -590,7 +603,7 @@ As such we define:
         \item For such a scheme, the (canonical) reveal of $F_s(i, 1^n)$ is $(i, s)$.
     \end{itemize}
 \end{definition}
-With this we can see that the one-way permuation construction yields a one-way-interaction bit commitment scheme where $F_s(i, 1^n) = (f(s), b(s) \oplus i)$.
+With this we can see that the one-way permutation construction yields a one-way-interaction bit commitment scheme where $F_s(i, 1^n) = (f(s), b(s) \oplus i)$.
 
 \subsection{ZKP for $\mathcal{NP}$-complete problems}
 Now that we have defined our machinery, we can make use of the structure of problems in the $\mathcal{NP}$ space.
@@ -607,7 +620,9 @@ In particular, the language that we will tackle is that of Graph Three Coloring.
 \end{definition}
 The language \texttt{3COL} as defined is $\mathcal{NP}$-complete. 
 Let us now present a computational ZKP \cite{goldreichProofsThatYield1991} \cite{goldreichMethodologyCryptographicProtocol} for this language. We use a one-way-interaction bit commitment scheme which denotes by 
-$C_s(i)$ the commitment of value $i \in \{1, 2, 3\}$ using random coins $s$ (That is $C_s(i) = F_s(i, 1^n)$). 
+$C_s(i)$ the commitment of value $i \in \{1, 2, 3\}$ using random coins $s$ (That is $C_s(i) = F_s(i, 1^n)$). Note how the commitment schemes 
+presented before only allow us to commit a single bit, while this one is able to commit a ternary bit of sorts. Of course, the transformation
+from one scheme to the other is trivial and only requires using the bit commitment scheme twice for every value (e.g. committing 00 for 1, 01 for 2, 10 for 3).
 \begin{example}
     Let the common input be $G = (V, E)$, where $V = \{1, \dots, n \}$.
     This graph is 3-colorable, with coloring $\pi$, which is unknown to the verifier\footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}. 
@@ -618,12 +633,15 @@ $C_s(i)$ the commitment of value $i \in \{1, 2, 3\}$ using random coins $s$ (Tha
         \item The verifier uniformly selects a edge $(u, v) \in E$, and sends it to the prover
         \item The prover sends $(s_u, \phi(u))$ and $(s_v, \phi(v))$ to the verifier
         \item On the messages $(\alpha, i)$, $(\beta, j)$, with $\alpha, \beta \in \{0, 1\}^n$ and $i, j \in  \{1, 2, 3\}$, the verifier checks that $c_u = C_\alpha(i)$ and that 
-                $c_v = C_\beta(j)$. If not it rejects. Finally, it accepts if $i \neq j$.
+                $c_v = C_\beta(j)$. If not it rejects. Finally, it accepts if $i \neq j$, and if as such the edges are differently coloured.
     \end{enumerate}
     A small discussion is, of course, in order. The fundamental idea is that the prover creates $n$ boxes, each with a inside a color.
     It locks these boxes and sends them to the verifier. The verifier then chooses two of these boxes, such that they are connected by an edge in the original graph.
     It asks the prover to open the boxes, and after having verified that they haven't been tampered with, the verifier concludes that the coloring is valid if the two boxes it chose have different colors.
     Intuitively, the verifier only ever learns that two vertexes have different colours, that of course is a requirement for any coloring.
+    In particular, note the role of the permutation $\sigma$. The idea is that, on every run, the prover will select a different sigma, and as such
+    repeating the prove will possibly yield different colorings for two vertexes. This way, a cheating verifier cannot alternatively ask for the coloring 
+    of each vertex in the graph, and so it cannot piece back the original coloring.
     \begin{theorem}
         The above protocol is a computational zero knowledge proof for \texttt{3COL}.
     \end{theorem}
@@ -634,7 +652,8 @@ $C_s(i)$ the commitment of value $i \in \{1, 2, 3\}$ using random coins $s$ (Tha
             \item Soundness: Let us suppose that $G$ is not 3-colorable. Then the $n$ commited values cannot 
                             correspond to a 3-coloring, and as such there must be at least one edge $(v, v')$ such that
                             $c_v, c_{v'}$ are commitment of the same value $k \in \{1, 2, 3\}$. So no matter what the 
-                            prover commits, the verifier will reject with probability at least $\frac{1}{|E|}$
+                            prover commits, the verifier will reject with probability at least $\frac{1}{|E|}$. Since we can bound 
+                            the number of edges with $|E| \leq \binom{n}{2}$, we have a polynomial bound of $\frac{2}{n(n+1)}$.
         \end{itemize}
         And so the protocol is an interactive proof system for \texttt{3COL}, with completeness bound $1$ and 
         with a weak soundness bound $1/|E|$. Repeating the protocol yields an interactive proof as required
@@ -691,7 +710,7 @@ A couple of things are worth noting. First of all, the proof above has a weak so
 a one round protocol has only a moderate change of convicing the verifier. However, as always repeating the 
 algorithm $k * |E|$ times yields a proof with error probability bounded by $e^{-k}$, and the sequential composition lemma will
 also guarantee that this is zero knowledge. Secondly, the main significance of this proof relies on the fact that 
-\texttt{3COL} is a $\mathcal{NP}$-complete language, and as such it is polynomial time reducible to any other problem in $\mathcal{NP}$.
+\texttt{3COL} is a $\mathcal{NP}$-complete language, and as such it is polynomial time reducible from any other problem in $\mathcal{NP}$.
 This in effect yields that, if one way functions exists, then every language in $\mathcal{NP}$ has a computational zero knowledge proof.
 
 \section{Applications}
@@ -807,12 +826,15 @@ Conversely, an algorithm that tries to invert a weakly one way function will fai
 Surprisingly, at the moment we do not know of functions that are definitely one way, even tough we have some candidates such as:
 \begin{align*}
     f_{mult}(x,y) &=  x \cdot y \\
+    f_{discrete}(x) &= g^x \\
     f_{ssum}(x_1, \dots, x_N, I) &= (x_1, \dots, x_N, \sum_{i \in I} x_i)
 \end{align*}
 Where $f_{mult}$ is simply multiplying two integers together, and, assuming intractability of integer factorization, it is weakly one way.
+The second problem, $f_{discrete}$ is the discrete logarithm problem, where $g^x$ is taken to be in some group in which the discrete log is assumed 
+to be hard, and $g$ is a generator for the group (more in the discrete log appendix).
 Instead, $f_{ssum}$ is very closely linked to the $\mathcal{NP}$-complete problem known as subset sum\footnote{In fact, we
 report here $f_{ssum}$ only as for historical relevance, as it originally it was tought to be a good candidate, while nowadays 
-it is known that the \texttt{SSUM} problem is actually efficiently solved in many commonly arising cases \cite{flaxmanSolvingMediumDensitySubset2005}, and a such
+it is known that the \texttt{SSUM} problem is actually efficiently solved in many commonly arising cases \cite{lagariasSolvingLowdensitySubset1985}, and a such
 not a good candidate}. 
 While it is true that if $\mathcal{P} = \mathcal{NP}$ then $f_{ssum}$ is not one way, the converse does not hold. To see this, note that subset sum could have \textit{worst case} exponentially running time, yet be polynomially solvable in the average case, and as such making $f_{ssum}$ not one way.
 In fact, $\mathcal{P} \neq \mathcal{NP}$ is necessary but not sufficient condition for one way functions to exist.
