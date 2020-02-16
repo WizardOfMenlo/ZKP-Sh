@@ -35,7 +35,7 @@ We start by defining some crucial sets of string \footnote{In general, the use o
 $\{0, 1\}^n = \{ a_1 a_2 \dots a_n \mid a_i \in \{0, 1\}\}$
 \end{definition}
 \begin{definition}
-$\{0, 1\}^* = \{ a_1 a_2 \dots a_n \mid a_i \in \{0, 1\} \text{ \normalfont{ and }} n \in \mathbb{N} \}$ \\
+$\{0, 1\}^* = \{ a_1 a_2 \dots a_n \mid a_i \in \{0, 1\} \text{ \normalfont{ and }} n \in \mathbb{N} \}$
 \end{definition}
 
 It is important to stress that $\{0, 1\}^*$ is the set of all \textit{finite} strings, and also that the empty string, denoted $\epsilon \in \{0, 1\}^*$.
@@ -46,7 +46,7 @@ A \textbf{language} $L$ is a subset of $\{0, 1\}^*$, i.e. $L \subseteq \{0, 1\}^
 
 Examples of languages include 
 \[ \{ x \in \{0, 1\}^* \mid |x| = 2 \}, \{ \langle(x, y, z)\rangle \mid x^2 + y^2 = z^2 \}, \dots \]
-Note in particular the use of $\langle \cdot \rangle$ to denote the binary representation of the inner element. In general, as long as the element can be encoded in binary in polynomial space, we will not concern ourselves too much with said representation, and sometime even omit the brackets. In particular note that, unless specified otherwise, integers are encoded in binary and without brackets.  \\
+Note in particular the use of $\langle \cdot \rangle$ to denote the binary representation of the inner element. In general, as long as the element can be encoded in binary in polynomial space, we will not concern ourselves too much with said representation, and sometime even omit the brackets. In particular note that, unless specified otherwise, integers are encoded in binary and without brackets.  \par
 
 Now, a couple of utilities for talking about the asymptotic complexity of various functions.
 
@@ -63,7 +63,7 @@ We also allow for two slight relaxation of notation, writing for example $O(f)$ 
 \[\text{\normalfont{poly}} = \bigcup_{i = 0}^\infty O(n^i)\]
 as the set of all functions bounded above by a polynomial. 
 \end{definition}
-As before, we will allow a slight relaxation and use $\text{poly}(\cdot)$ to specify some fixed but unspecified polynomial. \\
+As before, we will allow a slight relaxation and use $\text{poly}(\cdot)$ to specify some fixed but unspecified polynomial.
 
 \begin{definition}
 Let $\mu : \mathbb{N} \to \mathbb{R}$. We say $\mu$ is \textbf{negligible} if for every positive polynomial $p(\cdot)$ there exist a $N \in \mathbb{N}$ s.t for every $n > N$ we have:
@@ -125,7 +125,7 @@ The complexity class $\mathcal{P}$ is the one we most closely associate with "ef
 \[ \{(a_1, ... a_n) \, | \, n \in \mathbb{N} \text{ and } a_i \leq a_{i+1} \}\]
 \[ \{ p \,|\, p \in \mathbb{N} \text{ and } p \text{ prime } \}\]
 
-In general, a language being in $\mathcal{P}$ implies there exist a machine such that all the computation paths recognize the input if the input is indeed in the language. \\
+In general, a language being in $\mathcal{P}$ implies there exist a machine such that all the computation paths recognize the input if the input is indeed in the language. \par
 
 Compare this to the definition of $\mathcal{NP}$.
 
@@ -178,7 +178,7 @@ Note that that brings the final complexity to $O(l(nm + kn + mk + n))$ so for so
 
 \subsection{Adversarial Settings}
 In cryptography, in order to achieve sound schemes, it is common to work in what is commonly referred to as an adversarial setting.
-Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently well endowed attacker might take. \\
+Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently well endowed attacker might take. \par
 
 The capability of the attacker will vary depending on the level of security that the protocol needs to be hold to. For example, the computational power that the adversary has will affect the class of problems that it can solve.
 As an instance, if a construction relies on (hard) instances of an $\mathcal{NP}$-complete problem (and if $\mathcal{P} \neq \mathcal{NP}$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \mathcal{NP}$ there exist a deterministically recognizable $R_L \subseteq \{0, 1\}^* \times \{0, 1\}^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \text{poly}(|x|)$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
@@ -282,7 +282,7 @@ A pair of ITMs $(P, V)$ are an \textbf{interactive proof system} for a language 
 \end{definition}
 There are some things to note in the above definition. First of all, note that only the verifier is required to be computationally bound, while the prover has no such limit. This is required in the general case, as we will see in the next example, but often in the practical application we can make the prover polynomially bound by resorting to a similar model which makes use of auxiliary input. Secondly, as in many other examples, the bounds of $\frac{1}{3}$, $\frac{2}{3}$ can be replaced\footnote{By essentially repeating the procedure and taking majority votes} by $\frac{1}{2} \pm \epsilon$ for $\frac{1}{2} > \epsilon > 0$. From the above definition, we can prove that any language in $\mathcal{NP}$ has an interactive proof system. Letting $\mathcal{IP}$ be the set of all languages with an interactive proof system:
 \begin{theorem}
-$\mathcal{NP} \subseteq \mathcal{IP}$ \\
+$\mathcal{NP} \subseteq \mathcal{IP}$ 
 \end{theorem}
 \begin{proof}
 If $L$ is in $\mathcal{NP}$ then\footnote{Here we are using the certificate definition of $\mathcal{NP}$, see the appendix for details} there exists a polynomially recognizable relation $R_L$ such that $x \in L \iff \exists y : (x, y) \in R_L$. Also, such a $y$ satisfies $|y| < p(|x|)$ for some polynomial $p$. \\
@@ -869,9 +869,9 @@ We can now prove the equivalence of our two definition of $\mathcal{P}$, let us 
 
 \begin{proof}
 Let $L \in \mathcal{P}$, then there exist a Turing Machine $M$ such that the machine outputs one for each $x \in L$ and always halts in polynomially many steps. 
-Construct a probabilistic TM $M_1$ as follows: copy everything from $M$, except the transition function, replacing each transition of the form $\phi(s, i) = x$ with $\phi_1(s, i) = (x, x)$. Recall from the definition that on each step the machine $M_1$ will randomly choose between left and right transition. Since for each transition left and right are always equal, the choice is meaningless and for each transition it will take the same action as $M$ (taking of course the same exact number of steps). Since $M$ recognized $L$, then $M_1$ will also, and as such $L \in \mathcal{P}_{prob}$, which implies $\mathcal{P} \subseteq \mathcal{P}_{prob}$. \\
+Construct a probabilistic TM $M_1$ as follows: copy everything from $M$, except the transition function, replacing each transition of the form $\phi(s, i) = x$ with $\phi_1(s, i) = (x, x)$. Recall from the definition that on each step the machine $M_1$ will randomly choose between left and right transition. Since for each transition left and right are always equal, the choice is meaningless and for each transition it will take the same action as $M$ (taking of course the same exact number of steps). Since $M$ recognized $L$, then $M_1$ will also, and as such $L \in \mathcal{P}_{prob}$, which implies $\mathcal{P} \subseteq \mathcal{P}_{prob}$.  \par
 
-Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \Pr[M(x) = 1] = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in {0,1}^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \mathcal{P}$, which in turn implies $\mathcal{P}_{prob} \subseteq \mathcal{P}$ \\
+Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \Pr[M(x) = 1] = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in {0,1}^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \mathcal{P}$, which in turn implies $\mathcal{P}_{prob} \subseteq \mathcal{P}$  \par
 
 So, since $\mathcal{P} \subseteq \mathcal{P}_{prob}$ and $\mathcal{P}_{prob} \subseteq \mathcal{P}$, it must be that $\mathcal{P} = \mathcal{P}_{prob}$
 \end{proof}
@@ -899,14 +899,14 @@ Let $L \in \mathcal{NP}$, then there exist a relation $R_L$ s.t. that $R_L$ is r
 
 Since the certificate exists, and it is polynomial in the size of $x$, there will always be at least one extremely lucky machine that will guess it, and as such $\Pr[M(x) = 1] > 0$ for $x \in L$. So $L \in \mathcal{NP}_{prob}$, which implies $\mathcal{NP} \subseteq \mathcal{NP}_{prob}$. 
 
-Conversely, let $L \in \mathcal{NP}_{prob}$. Then there exist a probabilistic time machine $M$ s.t. $x \in L \iff \Pr[M(x) = y] > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \{ (x, r) | x \in L \text { and } M_r(x) = 1 \}$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existance is met by our above reasoning. Finally, since $r$ is bound by the bound on the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \mathcal{NP}$, which in turn implies $\mathcal{NP}_{prob} \subseteq \mathcal{NP}$. \\
+Conversely, let $L \in \mathcal{NP}_{prob}$. Then there exist a probabilistic time machine $M$ s.t. $x \in L \iff \Pr[M(x) = y] > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \{ (x, r) | x \in L \text { and } M_r(x) = 1 \}$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existance is met by our above reasoning. Finally, since $r$ is bound by the bound on the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \mathcal{NP}$, which in turn implies $\mathcal{NP}_{prob} \subseteq \mathcal{NP}$. \par
 
 So, since $\mathcal{NP} \subseteq \mathcal{NP}_{prob}$ and $\mathcal{NP}_{prob} \subseteq \mathcal{NP}$, it must be that $\mathcal{NP} = \mathcal{NP}_{prob}$
 
 
 \end{proof}
 
-It is also to be noted that $\mathcal{NP}$ has also a different but equivalent definition as the set of all languages recognized in non deterministic polynomial time. \\
+It is also to be noted that $\mathcal{NP}$ has also a different but equivalent definition as the set of all languages recognized in non deterministic polynomial time. \par
 
 Next, we can move to $\mathcal{NP}$ completeness. 
 \begin{definition}
