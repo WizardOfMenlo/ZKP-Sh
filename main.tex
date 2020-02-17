@@ -786,16 +786,20 @@ be expensive. Let us look at a simple example. First of all we need to introduce
 \end{definition}
 Pedersen Commitments have the desirable property that they are homomorphic i.e. $C_{r_1 + r_2}(m_1 + m_2) = C_{r_1}(m_1) C_{r_2}(m_2)$.
 Now, suppose we want to show in one interaction the fact that $x \in [0, 2^N -1]$. A way to do that is to show
-that we can encode $x =\sum^N_{i=1} b_i 2^i$ where each $b_i \in [0, 1]$. A non interactive proof \cite{boudotEfficientProofsThat2000} for the fact is as follows:
+that we can encode $x =\sum^N_{i=1} b_i 2^i$ where each $b_i \in [0, 1]$. A non interactive proof \cite{maoGuaranteedCorrectSharing1998b} for the fact is as follows:
 \begin{itemize}
-    \item Select a random value $r$, and random $r_i$ such that $\sum_{i = 1}^N r_i = r$.
+    \item Select a random value $r$, and let $r_i$ be such that the bit decomposition of $r = \sum_{i = 1}^N r_i 2^i$.
     \item Compute the commitment $c_i = C_{r_i}(b_i)$, and let $c = C_r(x)$.
-    \item Send to the verifier the commitments $c_i$ together with a proof $\pi$ that you know the discrete logarithm of $c_i$ base $h$ using something like \cite{schnorrEfficientSignatureGeneration1991}.
-    \item Finally, the verifier checks the proof $\pi$ and that $c = \prod_{i=1}^N c_i$
+    \item Send to the verifier the commitments $c_i$ together with a proof $\pi$ that each $c_i$ is a commitment of a value which is either 0 or 1. This can 
+    be done by combining discrete log knowledge proofs such as \cite{schnorrEfficientSignatureGeneration1991} and together with a proof of partial knowledge such as those
+    described in \cite{cramerProofsPartialKnowledge1994}. Essentially, by the property of the commitment, the value 
+    of $c_i$ is either $h^{r_i}$ or $g h^{r_i}$. We prove that we either know the discrete log of $c_i$ base $h$ or that we know 
+    the discrete log of $g^{-1} c_i$.
+    \item Finally, the verifier checks the proof $\pi$ and that $c = \prod_{i=1}^N c_i^{2^i}$
 \end{itemize}
 
 While this particular proof is extremely simple, unfortunately it is not particularly efficient, in fact according to \cite{boudotEfficientProofsThat2000}
-proving that a particular $x$ belongs in the interval $[0, 511] = [0, 2^9 -1]$ while using an underlying group of size $2^10$ requires a proof 
+proving that a particular $x$ belongs in the interval $[0, 511] = [0, 2^9 -1]$ while using an underlying group of size $2^{10}$ requires a proof 
 transcript of size $\approx 196.9$ kB. However, many examples in the literature improves this bound, and this paper gives 
 an excellent overview of what is the state of the art \cite{moraisSurveyZeroKnowledge2019}.
 
@@ -854,6 +858,58 @@ Using this we can define the following:
 \end{definition}
 In other words, any algorithm that aims to compute $b(x)$ by only having access to $f(x)$ will succeed with probability
 only negligibly better than guessing. As you have seen in the bit commitment section, hard cores are really useful, and it turns out \cite{goldreichFoundationsCryptographyVol2007} the the existance of one way functions implies the existance of such hard cores. 
+
+\section{Discrete Logarithm}
+The discrete logarithm problem is a generalization of the real valued logarithm to arbitrary groups. Recall that:
+\begin{definition}
+    Let $a, b > 0$. We define $\log_a b$ to be the unique real number  such that:
+    \[ \log_a b = x \iff a^x = b \]
+\end{definition}
+The discrete logarithm generalizes this to arbitrary groups. In particular:
+\begin{definition}
+    Let $\mathbb{G}$ be an arbitrary group. If it exists, the discrete logarithm or index of $a$ in base $g$ is denoted
+    by $\log_g a$, it is an integer and has the property that: 
+    \[ \log_g a = x \iff g^x = a \]
+\end{definition}
+A couple of things to note. First of all, it is important to note that some times the discrete logarithm does not exists.
+For example, since the equation $2^k \equiv 3 \mod 15$ has no solution\footnote{As $2^2 \equiv 4, 2^3 \equiv 8, 2^4 \equiv 1 \mod 15$, and the cycle repeats}
+then there is no $\log_2 3$ in $(\mathbb{Z}_{15})^\times$. In case $\mathbb{G}$ is a cyclic group, and $g$ is a generator then 
+every element $h \in \mathbb{G}$ has a $\log_g h$. While the real valued logarithm is generally easy to compute (for integers there 
+are strategies using a method similary to binary search, for real values Newton Methods yield good approximations), there are no 
+general techniques that, for every group $\mathbb{G}$, efficiently solve the problem. In fact, it is generally believed (and one 
+of the core assumptions of a number of protocols such as Diffie Hellman), that there exists groups where the discrete log problem 
+is not only hard to solve in the worst case, but actually seems to be extremely complicated to solve in the average\footnote{It can be shown
+using random self reducibility, that if an hard instance exists than on the average the problem will also be hard} (CITE).
+In particular, cyclic groups such as $\mathbb{Z}_p^\times$ are often good candidates, even tough if $p - 1$ has many factors 
+then there are efficient algorithms such as the Pohlig–Hellman \cite{pohligImprovedAlgorithmComputing1978}. In practice, 
+if modular arithmetic is used, the prime $p$ is chosen so that $p = 2q + 1$ for some other prime $q$. Using this and using
+suitably large primes the discrete logarithm problem is considered intractable. The other alternative to 
+modular arithmetic is using elliptic curves. Elliptic curves are defined over a field\footnote{In fact, it is required this 
+field has characteristic not 2 or 3, otherwise the equation becomes more complicated} $\mathbb{F}$. In particular,
+this field is in practice of the form $\mathbb{Z}_p$ for $p$ prime, and it is defined by the set of points $(x, y) \in \mathbb{F}^2 \cup \{ \infty \}$ such that\footnote{In fact the one below is
+one of the possible equations for elliptic curves, there are many with different advantages, but all of the general form: $\alpha_0 y^2 + \alpha_1 xy = \beta_0 x^3 + \beta_1 x^2 + \beta_2 x + \gamma$}:
+\[ y^2 = x^3 + \alpha x + \beta \]
+For suitable constant parameters $\alpha, \beta$, we can define addition in a geometrical manner, having that the sum of some 
+points $P, Q$ is given by first taking the line between the point (or the tangent at $P$ if $P = Q$), finding the other point in which 
+it intersects the curve, and then reflecting it in the $x$-axis. In particular, this yields us a group which has the following properties:
+\begin{itemize}
+    \item We denote $E(\mathbb{F})$ as the elliptic curve over $\mathbb{F}$ with parameters $\alpha, \beta$.
+    \item Then we have $\infty$ as the identity, and we let $P + \infty = \infty + P = P$ for all $P \in E(\mathbb{F})$
+    \item For a given $P = (x, y) \in E(\mathbb{F})$ we define $-P = (x, -y)$, which is easy to check also is an element of $E(\mathbb{F})$. We also let $-\infty = \infty$.
+    \item Letting $P = (x_1, y_1)$, and $Q = (x_2, y_2)$, if $P \neq \pm Q$ we have $P + Q = (x', y')$ where:
+          \[ x' = \left(\frac{y_2 - y_1}{x_2 - x_1}\right)^2 - x_1 - x_2 \text{ and } y' = \left(\frac{y_2 - y_1}{x_2 - x_1}\right)(x_1 - x') - y_1  \]
+    \item Instead we have that, if $(x, y) = P \neq -P$, $2P = (x', y')$ where:
+          \[ x' = \left(\frac{3x^2 + \alpha}{2y}\right)^2 - 2x \text{ and } y' = \left(\frac{3x^2 + \alpha}{2y}\right)(x - x') - y  \]
+\end{itemize}
+This definition is important, especially since the addition laws are easy to implement and optimize, yielding performance 
+often superior to that of modular exponentiation. As an example we have $E(\mathbb{F}_{29})$, with $\alpha=4, \beta=20$.
+This group in particular has 37 points (including of course $\infty$), such as $(2,6), (20, 26)$. In particular we can 
+verify that $(5, 22) + (16, 27) = (13, 6)$, and that $2(5, 22) = (14, 6)$ (and of course that closure holds).
+Using this kind of construction, and well tested\footnote{And please please do not use use the ones that I have used here unless you have a particular desire to design insecure system}
+parameters such as the ones that NIST recommend \cite{barkerRecommendationPairWiseKeyEstablishment2018}
+we can yield cryptosystems that are resistant to any non quantum attacker that we know of, and in particular we can get some pretty good performance as well.
+
+
 
 \section{Complexity Classes}
 \begin{definition}
