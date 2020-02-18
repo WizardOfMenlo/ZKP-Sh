@@ -754,8 +754,29 @@ to a non interactive one is as follows:
     \item The prover choses a $r$ uniformly randomly as before, and computes $\gamma \equiv \alpha^r$
     \item The prover now computes $b \equiv H(\alpha, \beta, \gamma)$, which will be his challenge
     \item Finally, the prover computes $y \equiv r + bx \pmod{\phi(N)}$, and sends the pair $(\gamma, y)$ to the verifier
-    \item The verifier, or anyone can ensure that $ \alpha^y =^? \gamma \beta^b$
+    \item The verifier, or anyone can ensure that $ \alpha^y =^? \gamma \beta^b$. Also note how the verifier can compute 
+          $b$ from the public parameters easily. 
 \end{itemize}
+
+The reasoning for why this would work are exactly the same as the interactive version, but the hash function 
+$H(\cdot)$ allows us to fairly select a challenge without possibility of cheating. In particular, a further 
+modification of the protocol allows us to get Schnorr signatures, a way to sign a message using $4t$-bit signatures,
+where $t$ is a security parameter. In fact, it was later shown \cite{nevenHashFunctionRequirements2009} that only $3t$-bits 
+are required. The scheme works as follows:
+\begin{itemize}
+    \item The prover has a private $x$ such that $\alpha^x \equiv \beta \pmod N$. $\alpha, \beta, N$ 
+          are published so that both parties know it. Also $H$ is a known hash function such that: $H: \{0, 1\}^n \to \{0, \dots, 2^t - 1\}$
+    \item Let us suppose that the prover has a message $M \in \{0, 1 \}^*$ that he wants to sign. 
+    \item The prover chooses a random $r$ uniformly as before. Set $\gamma \equiv \alpha^r$.
+    \item The prover computes $e \equiv (\gamma || M)$, and $y \equiv r - ex$.
+    \item Finally, the provers sends $(e, y)$ as the signature
+    \item To verify, the verifier computes $\gamma' \equiv \alpha^y \beta^e \pmod N$, and finally 
+          verifies that $e =^? H(\gamma' || M)$
+\end{itemize}
+
+It is easy to check that if both parties follow the procedure then 
+$\gamma' = \alpha^y \beta ^e = \alpha^y \alpha^{ex} = \alpha^{r - ex} \alpha{ex} = \alpha^r = \gamma$
+and as such $H(\gamma || M) = H(\gamma' || M)$.
 
 
 \subsection{Secure Remote Password}
