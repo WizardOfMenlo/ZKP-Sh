@@ -137,8 +137,8 @@ We say that a language $L \in \mathcal{NP}$ if there exist a probabilistic polyn
 The definition implies that there is at least one path for which the input is accepted. It is easy to see that $\mathcal{P} \subseteq \mathcal{NP}$, but the question of $\mathcal{P} =_? \mathcal{NP}$ is still open \cite{cookComplexityTheoremprovingProcedures1971} \cite{jaffeMillenniumGrandChallenge2006}. There are many $\mathcal{NP}$ problems for which there is no evidence of their belonging in $\mathcal{P}$, such as the following:
 
 \[ \texttt{INT\_FACT} = \{ (n, k) \, | \, \exists f : 1 < f < k \text { and } f \text{ divides } n\}\]
-\[\texttt{SUB\_SUM} = \{ G \subset_{fin} \mathbb{Z} \, | \, n \in \mathbb{N} \exists S \subseteq G : \sum_{i \in S} i = 0  \} \}\]
-\[ \texttt{SAT} = \{ \phi : \{0,1\}^n \to {0,1} \, | \, n \in \mathbb{N} \text{ and } \exists a_1 \dots a_n : \phi(a_1, \dots a_n) = 1 \} \]
+\[ \texttt{SUB\_SUM} = \{ G \subset_{fin} \mathbb{Z} \, | \, n \in \mathbb{N} \exists S \subseteq G : \sum_{i \in S} i = 0  \} \}\]
+\[ \texttt{SAT} = \{ \phi : \{0,1\}^n \to \{0,1\} \, | \, n \in \mathbb{N} \text{ and } \exists a_1 \dots a_n : \phi(a_1, \dots a_n) = 1 \} \]
 \[ \texttt{GRAPH\_HOM} = \{ (G, H) \, | \, \exists \phi : G \to H \text{ s.t. $\phi$ is a graph homomorphism} \}\]
 
 In particular, the last three languages are instances of $\mathcal{NP}$-complete problems, i.e. problems that are conceptually as hard as any problem in $\mathcal{NP}$ (more on this in the appendix). It is interesting to see that each of this problem involves some sort of search over an exponentially large possibility space, and the correctness can be easily verified by the result of such search. We associate thus $\mathcal{NP}$ class with problems that can be efficiently verified.
@@ -657,7 +657,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
         \end{itemize}
         And so the protocol is an interactive proof system for \texttt{3COL}, with completeness bound $1$ and 
         with a weak soundness bound $1/|E|$. Repeating the protocol yields an interactive proof as required
-        \footnote{The situation is a bit subtle as we would want to ensure that repeating the protocl does not yield any knowledge.
+        \footnote{The situation is a bit subtle as we would want to ensure that repeating the protocol does not yield any knowledge.
         Luckily, the sequential composition lemma that we assumed earlier and here ensures that this is the case}. 
         For any verifier $V'$, we show a simulator $M_{V'}$ that shows that the prover has the zero knowledge property.
         \begin{itemize}
@@ -720,6 +720,44 @@ did not have practical applications, and were not a capable tool for solving var
 Taking inspiration from \cite{moraisSurveyZeroKnowledge2019}, we hope to show a variety of proofs that 
 are applicable with real life problems. 
 \subsection{Schnorr Signatures}
+The main problem that Schnorr signatures (proposed firstly in \cite{schnorrEfficientSignatureGeneration1991}) aim to 
+solve is that of signing a message, so that the receiver can ensure that it was not tampered with. They are particularly
+helpful in practice, since there are ways to make the signatures attractively small. Schnorr algorithm is based on the hardness
+of the discrete logarithm problem, and in particular on the following zero knowledge protocol of knowledge of the 
+discrete logarithm, due to \cite{chaumImprovedProtocolDemonstrating1988}.
+\begin{itemize}
+    \item The prover wants to show that it possesses a $x$ such that $\alpha^x \equiv \beta \pmod N$, where $\alpha, \beta, N$
+          are chosen in advance and known to both parties\footnote{In particular $N$ is chosen so that the discrete log is hard in the group $\mathbb{Z}_N^\times$}.
+    \item The prover choses a $r$ uniformly randomly from the set $1, \dots, \phi(N)$, where $\phi(\cdot)$ is Euler's
+          totient function. It then computes the value of $\gamma \equiv \alpha^r$, and sends it to the prover.
+    \item The verifier selects a bit $b \in \{0,1\}$ uniformly and randomly, and sends it over to the prover
+    \item The prover computes the exponent $y \equiv r + bx \pmod{\phi(N)}$ and send it to the verifier
+    \item The verifier accepts if $\alpha^y =^? \gamma \beta^b $
+\end{itemize}
+One can easily verify that, if both parties follow the protocol, then the equation 
+$\alpha^y = \alpha^{r + bx} = \alpha^r \alpha^{bx} = \gamma (\alpha^x)^b = \gamma \beta^b$ holds. 
+The main idea is that the prover commits itself to a value $r$, that is kept hidden from the verifier thanks to 
+the hardness of the discrete log. Then the verifier issues a challenge, in this case the bit $b$. If a cheating prover
+did not know $x$, then he would not be able to find a $y$ that satisfies the above equation. Furthermore, the random 
+parameter $r$ ensures that the verifier does not learn anything from $y$ about $x$, ensuring the scheme is zero knowledge.
+Now, the idea is that, using something called the Fiat Shamir Heuristic \cite{fiatHowProveYourself1987}, we can turn a 
+interactive proof into a non interactive one. In summary, since the only contribution of the verifier to the interaction 
+is to provide a challenge, we can replace this interaction with the use of a cryptographic hash function.
+We make the verifier compute an hash of the parameters, and use the hash as the challenge. By the fact that 
+the hash is determined from public parameters the verifier can make sure that the prover is not cheating selecting one 
+that would advantage it. Also, by the fact that the hash function is indistinguishable from a random function, the prover 
+will have to solve a problem of the same difficulty as the one in the interactive proof. A transformation of the above protocol 
+to a non interactive one is as follows:
+\begin{itemize}
+    \item The prover has a $x$ such that $\alpha^x \equiv \beta \pmod N$. The conditions are as above.
+         Furthermore, both the prover and the verifier have access to an hash function $H(\cdot)$
+    \item The prover choses a $r$ uniformly randomly as before, and computes $\gamma \equiv \alpha^r$
+    \item The prover now computes $b \equiv H(\alpha, \beta, \gamma)$, which will be his challenge
+    \item Finally, the prover computes $y \equiv r + bx \pmod{\phi(N)}$, and sends the pair $(\gamma, y)$ to the verifier
+    \item The verifier, or anyone can ensure that $ \alpha^y =^? \gamma \beta^b$
+\end{itemize}
+
+
 \subsection{Secure Remote Password}
 The Secure Remote Password protocol \cite{wuSecureRemotePassword1997}, or SRP for short, is the most common 
 example of zero knowledge proofs used for authentication. Common schemes usually use a plaintext approach,
@@ -927,7 +965,7 @@ We can now prove the equivalence of our two definition of $\mathcal{P}$, let us 
 Let $L \in \mathcal{P}$, then there exist a Turing Machine $M$ such that the machine outputs one for each $x \in L$ and always halts in polynomially many steps. 
 Construct a probabilistic TM $M_1$ as follows: copy everything from $M$, except the transition function, replacing each transition of the form $\phi(s, i) = x$ with $\phi_1(s, i) = (x, x)$. Recall from the definition that on each step the machine $M_1$ will randomly choose between left and right transition. Since for each transition left and right are always equal, the choice is meaningless and for each transition it will take the same action as $M$ (taking of course the same exact number of steps). Since $M$ recognized $L$, then $M_1$ will also, and as such $L \in \mathcal{P}_{prob}$, which implies $\mathcal{P} \subseteq \mathcal{P}_{prob}$.  \par
 
-Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \Pr[M(x) = 1] = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in {0,1}^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \mathcal{P}$, which in turn implies $\mathcal{P}_{prob} \subseteq \mathcal{P}$  \par
+Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \Pr[M(x) = 1] = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in \{0,1\}^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \mathcal{P}$, which in turn implies $\mathcal{P}_{prob} \subseteq \mathcal{P}$  \par
 
 So, since $\mathcal{P} \subseteq \mathcal{P}_{prob}$ and $\mathcal{P}_{prob} \subseteq \mathcal{P}$, it must be that $\mathcal{P} = \mathcal{P}_{prob}$
 \end{proof}
