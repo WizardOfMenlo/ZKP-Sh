@@ -853,11 +853,39 @@ that we can encode $x =\sum^N_{i=1} b_i 2^i$ where each $b_i \in [0, 1]$. A non 
     be done by combining discrete log knowledge proofs such as \cite{schnorrEfficientSignatureGeneration1991} and together with a proof of partial knowledge such as those
     described in \cite{cramerProofsPartialKnowledge1994}. Essentially, by the property of the commitment, the value 
     of $c_i$ is either $h^{r_i}$ or $g h^{r_i}$. We prove that we either know the discrete log of $c_i$ base $h$ or that we know 
-    the discrete log of $g^{-1} c_i$.
+    the discrete log of $g^{-1} c_i$ in base $h$.
     \item Finally, the verifier checks the proof $\pi$ and that $c = \prod_{i=1}^N c_i^{2^i}$
 \end{itemize}
 
-While this particular proof is extremely simple, unfortunately it is not particularly efficient, in fact according to \cite{boudotEfficientProofsThat2000}
+Just to fill in the gap, the proof of partial knowledge in this case can be extracted and simplified, and it works as following. 
+Recall that in that step of the proof the prover has committed $c_i = g^{b_i} h^{r_i}$. We know that $b_i \in \{ 0, 1 \}$. And $c_i = h^{r_i}$ or $c_i = g h^{r_i}$.
+Note that in the first case we know a discrete log of $c_i$, while in the second we know the discrete log of $g^{-1} c_i$ (in both cases in base $h$ and in both cases the log is $r_i$). 
+If we manage to prove either one of the facts, without letting the verifier know which actually holds, then we will be set. 
+A protocol for this works as following (due to \cite{maoGuaranteedCorrectSharing1998b}):
+\begin{itemize}
+    \item Let $E, f, g \in \mathbb{G}$ be common inputs. $E$ is equal to either $f^z$ or $g f^z$, where $z$ is known by the prover only.
+    \item The prover actions are conditional on what case holds
+    \begin{itemize}
+        \item If $E = f^z$, the prover uniformly and indipendently selects integers $w, r_1, c_1$. Computes $a \equiv f^w$, and $b \equiv f^{r_1}(E/g)^{-c_i}$
+        \item If $E = g f^z$, the prover uniformly and indepently selects integers $w, r_2, c_2$. Computes $a \equiv f^{r_2} E^{-c_2}$, $b \equiv f^w$
+    \end{itemize}
+    The prover then sends $a, b$ to the verifier
+    \item The verifier sends a random integer $c$ to the prover.
+    \item Again, we act differently in both cases.
+    \begin{itemize}
+        \item If $E = f^z$, the prover computes $c_2 \equiv c - c_1$, and $r_2 \equiv w + z c_2$
+        \item If $E = g f^z$, the prover computes $c_1 \equiv c - c_2$ and $r_1 \equiv w + z c_1$ 
+    \end{itemize}
+    Finally, the prover sends $r_1, r_2, c_1, c_2$ to the verifier
+    \item The verifier accepts if the following hold:
+    \begin{align*}
+        c &=^? c_1 + c_2 \\
+        f^{r_1} &= b(E/g)^{c_1} \\
+        f^{r_2} &= a E^{c_2}
+    \end{align*}
+\end{itemize}
+
+While this particular proof is quite simple, unfortunately it is not particularly efficient, in fact according to \cite{boudotEfficientProofsThat2000}
 proving that a particular $x$ belongs in the interval $[0, 511] = [0, 2^9 -1]$ while using an underlying group of size $2^{10}$ requires a proof 
 transcript of size $\approx 196.9$ kB. However, many examples in the literature improves this bound, and this paper gives 
 an excellent overview of what is the state of the art \cite{moraisSurveyZeroKnowledge2019}.
