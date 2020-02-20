@@ -768,7 +768,7 @@ are required. The scheme works as follows:
           are published so that both parties know it. Also $H$ is a known hash function such that: $H: \{0, 1\}^n \to \{0, \dots, 2^t - 1\}$
     \item Let us suppose that the prover has a message $M \in \{0, 1 \}^*$ that he wants to sign. 
     \item The prover chooses a random $r$ uniformly as before. Set $\gamma \equiv \alpha^r$.
-    \item The prover computes $e \equiv (\gamma || M)$, and $y \equiv r - ex$.
+    \item The prover computes $e \equiv H(\gamma || M)$, and $y \equiv r - ex$.
     \item Finally, the provers sends $(e, y)$ as the signature
     \item To verify, the verifier computes $\gamma' \equiv \alpha^y \beta^e \pmod N$, and finally 
           verifies that $e =^? H(\gamma' || M)$
