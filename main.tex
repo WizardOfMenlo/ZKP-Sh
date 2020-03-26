@@ -937,6 +937,37 @@ to change their workflows.
 SRP is based on Diffie Hellman, and as such it has some of the same cryptography requirement, namely the intractability
 of the discrete logarithm and the existance of one way functions.
 The protocol consists of two steps: the registration step and the authentication step. 
+
+\begin{figure}[H]
+    \centering
+    \fbox{%
+        \procedure{Secure Remote Password, with sec param $k$}{%
+            \textbf{User } I \> \> \textbf{Host} \pclb
+            \pcintertext[center]{A group $\mathbb{G}$, generator $g$, Hash function $H(\cdot)$} \pclb
+            \pcintertext[dotted]{Registration}
+            p,s \sample \bin^* \> \> \\
+            x \coloneqq H(s, p) \> \> \\
+            v \coloneqq g^x \> \> \\
+            \> \sendmessageright*{s, v} \> \\
+            \> \> \text{store } I, s, v \pclb
+            \pcintertext[dotted]{Authentication}
+            a \sample \set{1, \abs{\mathbb{G}}} \> \> \\
+            A \coloneqq g^a \> \> \\
+            \> \sendmessageright*{I, A} \> \\
+            \> \> \text{lookup } s, v \text{ from } I \\
+            \> \> b \sample \set{1, \abs{\mathbb{G}}} \\
+            \> \> B \coloneqq kv + g^b \\
+            \> \sendmessageleft*{s, B} \> \pclb
+            \pcintertext[center]{$u \coloneqq H(A, B)$}
+            x \coloneqq H(s, p) \> \> S \coloneqq (Av^u)^b \\
+            S \coloneqq (B - kg^x)^{a + ux} \> \> K \coloneqq H(S) \\
+            K \coloneqq H(S) \> \>
+        }
+    }
+    \caption{Secure Remote Passoword protocol}
+    \label{srp}
+\end{figure}
+
 \begin{itemize}
     \item Preliminaries
     \item Both parties need to agree on a large safe prime $N$, and consequently on a group $\mathbb{G} \cong \ZZ_N$. 
