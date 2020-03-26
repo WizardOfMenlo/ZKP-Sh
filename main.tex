@@ -28,8 +28,15 @@
 \tableofcontents
 
 \section{Introduction}
-
-
+The concept of proof is one that resonates quite strongly in all of society. Having positive verification that 
+an untrusted party is actually making an affirmative claim opens up to a variety of avenues for collaboration and
+enquiry. This paper will be a survey of the theory of a particular variety of proofs, namely Zero Knowledge Proofs. 
+We will build an understanding of Interactive Proofs, which are processes in which a verifier is successively convinced 
+by a prover. From there, we aim to mirror the process in Mathematics that finds the mininum set of assumptions needed 
+to prove a statement. This will lead us to formulate the following central query:
+Given a true proposition, what is the minimal amount of knowledge that I need to transpire to convince someone else of it?
+We will formalize such query, investigate the structure of the resulting class, and show many examples of elements of said class.
+Finally, we will survey some applications of Zero Knowledge Proofs, in the fields of digital signatures and authentication.
 
 \section{Motivation}
 Zero Knowledge Proofs have applications in a number of fields outside of theory. 
@@ -747,7 +754,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
                 \> \sendmessageright*{s_u, \gamma_u, s_v, \gamma_v} \> \\
                 \> \> \pcfail \pcif C_{s_u}(\gamma_u) \neq_? c_u \\
                 \> \> \pcfail \pcif C_{s_v}(\gamma_v) \neq_? c_v \\
-                \> \> \pcfail \pcif i =_? j \\
+                \> \> \pcfail \pcif \gamma_u =_? \gamma_v \\
                 \> \> \pcreturn \pctrue
             }
         }
