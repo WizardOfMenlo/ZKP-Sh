@@ -159,13 +159,13 @@ Note in particular that we can replace the $\frac{2}{3}$ constant with $\frac{1}
 
 $\mathcal{BPP}$ is referred to as the class of bounded polynomial time languages. It is evident that $\mathcal{P} \subseteq \mathcal{BPP}$ but, while it is believed that the classes are equal, no proof was yet found. This class is significant, as it is intrinsically associated with efficient computation. This is because of a few factors, first of all because the probabilistic computation closely mimics the capabilities of general purpose computer, which can use the external environment as a source of randomness. Secondly, polynomial time computation is feasible, and, as long as Moore's law holds, modern computer can every year improve faster than one can increase the problem size\footnote{What I mean is, if an algorithm takes $poly(|x|)$ steps, and on year $n$ a computer can perform $\bigO{2^n}$ steps, }. Let us have an example to clarify:
 \begin{example}
-Consider three matrices, $A, B, C$ where $A \in \mathbb{F}^{n \times m}$, $B \in \mathbb{F}^{n \times k}$, $C \in \mathbb{F}^{k \times m}$. We want to solve the question $A =_? B C$. Of course, in a deterministic setting, we can simply multiply the two matrices (taking $\bigO{nkm}$ steps) and compare it with the first (in $\bigO{nm}$ steps), in a total of $\bigO{nmk + nm}$ steps. We can do better if we allow for some probabilistic error. Take the following procedure.
+Consider three matrices, $A, B, C$ where $A \in \FF^{n \times m}$, $B \in \FF^{n \times k}$, $C \in \FF^{k \times m}$. We want to solve the question $A =_? B C$. Of course, in a deterministic setting, we can simply multiply the two matrices (taking $\bigO{nkm}$ steps) and compare it with the first (in $\bigO{nm}$ steps), in a total of $\bigO{nmk + nm}$ steps. We can do better if we allow for some probabilistic error. Take the following procedure.
 \begin{enumerate}
-    \item Take a random vector $x \in \mathbb{F}^m$
+    \item Take a random vector $x \in \FF^m$
     \item Compute $Ax$ and $BCx$.
-    \item Compare the two resulting vectors (in $\mathbb{F}^n$). If they are the same return true, else return false. 
+    \item Compare the two resulting vectors (in $\FF^n$). If they are the same return true, else return false. 
 \end{enumerate}
-Computationally wise, this requires less calculations. Let's assume you can select a random $k$-vector in $\bigO{k}$ steps, then the first step is $\bigO{m}$, the two computations take respectively $\bigO{nm}$ and $\bigO{k (n + m)}$\footnote{This is optimized computing $(B(Cx))$} and the comparison will be $\bigO{n}$. So in total the operation is $\bigO{nm + kn + mk + n}$. We claim that, trivially, if $A = BC$ then the algorithm always answer correctly. Furthermore if $A \neq BC$ then the algorithm answers correctly in the majority of cases. Let $D = BC$ Note that if the algorithm is to output incorrectly, it must be that $Ax = Dx$. Then it must be that $(A - D) x = 0$, and as such $x \in \ker(A - D)$. Note that $A - D \in \mathbb{F}^{n \times m}$ and as such $A - D$ can be seen as a linear transformation from $\mathbb{F}^m \to \mathbb{F}^n$. The whole problem reduces to finding the probability that a vector picked at random belongs to the kernel of a linear transformation. Let $|\mathbb{F}| = q$, the size of the underlying field\footnote{Note that in this case we assume the underlying field to be finite, the infinite case can also be handled but requires more thought}. First of all note that since $A \neq D$ at least one of the of the row of the matrix is non zero, and as such $\dim \ker (A - D) < m$. Since the size of any vector space $V$ over $\mathbb{F}$ is $|V| = q^{\dim V}$, then the size of the kernel is at most $q^{m - 1}$. As such the probability of a random vector belonging to the kernel is at most $\frac{q^{m-1}}{q^m}=\frac{1}{q}$. We can then calculate that, repeating the algorithm $l$ times the probability of getting at least one vector not in the kernel is $1 - \left(\frac{1}{q}\right)^l$ and if we want to ensure that this probability is greater than $\frac{2}{3}$ we can then set:
+Computationally wise, this requires less calculations. Let's assume you can select a random $k$-vector in $\bigO{k}$ steps, then the first step is $\bigO{m}$, the two computations take respectively $\bigO{nm}$ and $\bigO{k (n + m)}$\footnote{This is optimized computing $(B(Cx))$} and the comparison will be $\bigO{n}$. So in total the operation is $\bigO{nm + kn + mk + n}$. We claim that, trivially, if $A = BC$ then the algorithm always answer correctly. Furthermore if $A \neq BC$ then the algorithm answers correctly in the majority of cases. Let $D = BC$ Note that if the algorithm is to output incorrectly, it must be that $Ax = Dx$. Then it must be that $(A - D) x = 0$, and as such $x \in \ker(A - D)$. Note that $A - D \in \FF^{n \times m}$ and as such $A - D$ can be seen as a linear transformation from $\FF^m \to \FF^n$. The whole problem reduces to finding the probability that a vector picked at random belongs to the kernel of a linear transformation. Let $|\FF| = q$, the size of the underlying field\footnote{Note that in this case we assume the underlying field to be finite, the infinite case can also be handled but requires more thought}. First of all note that since $A \neq D$ at least one of the of the row of the matrix is non zero, and as such $\dim \ker (A - D) < m$. Since the size of any vector space $V$ over $\FF$ is $|V| = q^{\dim V}$, then the size of the kernel is at most $q^{m - 1}$. As such the probability of a random vector belonging to the kernel is at most $\frac{q^{m-1}}{q^m}=\frac{1}{q}$. We can then calculate that, repeating the algorithm $l$ times the probability of getting at least one vector not in the kernel is $1 - \left(\frac{1}{q}\right)^l$ and if we want to ensure that this probability is greater than $\frac{2}{3}$ we can then set:
 \[l > \frac{\log \frac{1}{3}}{\log \frac{1}{q}} = \frac{\log{3}}{\log{q}}\]
 
 Finally, we can see that repeating the procedure $l$ times\footnote{In fact, since $l < 1$ for $q > 3$, repetition is only really needed for the trivial field $\ZZ_2$} (call this $M$) will have the following result:
@@ -795,7 +795,7 @@ of the discrete logarithm and the existance of one way functions.
 The protocol consists of two steps: the registration step and the authentication step. 
 \begin{itemize}
     \item Preliminaries
-    \item Both parties need to agree on a large safe prime $N$, and consequently on a group $\mathbb{G} \cong \mathbb{Z_N}$. 
+    \item Both parties need to agree on a large safe prime $N$, and consequently on a group $\mathbb{G} \cong \ZZ_N$. 
           Also, they agree to a generator of the group $g$, and to a parameter $k \in \mathbb{G}$. 
     \item Both parties select a cryptographically secure hash function $H$.
     \item Finally, the parties agree to an identifier $I$ for the user $U$.
@@ -998,24 +998,24 @@ then there are efficient algorithms such as the Pohlig–Hellman \cite{pohligImp
 if modular arithmetic is used, the prime $p$ is chosen so that $p = 2q + 1$ for some other prime $q$. Using this and using
 suitably large primes the discrete logarithm problem is considered intractable. The other alternative to 
 modular arithmetic is using elliptic curves. Elliptic curves are defined over a field\footnote{In fact, it is required this 
-field has characteristic not 2 or 3, otherwise the equation becomes more complicated} $\mathbb{F}$. In particular,
-this field is in practice of the form $\ZZ_p$ for $p$ prime, and it is defined by the set of points $(x, y) \in \mathbb{F}^2 \cup \{ \infty \}$ such that\footnote{In fact the one below is
+field has characteristic not 2 or 3, otherwise the equation becomes more complicated} $\FF$. In particular,
+this field is in practice of the form $\ZZ_p$ for $p$ prime, and it is defined by the set of points $(x, y) \in \FF^2 \cup \{ \infty \}$ such that\footnote{In fact the one below is
 one of the possible equations for elliptic curves, there are many with different advantages, but all of the general form: $\alpha_0 y^2 + \alpha_1 xy = \beta_0 x^3 + \beta_1 x^2 + \beta_2 x + \gamma$}:
 \[ y^2 = x^3 + \alpha x + \beta \]
 For suitable constant parameters $\alpha, \beta$, we can define addition in a geometrical manner, having that the sum of some 
 points $P, Q$ is given by first taking the line between the point (or the tangent at $P$ if $P = Q$), finding the other point in which 
 it intersects the curve, and then reflecting it in the $x$-axis. In particular, this yields us a group which has the following properties:
 \begin{itemize}
-    \item We denote $E(\mathbb{F})$ as the elliptic curve over $\mathbb{F}$ with parameters $\alpha, \beta$.
-    \item Then we have $\infty$ as the identity, and we let $P + \infty = \infty + P = P$ for all $P \in E(\mathbb{F})$
-    \item For a given $P = (x, y) \in E(\mathbb{F})$ we define $-P = (x, -y)$, which is easy to check also is an element of $E(\mathbb{F})$. We also let $-\infty = \infty$.
+    \item We denote $E(\FF)$ as the elliptic curve over $\FF$ with parameters $\alpha, \beta$.
+    \item Then we have $\infty$ as the identity, and we let $P + \infty = \infty + P = P$ for all $P \in E(\FF)$
+    \item For a given $P = (x, y) \in E(\FF)$ we define $-P = (x, -y)$, which is easy to check also is an element of $E(\FF)$. We also let $-\infty = \infty$.
     \item Letting $P = (x_1, y_1)$, and $Q = (x_2, y_2)$, if $P \neq \pm Q$ we have $P + Q = (x', y')$ where:
           \[ x' = \left(\frac{y_2 - y_1}{x_2 - x_1}\right)^2 - x_1 - x_2 \text{ and } y' = \left(\frac{y_2 - y_1}{x_2 - x_1}\right)(x_1 - x') - y_1  \]
     \item Instead we have that, if $(x, y) = P \neq -P$, $2P = (x', y')$ where:
           \[ x' = \left(\frac{3x^2 + \alpha}{2y}\right)^2 - 2x \text{ and } y' = \left(\frac{3x^2 + \alpha}{2y}\right)(x - x') - y  \]
 \end{itemize}
 This definition is important, especially since the addition laws are easy to implement and optimize, yielding performance 
-often superior to that of modular exponentiation. As an example we have $E(\mathbb{F}_{29})$, with $\alpha=4, \beta=20$.
+often superior to that of modular exponentiation. As an example we have $E(\FF_{29})$, with $\alpha=4, \beta=20$.
 This group in particular has 37 points (including of course $\infty$), such as $(2,6), (20, 26)$. In particular we can 
 verify that $(5, 22) + (16, 27) = (13, 6)$, and that $2(5, 22) = (14, 6)$ (and of course that closure holds).
 Using this kind of construction, and well tested\footnote{And please please do not use use the ones that I have used here unless you have a particular desire to design insecure system}
