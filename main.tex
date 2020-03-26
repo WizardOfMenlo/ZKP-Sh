@@ -893,7 +893,7 @@ discrete logarithm, due to \cite{chaumImprovedProtocolDemonstrating1988}.
           totient function. It then computes the value of $\gamma \equiv \alpha^r$, and sends it to the prover.
     \item The verifier selects a bit $b \in \bin$ uniformly and randomly, and sends it over to the prover
     \item The prover computes the exponent $y \equiv r + bx \pmod{\phi(N)}$ and send it to the verifier
-    \item The verifier accepts if $\alpha^y =^? \gamma \beta^b $
+    \item The verifier accepts if $\alpha^y =_? \gamma \beta^b $
 \end{itemize}
 One can easily verify that, if both parties follow the protocol, then the equation 
 $\alpha^y = \alpha^{r + bx} = \alpha^r \alpha^{bx} = \gamma (\alpha^x)^b = \gamma \beta^b$ holds. 
@@ -934,9 +934,9 @@ to a non interactive one is as follows:
     \item The prover has a $x$ such that $\alpha^x \equiv \beta \pmod N$. The conditions are as above.
          Furthermore, both the prover and the verifier have access to an hash function $H(\cdot)$
     \item The prover choses a $r$ uniformly randomly as before, and computes $\gamma \equiv \alpha^r$
-    \item The prover now computes $b \equiv H(\alpha, \beta, \gamma)$, which will be his challenge
+    \item The prover now computes $b \coloneqq H(\alpha, \beta, \gamma)$, which will be his challenge
     \item Finally, the prover computes $y \equiv r + bx \pmod{\phi(N)}$, and sends the pair $(\gamma, y)$ to the verifier
-    \item The verifier, or anyone can ensure that $ \alpha^y =^? \gamma \beta^b$. Also note how the verifier can compute 
+    \item The verifier, or anyone can ensure that $ \alpha^y =_? \gamma \beta^b$. Also note how the verifier can compute 
           $b$ from the public parameters easily. 
 \end{itemize}
 
@@ -971,10 +971,10 @@ are required. The scheme works as follows:
           are published so that both parties know it. Also $H$ is a known hash function such that: $H: \bin^n \to \set{0, \dots, 2^t - 1}$
     \item Let us suppose that the prover has a message $M \in \bin^*$ that he wants to sign. 
     \item The prover chooses a random $r$ uniformly as before. Set $\gamma \equiv \alpha^r$.
-    \item The prover computes $e \equiv H(\gamma, M)$, and $y \equiv r - ex$.
+    \item The prover computes $e \coloneqq H(\gamma, M)$, and $y \equiv r - ex$.
     \item Finally, the provers sends $(e, y)$ as the signature
     \item To verify, the verifier computes $\gamma' \equiv \alpha^y \beta^e \pmod N$, and finally 
-          verifies that $e =^? H(\gamma', M)$
+          verifies that $e =_? H(\gamma', M)$
 \end{itemize}
 
 It is easy to check that if both parties follow the procedure then 
@@ -1114,7 +1114,7 @@ A protocol for this works as following (due to \cite{maoGuaranteedCorrectSharing
     Finally, the prover sends $r_1, r_2, c_1, c_2$ to the verifier
     \item The verifier accepts if the following hold:
     \begin{align*}
-        c &=^? c_1 + c_2 \\
+        c &=_? c_1 + c_2 \\
         f^{r_1} &= b(E/g)^{c_1} \\
         f^{r_2} &= a E^{c_2}
     \end{align*}
@@ -1146,7 +1146,14 @@ protocol is executed multiple times serially, in order to show that the probabil
 the experimental results. 
 
 \section{Conclusion}
-In conclusion, in this paper we provided a survey of 
+In conclusion, in this paper we provided a survey of the theory underlying Zero Knowledge Proofs,
+building up from Interactive Proofs to Perfect Zero Knowledge Proofs. In the process, we have shown interactive 
+proofs for \texttt{GNI}, and zero knowledge proofs for both \texttt{GI} and \texttt{3COL}. Finally, we have detailed some
+applications of the theory, showing various "flavours" of ZKP for the Discrete Logarithm problem that culminated in 
+Schnorr Signature. We compounded this with the Secure Remote Protocol, a protocol that uses a similar ZKP in order 
+to authenticate without communicating your password to the server. Finally, we have shown a very simple Zero Knowledge
+Range Proof, a very general class that has a wide range of applications and is currently one of the hottest avenues of research.
+
 
 \appendix
 \section{One Way Functions}
