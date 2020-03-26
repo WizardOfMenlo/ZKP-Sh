@@ -79,12 +79,12 @@ There a couple of notions of probability that we will most likely need.
 \begin{definition}
     Suppose we have a series of $n$ independent event $X_i$, each one of them 
     occurring with probability $\theta$. Then the probability of the total number of success $X$ being exactly equal to $k$ follows a binomial distribution and:
-    \[ \Pr[X = k] = \binom{n}{k} \theta^k (1 - \theta)^{n - k} \]
+    \[ \prob{X = k} = \binom{n}{k} \theta^k (1 - \theta)^{n - k} \]
 \end{definition}
 In particular, we have that in those $n$ trials we expect $\mathbb{E}[X] = n\theta$ events to occurr. This is useful, expecially since 
-    we have that the probability of an event always occurring is $\Pr[X = n] = \theta^n$. This will be useful especially 
+    we have that the probability of an event always occurring is $\prob{X = n} = \theta^n$. This will be useful especially 
     to  estimate the probability of some algorithm succeeding multiple times when it is not supposed to. 
-    Note in particular that if a algorithm spuriosly succeeds with probability $\theta \in [0, 1)$ then $\Pr[X = n]$ is a 
+    Note in particular that if a algorithm spuriosly succeeds with probability $\theta \in [0, 1)$ then $\prob{X = n}$ is a 
     negligible function of $n$. \par
 
 Finally, a lot of our examples will deal with graphs and isomorphisms on graphs.
@@ -114,14 +114,14 @@ In particular, we will be providing an uniform probability based definition for 
 The Turing machine that we will be using have a slightly relaxed transition function, which allows for two different actions to be taken on the same step (as in a non deterministic machine). Also, for a polynomial time Turing Machine $M$ we will write $M_r(x)$ for the output of $M$ on $x$, where $r$ is a binary string, where the $i$-th character specifies which action the machine should take on step $i$\footnote{Note the polynomial bound, this is needed since in theory decisions taken early in the string can effect the running time and such the length of the string. If the machine $M$ is always polynomial time we can then find a bound $p$ s.t. $\forall r, T(M_r(x))) \leq p(|x|) $, and as such having $r \in \{0,1\}^{p(|x|)}$ will be enough}. We can then let $l$ be the maximum length that $r$ can take and define the probability of $M$ outputting $y$ on input $x$ to be:
 
 \begin{definition} The probability of machine $M$ outputting $y$ on input $x$
-\[ \Pr[M(x) = y] = \frac{|\{r \in \{0, 1\}^{l} \mid M_r(x) = y \}|}{2^{l}}\]
+\[ \prob{M(x) = y} = \frac{|\{r \in \{0, 1\}^{l} \mid M_r(x) = y \}|}{2^{l}}\]
 \end{definition}
 
 Using this definition, we can then define our complexity classes. 
 
 \begin{definition}
 We say that a language $L \in \mathcal{P}$ if there exist a probabilistic polynomial time TM $M$ such that:
-\[x \in L \iff \Pr[M(x) = 1] = 1\]
+\[x \in L \iff \prob{M(x) = 1} = 1\]
 \end{definition}
 
 The complexity class $\mathcal{P}$ is the one we most closely associate with "efficient" computation. Notable examples of languages which belong in $\mathcal{P}$ are finite languages, regular languages, context free languages, and more. For example, the following are all in $\mathcal{P}$ : 
@@ -134,7 +134,7 @@ Compare this to the definition of $\mathcal{NP}$.
 
 \begin{definition}
 We say that a language $L \in \mathcal{NP}$ if there exist a probabilistic polynomial time TM $M$ such that:
-\[x \in L \iff \Pr[M(x) = 1] > 0\]
+\[x \in L \iff \prob{M(x) = 1} > 0\]
 \end{definition}
 
 The definition implies that there is at least one path for which the input is accepted. It is easy to see that $\mathcal{P} \subseteq \mathcal{NP}$, but the question of $\mathcal{P} =_? \mathcal{NP}$ is still open \cite{cookComplexityTheoremprovingProcedures1971} \cite{jaffeMillenniumGrandChallenge2006}. There are many $\mathcal{NP}$ problems for which there is no evidence of their belonging in $\mathcal{P}$, such as the following:
@@ -149,8 +149,8 @@ In particular, the last three languages are instances of $\mathcal{NP}$-complete
 \begin{definition}
 We say that a language $L \in \mathcal{BPP}$ if there exist a probabilistic polynomial time TM $M$ such that the following hold
 \begin{enumerate}
-    \item $x \in L \iff \Pr[M(x) = 1] \geq \frac{2}{3}$
-    \item $x \notin L \iff \Pr[M(x) = 0] \geq \frac{2}{3}$
+    \item $x \in L \iff \prob{M(x) = 1} \geq \frac{2}{3}$
+    \item $x \notin L \iff \prob{M(x) = 0} \geq \frac{2}{3}$
 \end{enumerate}
 In this case we say that $L$ is \textbf{recognizable in probabilistic polynomial time}
 \end{definition}
@@ -170,8 +170,8 @@ Computationally wise, this requires less calculations. Let's assume you can sele
 
 Finally, we can see that repeating the procedure $l$ times\footnote{In fact, since $l < 1$ for $q > 3$, repetition is only really needed for the trivial field $\mathbb{Z}_2$} (call this $M$) will have the following result:
 \begin{itemize}
-    \item $A = BC \implies \Pr[M(A, B,C) = 1] = 1$
-    \item $A \neq BC \implies \Pr[M(A, B,C) = 0] > \frac{2}{3}$
+    \item $A = BC \implies \prob{M(A, B,C) = 1} = 1$
+    \item $A \neq BC \implies \prob{M(A, B,C) = 0} > \frac{2}{3}$
 \end{itemize}
 
 Note that that brings the final complexity to $\bigO{l(nm + kn + mk + n)}$ so for some values of $l$ this might actually be slower than the deterministic algorithm.
@@ -278,9 +278,9 @@ With the above machinery, we can now start introducing Interactive Proofs.
 A pair of ITMs $(P, V)$ are an \textbf{interactive proof system} for a language $L$ if $V$ is polynomial time and the following hold:
 \begin{itemize}
     \item \textbf{Soundness} if $x \notin L$, for every ITM $E$:
-        \[ \Pr[\left<E,V \right>(x) = 1] \leq \frac{1}{3} \]
+        \[ \prob{\left<E,V \right>(x) = 1} \leq \frac{1}{3} \]
     \item \textbf{Completeness} if $x \in L$ then:
-        \[ \Pr[\left<P, V\right>(x) = 1 ] \geq \frac{2}{3}\]
+        \[ \prob{\left<P, V\right>(x) = 1 } \geq \frac{2}{3}\]
 \end{itemize}
 \end{definition}
 There are some things to note in the above definition. First of all, note that only the verifier is required to be computationally bound, while the prover has no such limit. This is required in the general case, as we will see in the next example, but often in the practical application we can make the prover polynomially bound by resorting to a similar model which makes use of auxiliary input. Secondly, as in many other examples, the bounds of $\frac{1}{3}$, $\frac{2}{3}$ can be replaced\footnote{By essentially repeating the procedure and taking majority votes} by $\frac{1}{2} \pm \epsilon$ for $\frac{1}{2} > \epsilon > 0$. From the above definition, we can prove that any language in $\mathcal{NP}$ has an interactive proof system. Letting $\mathcal{IP}$ be the set of all languages with an interactive proof system:
@@ -323,46 +323,46 @@ We start by proving this preliminary claim:
 
 \begin{theorem}
 Let $I$ be a random variable uniformly selected from $\{1, 2\}$. Let $G_1, G_2$ be two graphs such that $G_1 \cong G_2$. We also let $\Pi$ be a random variable uniformly distributed over the set of permutations of the vertex set of $G_1$ (which without loss of generality we assume being equal to the vertex set of $G_2$). Then we want to show, for every graph $F \cong G_1 \cong G_2$ the following hold:
-\[ \Pr[I = 1 | \Pi(G_I) = F] = \Pr[I = 2 | \Pi(G_I) = F] = \frac{1}{2} \]
+\[ \condprob{I = 1}{\Pi(G_I) = F} = \condprob{I = 2}{\Pi(G_I) = F} = \frac{1}{2} \]
 \end{theorem}
 \begin{proof}
 First of all let $F$ be a graph isomorphic to $G_1, G_2$. 
 Then consider the sets $S_1, S_2$ defined by $S_\delta = \{ \pi : \pi(G_\delta) = F \}$. We first claim that $|S_1| = |S_2|$. To see this, note that $G_1 \cong G_2 \implies \exists \phi : G_1 = \phi(G_2) $. Then $\pi \in S_1 \implies \pi(G_1) = F \implies \pi(\phi(G_2)) = F \implies \pi \circ \phi \in S_2$, where the last step is justified since $\alpha(\beta(G)) = (\alpha \circ \beta) (G)$. So we can see that $f: S_1 \to S_2$ defined as $f(\sigma) = \sigma \circ \phi$ is well defined, and we can prove that it is a bijection\footnote{Injectivity: $f(\sigma) = f(\sigma') \implies \sigma \phi = \sigma' \phi \implies \sigma = \sigma'$. Surjectivity: $\pi \in S_2 \implies \pi(G_2) = F \implies \pi (\phi ^ {-1} (G_1)) = F \implies \pi \circ \phi^{-1} \in S_1$. Then $f(\pi \circ \phi^{-1}) = \pi \circ \phi^{-1} \circ \phi = \pi$}. and as such $|S_1| = |S_2|$. Now using this fact we have that:
 \begin{align*}
-    & \Pr[I = 1 | \Pi(G_I) = F] \\
-    &= \Pr[\Pi(G_1) = F ]  \\
-    &= \Pr[\Pi \in S_1] \\
-    &= \Pr[\Pi \in S_2] \\
-    &= \Pr[\Pi(G_2) = F ]  \\
-    &= \Pr[I = 2 | \Pi(G_I) = F] 
+    & \condprob{I = 1}{\Pi(G_I) = F} \\
+    &= \prob{\Pi(G_1) = F }  \\
+    &= \prob{\Pi \in S_1} \\
+    &= \prob{\Pi \in S_2} \\
+    &= \prob{\Pi(G_2) = F }  \\
+    &= \condprob{I = 2}{\Pi(G_I) = F} 
 \end{align*}
-Now using Bayes' rule\footnote{And using the facts that $ \Pr[\Pi(G_I) = F | I = 1 ] = \Pr[\Pi(G_1) = F] = \Pr[\Pi \in S_1]$ and that 
-$\Pr[\Pi(G_I) = F] = \frac{Pr[\Pi(G_I) = F | I = 1 + Pr[\Pi(G_I) = F | I = 2]}{2} = \frac{1}{2}(\Pr[\Pi \in S_1] + \Pr[\Pi \in S_2])) = \Pr[\Pi \in S_1]$}:
-\[ \Pr[I = 1 | \Pi(G_I) = F] = \frac{\Pr[\Pi(G_I) = F | I = 1 ]\Pr[I = 1]}{\Pr[\Pi(G_I) = F]}  = \Pr[I = 1] = \frac{1}{2}\] 
+Now using Bayes' rule\footnote{And using the facts that $ \condprob{\Pi(G_I) = F}{I = 1} = \prob{\Pi(G_1) = F} = \prob{\Pi \in S_1}$ and that 
+$\prob{\Pi(G_I) = F} = \frac{\condprob{\Pi(G_I) = F }{I = 1} + \condprob{\Pi(G_I) = F}{I = 2}}{2} = \frac{1}{2}(\prob{\Pi \in S_1} + \prob{\Pi \in S_2})) = \prob{\Pi \in S_1}$}:
+\[ \condprob{I = 1}{\Pi(G_I) = F} = \frac{\condprob{\Pi(G_I) = F}{I = 1} \prob{I = 1}}{\prob{\Pi(G_I) = F}}  = \prob{I = 1} = \frac{1}{2}\] 
 
 \end{proof}
 
 Using this, proving the soundness property is not too hard. 
 \begin{theorem}
-    Let $V$ be the verifier in the above protocol, then for any  prover $E$ and any $G_1  \cong G_2$ we have \[ \Pr[\left<E, V\right>(G_1, G_2) = 1] \leq \frac{1}{2} \] 
+    Let $V$ be the verifier in the above protocol, then for any  prover $E$ and any $G_1  \cong G_2$ we have \[ \prob{\left<E, V\right>(G_1, G_2) = 1} \leq \frac{1}{2} \] 
 \end{theorem}
 \begin{proof}
     We see that, in the protocol, the verifier only ever accepts if the prover successfully figures out which graph was permuted and sent to it. Using the notation of the above discussion, we have that the permuted graph is represented by the random variable $\Pi(G_I)$. Letting $E$ be a random process, we see that the verifier accepts if $E(\Pi(G_I)) = I$. Then:
-    \[ \Pr[E(\Pi(G_i)) = I] = \sum_{G'} \Pr[\Pi(G_I) = G'] \Pr[E(G') = I | \Pi(G_I) = G'] \]
+    \[ \prob{E(\Pi(G_i)) = I} = \sum_{G'} \prob{\Pi(G_I) = G'} \condprob{E(G') = I}{\Pi(G_I) = G'} \]
     We now can use the proof from before and conclude that, for any $G'$
     \begin{align*}
-    \Pr[E(G') = I | \Pi(G_I) = G'] &= \sum_i \Pr[E(G') = i \; \land \; I = i | \Pi(G_I) = G' ] \\
-    &= \sum_i \Pr[E(G') = i ] \Pr[ I = i | \Pi(G_I) = G' ] 
+    \condprob{E(G') = I}{\Pi(G_I) = G'} &= \sum_i \condprob{E(G') = i \; \land \; I = i}{\Pi(G_I) = G'} \\
+    &= \sum_i \prob{E(G') = i } \condprob{ I = i}{\Pi(G_I) = G'} 
     \end{align*}
     Here we can use the fact proved before, and for $i \in \{1, 2\}$ we have that the rigth expression is equal to $\frac{1}{2}$ and as such
     \begin{align*}
-         &\sum_i \Pr[E(G') = i ] \Pr[ I = i | \Pi(G_I) = G' ] \\
-         &= \frac{\Pr[E(G') = 1 ] + \Pr[E(G') = 2]}{2} \\
-         &= \frac{\Pr[E(G') \in \{ 1, 2\}]}{2} \\
+         &\sum_i \prob{E(G') = i } \prob{ I = i}{\Pi(G_I) = G' } \\
+         &= \frac{\prob{E(G') = 1 } + \prob{E(G') = 2}}{2} \\
+         &= \frac{\prob{E(G') \in \{ 1, 2\}}}{2} \\
          &\leq \frac{1}{2}
     \end{align*}
     Where the last inequality is taking the case $E$ always outputs an element of $ \{ 1, 2\}$. Going back to the original equation:
-    \[\Pr[E(\Pi(G_i)) = I] \leq \frac{1}{2} \sum_{G'} \Pr[\Pi(G_I) = G'] = \frac{1}{2} \]
+    \[\prob{E(\Pi(G_i)) = I} \leq \frac{1}{2} \sum_{G'} \prob{\Pi(G_I) = G'} = \frac{1}{2} \]
     Since $E$ was arbitrary, this implies that any possible prover can fool the verifier with maximum probability $\frac{1}{2}$.
 \end{proof}
 
@@ -381,8 +381,8 @@ Let $L$ be a language. Then $L$ has a \textbf{perfect zero knowledge proof syste
     \item $P, V$ is an interactive proof system for $L$
     \item For any probabilistic polynomial time ITM $V'$, there exists a probabilistic polynomial time TM $M_{V'}$ such that, for any $x \in L$ the following two hold:
     \begin{enumerate}
-        \item The machine $M_{V'}$ outputs the special symbol $\bot$ with probability: \[\Pr[M_{V'}(x) = \bot] \leq \frac{1}{2}\]
-        \item Letting $m_{V'}$ be a variable describing the output of $M_{V'}$ conditioned on the output of $M_{V'} \neq \bot$ (i.e. $\Pr[m_{V'}(x) = \alpha] = \Pr[M_{V'}(x) = \alpha | M_{V'}(x) \neq \bot]$), we must have that $\left<P, V\right>(x)$ and $m_{V'}(x)$ are identically distributed
+        \item The machine $M_{V'}$ outputs the special symbol $\bot$ with probability: \[\prob{M_{V'}(x) = \bot} \leq \frac{1}{2}\]
+        \item Letting $m_{V'}$ be a variable describing the output of $M_{V'}$ conditioned on the output of $M_{V'} \neq \bot$ (i.e. $\prob{m_{V'}(x) = \alpha} = \condprob{M_{V'}(x) = \alpha}{M_{V'}(x) \neq \bot}$), we must have that $\left<P, V\right>(x)$ and $m_{V'}(x)$ are identically distributed
     \end{enumerate}
 \end{itemize}
 \end{definition}
@@ -423,7 +423,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
                   $\phi(G_1) = G_2$. Then $G' = \sigma(G_2) = (\sigma \circ \phi) (G_1)$. Then the prover can always satisfy the verifier challenge,
                   and as such the completeness bound is 1.
             \item Soundness. If $(G_1, G_2) \notin \texttt{GI}$, then there is no isomorphism between the two input graphs. Therefore for any $G'$ that a 
-                    possibly cheating prover $E$ might choose, there exists a $j \in \{1, 2\}$ such that $G_j \ncong G'$. So, since the verifier chooses $i \in_R \{1, 2\}$ after $G'$ is fixed, $\Pr[i = j] = \frac{1}{2}$ and as such the prover will fail to convince the verifier 
+                    possibly cheating prover $E$ might choose, there exists a $j \in \{1, 2\}$ such that $G_j \ncong G'$. So, since the verifier chooses $i \in_R \{1, 2\}$ after $G'$ is fixed, $\prob{i = j} = \frac{1}{2}$ and as such the prover will fail to convince the verifier 
                     at least $\frac{1}{2}$ of the times, and that is the soundness bound.
         \end{itemize}
         Now, for the arguably more challenging section of the proof let us prove that the above protocol is indeed zero knowledge.
@@ -443,10 +443,10 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
         Now onto proving that this simulator satisfies the requirement.
         Let $x \equiv (G_1, G_2) \in \texttt{GI}$.
         We first show that: 
-        \[ \Pr[M_{V'}(x) = \bot] \leq \frac{1}{2} \]
+        \[ \prob{M_{V'}(x) = \bot} \leq \frac{1}{2} \]
         Recall that \footnote{In proving the soundness bound for the interactive proof of \texttt{GNI}} we showed that, for any randomized algorithm $E$, any two isomorphic graph $G_1, G_2$, and with the variables $\Pi \in_R S_{V_1}, I \in_R \{1, 2\}$ we have that:
-        \[ \Pr[E(\Pi(G_I)) = I] \leq \frac{1}{2} \]
-        Since we see that $\Pr[M_{V'}(x) = \bot] \leq \Pr[E(\Pi(G_I)) = I]$ (as the simulation only fails when $V'$ is able to find out $i$ from $H = \pi(G_i)$), the claim is proved. \\
+        \[ \prob{E(\Pi(G_I)) = I} \leq \frac{1}{2} \]
+        Since we see that $\prob{M_{V'}(x) = \bot} \leq \prob{E(\Pi(G_I)) = I}$ (as the simulation only fails when $V'$ is able to find out $i$ from $H = \pi(G_i)$), the claim is proved. \\
         Using now the alternative characterization of zero knowledge, we aim to show that $\text{view}^{P}_{V'}(x)$ and $m_{V'}(x)$ are identically distributed.
         First of all, note that both deal with quadruples of the form $(x, r, \cdot, \cdot)$, with $r$  in both cases randomly and uniformly selected. As such, we can move on to consider only the next two components, namely the first and second message sent by the prover to the verifier.
         Let us define $s(x,r)$ be the last two elements of the quadruple outputted by the simulator (as long as the simulation succeeds), and similarly $p(x,r)$ the same elements of the quadruple of the verifier's view of the interaction.
@@ -462,17 +462,17 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
 Perfect Zero Knowledge Proofs have the extremely strong requirement that the simulation and the actual interaction yields the same identical distribution (of course when the simulator is able to answer accurately i.e. does not output $\bot$). However, this requirement is quite stringent, and as such we can relax it by borrowing from pseudorandom generators. In particular, the key insight is that for a generator to be such, it is not necessary for it to be truly random, but only for it to be impossible for a polynomial time procedure to distinguish it from a truly random sequence. In particular, we can formalize this as follows:
 \begin{definition}
 Two random variable ensembles\footnote{An ensemble $\{A_n\}_{n \in \mathbb{N}}$ is just an infinite set of random variables over $\{0, 1\}^*$ indexed by either an integer $n$, or by some string in some language} $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{computationally indistinguishable} if for any polynomial time algorithm $D$ the function
-\[ \delta(n) = \left| \; \Pr[D(A_n, 1^n) = 1] - \Pr[D(B_n, 1^n) = 1] \;  \right|  \] is a negligible function of $n$.
+\[ \delta(n) = \left| \; \prob{D(A_n, 1^n) = 1} - \prob{D(B_n, 1^n) = 1} \;  \right|  \] is a negligible function of $n$.
 \end{definition}
 A couple of notes are, as usual, in order. First of all, the $1^n$ parameter are used to rule out degenerate cases where the two distributions yields strings logarithmic in the size of $n$, and as such the $D$ algorithm is unable to run in polynomial time of $n$. The $\delta$ function is often referred to as the attackers advantage. The idea is that this metric can measure how much better the attacker can do over the general strategy of always accepting, rejecting or guessing, which always yield an advantage of\footnote{For example, if an algorithm $D$ always accepts then $\delta(n) = |1 - 1| = 0$} 0. 
 In order to further explain how this is useful let us consider the following two examples \cite{ProvableSecurityComputational}.
 
 \begin{example}
-Consider the two ensembles $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ where $\Pr[A_n = n] = \Pr[A_n = n+1] = \frac{1}{2}$, and $\Pr[B_n = n] = 1$. So $A_n$ is either $n$ or $n+1$, while $B_n$ always equals $n$. Then $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{not} computationally indistinguishable
+Consider the two ensembles $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ where $\prob{A_n = n} = \prob{A_n = n+1} = \frac{1}{2}$, and $\prob{B_n = n} = 1$. So $A_n$ is either $n$ or $n+1$, while $B_n$ always equals $n$. Then $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{not} computationally indistinguishable
 \begin{proof}
 Let $D$ be the algorithm that accepts $(x, 1^n)$ if $x = n$. Then 
 \begin{align*}
-    \delta(n) &= \left| \; \Pr[D(A_n, 1^n) = 1] - \Pr[D(B_n, 1^n) = 1] \;  \right| \\
+    \delta(n) &= \left| \; \prob{D(A_n, 1^n) = 1} - \prob{D(B_n, 1^n) = 1} \;  \right| \\
     &= \left| \; \frac{1}{2} - 1 \;  \right| = \frac{1}{2} 
 \end{align*}
 Since $\delta(n)$ is a constant, it is non negligible and as such the two ensembles are distinguishable. 
@@ -480,50 +480,50 @@ Since $\delta(n)$ is a constant, it is non negligible and as such the two ensemb
 \end{example}
 
 \begin{example}
-Consider the two ensembles $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ where $\Pr[A_n = 0^n] = 2^{-n}$, $\Pr[A_n = 1^n] = 1 - 2^{-n}$ and $\Pr[B_n = 1^n] = 1$. In order to make intuitive, $A_n$ can be generated by an algorithm that flips $n$ coins and outputs $0^n$ if all landed tails, and $1^n$ otherwise, and $B_n$ always outputs $1^n$. Then $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{computationally indistinguishable}
+Consider the two ensembles $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ where $\prob{A_n = 0^n} = 2^{-n}$, $\prob{A_n = 1^n} = 1 - 2^{-n}$ and $\prob{B_n = 1^n} = 1$. In order to make intuitive, $A_n$ can be generated by an algorithm that flips $n$ coins and outputs $0^n$ if all landed tails, and $1^n$ otherwise, and $B_n$ always outputs $1^n$. Then $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{computationally indistinguishable}
 \begin{proof}
 First of all note that the only case in which the distribution of the two differ is when $A_n = 0^n$. Intuitively, this happens only with negligible probability, and as such the overall advantage that any $D$ could gain happens scarcely enough that it does not matter. Let us give a formal proof of this fact. Let $D$ be any polynomial time algorithm. Then let: 
 \begin{align*}
-    \phi(n) &=  \Pr[D(B_n, 1^n) = 1] - \Pr[D(A_n, 1^n) = 1] \\
+    \phi(n) &=  \prob{D(B_n, 1^n) = 1} - \prob{D(A_n, 1^n) = 1} \\
     \delta(n) &= \left| \phi(n) \right| 
 \end{align*}
 Where $\phi$ is used so not to have to deal with the absolute value. 
 
 First of all note that if $A_n \neq 0^n$ then the two distributions are identical (both equal to $1^n$). So:
-\[\Pr[D(A_n, 1^n) = 1 | A_n \neq 0^n] = \Pr[D(B_n, 1^n) \]
+\[\condprob{D(A_n, 1^n) = 1}{ A_n \neq 0^n} = \prob{D(B_n, 1^n)} \]
 Then we can split the case of $D$ accepting $A_n$ into two branches:
-\[ \Pr[D(A_n, 1^n) = 1] = \Pr[D(A_n, 1^n) = 1 \land A_n \neq 0^n] + \Pr[D(A_n, 1^n) = 1 \land A_n = 0^n]   \]
+\[ \prob{D(A_n, 1^n) = 1} = \prob{D(A_n, 1^n) = 1 \land A_n \neq 0^n} + \prob{D(A_n, 1^n) = 1 \land A_n = 0^n}   \]
 Now note that the second term is greater than 0, and as such:
 \begin{align*}
-    \Pr[D(A_n, 1^n) = 1] &\geq \Pr[D(A_n, 1^n) = 1 \land A_n \neq 0^n] \\
-    &= \Pr[D(A_n, 1^n) = 1 | A_n \neq 0^n] \Pr[A_n \neq 0^n] \\
-    &= \Pr[D(B_n, 1^n) = 1] \Pr[A_n \neq 0^n] \\
-    &= \Pr[D(B_n, 1^n) = 1] (1 - 2^{-n}) \\
+    \prob{D(A_n, 1^n) = 1} &\geq \prob{D(A_n, 1^n) = 1 \land A_n \neq 0^n} \\
+    &= \condprob{D(A_n, 1^n) = 1}{A_n \neq 0^n} \prob{A_n \neq 0^n} \\
+    &= \prob{D(B_n, 1^n) = 1} \prob{A_n \neq 0^n} \\
+    &= \prob{D(B_n, 1^n) = 1} (1 - 2^{-n}) \\
 \end{align*}
 Using this we can bound the $\phi$ from above: 
 \begin{align*}
- \phi(n) &= \Pr[D(B_n, 1^n) = 1] - \Pr[D(A_n, 1^n) = 1] \\
- &\leq  \Pr[D(B_n, 1^n) = 1] - \Pr[D(B_n, 1^n) = 1] (1 - 2^{-n})  \\
- &= \Pr[D(B_n, 1^n) = 1] (1 + 2^{-n} - 1) \\
- &= 2^{-n} \Pr[D(B_n, 1^n) = 1] \\ 
+ \phi(n) &= \prob{D(B_n, 1^n) = 1} - \prob{D(A_n, 1^n) = 1} \\
+ &\leq  \prob{D(B_n, 1^n) = 1} - \prob{D(B_n, 1^n) = 1} (1 - 2^{-n})  \\
+ &= \prob{D(B_n, 1^n) = 1} (1 + 2^{-n} - 1) \\
+ &= 2^{-n} \prob{D(B_n, 1^n) = 1} \\ 
  &\leq 2^{-n} \\
 \end{align*}
-Similarly we can use the fact that $\Pr[A \land B] \leq \Pr[A]$ to conclude that:
+Similarly we can use the fact that $\prob{A \land B} \leq \prob{A}$ to conclude that:
 \begin{align*}
-    &\Pr[D(A_n, 1^n) = 1] \\
-    &= \Pr[D(A_n, 1^n) = 1 \land A_n \neq 0^n] + \Pr[D(A_n, 1^n) = 1 \land A_n = 0^n] \\
-    &\leq \Pr[A_n \neq 0^n] + \Pr[D(A_n, 1^n) = 1 \land A_n = 0^n] \\
-    &= 2^{-n} + \Pr[D(A_n, 1^n) = 1 | A_n \neq 0^n] \Pr[A_n \neq 0^n] \\
-    &= 2^{-n} + \Pr[D(B_n, 1^n) = 1] (1 - 2^{-n}) 
+    &\prob{D(A_n, 1^n) = 1} \\
+    &= \prob{D(A_n, 1^n) = 1 \land A_n \neq 0^n} + \prob{D(A_n, 1^n) = 1 \land A_n = 0^n} \\
+    &\leq \prob{A_n \neq 0^n} + \prob{D(A_n, 1^n) = 1 \land A_n = 0^n} \\
+    &= 2^{-n} + \condprob{D(A_n, 1^n) = 1}{A_n \neq 0^n} \prob{A_n \neq 0^n} \\
+    &= 2^{-n} + \prob{D(B_n, 1^n) = 1} (1 - 2^{-n}) 
 \end{align*}
 And conclude that $\phi$ is bounded below by:
 \begin{align*}
-    \phi(n) &=  \Pr[D(B_n, 1^n) = 1] - \Pr[D(A_n, 1^n) = 1] \\
-    &\geq  \Pr[D(B_n, 1^n) = 1] - 2^{-n} - \Pr[D(B_n, 1^n) = 1] (1 - 2^{-n}) \\
-    &=  - 2 ^ {-n} + 2^{-n} \Pr[D(B_n, 1^n) = 1] \\ 
+    \phi(n) &=  \prob{D(B_n, 1^n) = 1} - \prob{D(A_n, 1^n) = 1} \\
+    &\geq  \prob{D(B_n, 1^n) = 1} - 2^{-n} - \prob{D(B_n, 1^n) = 1} (1 - 2^{-n}) \\
+    &=  - 2 ^ {-n} + 2^{-n} \prob{D(B_n, 1^n) = 1} \\ 
     &\geq - 2^{-n} 
 \end{align*}
-Where the last inequality follows since $\Pr[D(B_n, 1^n) = 1] \geq 0$.
+Where the last inequality follows since $\prob{D(B_n, 1^n) = 1} \geq 0$.
 Now, since $\delta(n) = |\phi(n)| \leq  2 ^ {-n} $, it follows that $\delta$ is a negligible function of $n$, and as such $A_n, B_n$ are computationally indistinguishable. 
 
 \end{proof}
@@ -691,7 +691,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
         random variable denoting the output of $M_{V'}$ on input $G$ conditioned on it being different from $\bot$.
         Let also $A$ be any probabilistic time algorithm.
         We let:
-        \[ \epsilon_A(G) \equiv \left| \Pr[A(m_{V'}(G)) = 1] - \Pr[A(\text{view}^{P}_{V'}(x))] \right| \] 
+        \[ \epsilon_A(G) \equiv \left| \prob{A(m_{V'}(G)) = 1} - \prob{A(\text{view}^{P}_{V'}(x))} \right| \] 
         We would like to show that $\epsilon_A(G)$ is a negligible function in $n$, where $n$ is the number 
         of vertices in $G$. First of all, recall that both the view of the interaction of the machine $P$ with $V$ 
         and the output of the simulator are distributed over tuples of the form $(r, (\alpha_1, \dots , \alpha_n), (s_u, e_u, s_v, e_v))$ where (at least in the view 
@@ -927,7 +927,7 @@ Formally, we have two definition of one way functions:
     \begin{enumerate}
         \item There exists a deterministic polynomial time algorithm $A$ such that $A(x) = f(x)$
         \item For every probabilistic polynomial time algorithm $E$, every sufficiently large $n$, and $U^n$ uniformly distributed over ${0, 1}^n$ the following is negligible:
-            \[ \Pr[E(f(U^n), 1^n) \in f^{-1}(f(U^n))  ] \]
+            \[ \prob{E(f(U^n), 1^n) \in f^{-1}(f(U^n))  } \]
     \end{enumerate}
 \end{definition}
 \begin{definition}
@@ -935,7 +935,7 @@ Formally, we have two definition of one way functions:
     \begin{enumerate}
         \item There exists a deterministic polynomial time algorithm $A$ such that $A(x) = f(x)$
         \item For every probabilistic polynomial time algorithm $E$, every sufficiently large $n$, and $U_n$ uniformly distributed over ${0, 1}^n$ the following is non-negligible:
-            \[ \Pr[E(f(U_n), 1^n) \notin f^{-1}(f(U_n))  ] \]
+            \[ \prob{E(f(U_n), 1^n) \notin f^{-1}(f(U_n))  } \]
     \end{enumerate}
 \end{definition}
 In a nutshell, an algorithm that tries to invert a strongly one way function will succeed only with negligible probability.
@@ -966,7 +966,7 @@ Using this we can define the following:
     \begin{itemize}
         \item $b$ is computable in polynomial time.
         \item For every polynomial time probabilistic algorithm $E$, the following is negligible:
-        \[ \Pr[E(f(U_n)) = b(U_n)] - \frac{1}{2} \]
+        \[ \prob{E(f(U_n)) = b(U_n)} - \frac{1}{2} \]
     \end{itemize}
 \end{definition}
 In other words, any algorithm that aims to compute $b(x)$ by only having access to $f(x)$ will succeed with probability
@@ -1040,7 +1040,7 @@ We can now prove the equivalence of our two definition of $\mathcal{P}$, let us 
 Let $L \in \mathcal{P}$, then there exist a Turing Machine $M$ such that the machine outputs one for each $x \in L$ and always halts in polynomially many steps. 
 Construct a probabilistic TM $M_1$ as follows: copy everything from $M$, except the transition function, replacing each transition of the form $\phi(s, i) = x$ with $\phi_1(s, i) = (x, x)$. Recall from the definition that on each step the machine $M_1$ will randomly choose between left and right transition. Since for each transition left and right are always equal, the choice is meaningless and for each transition it will take the same action as $M$ (taking of course the same exact number of steps). Since $M$ recognized $L$, then $M_1$ will also, and as such $L \in \mathcal{P}_{prob}$, which implies $\mathcal{P} \subseteq \mathcal{P}_{prob}$.  \par
 
-Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \Pr[M(x) = 1] = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in \{0,1\}^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \mathcal{P}$, which in turn implies $\mathcal{P}_{prob} \subseteq \mathcal{P}$  \par
+Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \prob{M(x) = 1} = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in \{0,1\}^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \mathcal{P}$, which in turn implies $\mathcal{P}_{prob} \subseteq \mathcal{P}$  \par
 
 So, since $\mathcal{P} \subseteq \mathcal{P}_{prob}$ and $\mathcal{P}_{prob} \subseteq \mathcal{P}$, it must be that $\mathcal{P} = \mathcal{P}_{prob}$
 \end{proof}
@@ -1066,9 +1066,9 @@ Let $L \in \mathcal{NP}$, then there exist a relation $R_L$ s.t. that $R_L$ is r
     \item If we recognized $(x, y) \in R_L$, accept, else reject. 
 \end{enumerate}
 
-Since the certificate exists, and it is polynomial in the size of $x$, there will always be at least one extremely lucky machine that will guess it, and as such $\Pr[M(x) = 1] > 0$ for $x \in L$. So $L \in \mathcal{NP}_{prob}$, which implies $\mathcal{NP} \subseteq \mathcal{NP}_{prob}$. 
+Since the certificate exists, and it is polynomial in the size of $x$, there will always be at least one extremely lucky machine that will guess it, and as such $\prob{M(x) = 1} > 0$ for $x \in L$. So $L \in \mathcal{NP}_{prob}$, which implies $\mathcal{NP} \subseteq \mathcal{NP}_{prob}$. 
 
-Conversely, let $L \in \mathcal{NP}_{prob}$. Then there exist a probabilistic time machine $M$ s.t. $x \in L \iff \Pr[M(x) = y] > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \{ (x, r) | x \in L \text { and } M_r(x) = 1 \}$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existance is met by our above reasoning. Finally, since $r$ is bound by the bound on the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \mathcal{NP}$, which in turn implies $\mathcal{NP}_{prob} \subseteq \mathcal{NP}$. \par
+Conversely, let $L \in \mathcal{NP}_{prob}$. Then there exist a probabilistic time machine $M$ s.t. $x \in L \iff \prob{M(x) = y} > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \{ (x, r) | x \in L \text { and } M_r(x) = 1 \}$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existance is met by our above reasoning. Finally, since $r$ is bound by the bound on the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \mathcal{NP}$, which in turn implies $\mathcal{NP}_{prob} \subseteq \mathcal{NP}$. \par
 
 So, since $\mathcal{NP} \subseteq \mathcal{NP}_{prob}$ and $\mathcal{NP}_{prob} \subseteq \mathcal{NP}$, it must be that $\mathcal{NP} = \mathcal{NP}_{prob}$
 
