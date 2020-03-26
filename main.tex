@@ -39,7 +39,7 @@ We start by defining some crucial sets of string \footnote{In general, the use o
 $\bin^n = \{ a_1 a_2 \dots a_n \mid a_i \in \bin\}$
 \end{definition}
 \begin{definition}
-$\bin^* = \{ a_1 a_2 \dots a_n \mid a_i \in \bin \text{ \normalfont{ and }} n \in \mathbb{N} \}$
+$\bin^* = \{ a_1 a_2 \dots a_n \mid a_i \in \bin \text{ \normalfont{ and }} n \in \NN \}$
 \end{definition}
 
 It is important to stress that $\bin^*$ is the set of all \textit{finite} strings, and also that the empty string, denoted $\epsilon \in \bin^*$.
@@ -56,9 +56,9 @@ Now, a couple of utilities for talking about the asymptotic complexity of variou
 
 \begin{definition} We define the following sets:
 \begin{align*}
-    \bigO{f} &= \{ g \mid \exists r \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : g(n) \leq r f(n)  \} \\
-    \bigOmega{f} &= \{ g \mid \exists r \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : r g(n) \geq f(n)  \} \\
-    \bigsmallO{f} &= \{ g \mid \exists r_1,r_2 \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : r_1 g(n) \leq f(n) \leq r_2 g(n)  \}
+    \bigO{f} &= \{ g \mid \exists r \in \RR^+, N \in \NN \text{ s.t } \forall n \geq N : g(n) \leq r f(n)  \} \\
+    \bigOmega{f} &= \{ g \mid \exists r \in \RR^+, N \in \NN \text{ s.t } \forall n \geq N : r g(n) \geq f(n)  \} \\
+    \bigsmallO{f} &= \{ g \mid \exists r_1,r_2 \in \RR^+, N \in \NN \text{ s.t } \forall n \geq N : r_1 g(n) \leq f(n) \leq r_2 g(n)  \}
 \end{align*}
 \end{definition}
 We also allow for two slight relaxation of notation, writing for example $\bigO{f}$ as $\bigO{f(n)}$ and $f \in \bigO{g}$ as $f = \bigO{g}$. Furthermore, we define the following useful set:
@@ -69,7 +69,7 @@ as the set of all functions bounded above by a polynomial.
 As before, we will allow a slight relaxation and use $\text{poly}(\cdot)$ to specify some fixed but unspecified polynomial.
 
 \begin{definition}
-Let $\mu : \mathbb{N} \to \mathbb{R}$. We say $\mu$ is \textbf{negligible} if for every positive polynomial $p(\cdot)$ there exist a $N \in \mathbb{N}$ s.t for every $n > N$ we have:
+Let $\mu : \NN \to \RR$. We say $\mu$ is \textbf{negligible} if for every positive polynomial $p(\cdot)$ there exist a $N \in \NN$ s.t for every $n > N$ we have:
 \[\mu(n) < \frac{1}{p(n)}\]
 \end{definition}
 As an example, functions such $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of poly. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. \par
@@ -125,8 +125,8 @@ We say that a language $L \in \mathcal{P}$ if there exist a probabilistic polyno
 \end{definition}
 
 The complexity class $\mathcal{P}$ is the one we most closely associate with "efficient" computation. Notable examples of languages which belong in $\mathcal{P}$ are finite languages, regular languages, context free languages, and more. For example, the following are all in $\mathcal{P}$ : 
-\[ \{(a_1, ... a_n) \, | \, n \in \mathbb{N} \text{ and } a_i \leq a_{i+1} \}\]
-\[ \{ p \,|\, p \in \mathbb{N} \text{ and } p \text{ prime } \}\]
+\[ \{(a_1, ... a_n) \, | \, n \in \NN \text{ and } a_i \leq a_{i+1} \}\]
+\[ \{ p \,|\, p \in \NN \text{ and } p \text{ prime } \}\]
 
 In general, a language being in $\mathcal{P}$ implies there exist a machine such that all the computation paths recognize the input if the input is indeed in the language. \par
 
@@ -140,8 +140,8 @@ We say that a language $L \in \mathcal{NP}$ if there exist a probabilistic polyn
 The definition implies that there is at least one path for which the input is accepted. It is easy to see that $\mathcal{P} \subseteq \mathcal{NP}$, but the question of $\mathcal{P} =_? \mathcal{NP}$ is still open \cite{cookComplexityTheoremprovingProcedures1971} \cite{jaffeMillenniumGrandChallenge2006}. There are many $\mathcal{NP}$ problems for which there is no evidence of their belonging in $\mathcal{P}$, such as the following:
 
 \[ \texttt{INT\_FACT} = \{ (n, k) \, | \, \exists f : 1 < f < k \text { and } f \text{ divides } n\}\]
-\[ \texttt{SUB\_SUM} = \{ G \subset_{fin} \mathbb{Z} \, | \, n \in \mathbb{N} \exists S \subseteq G : \sum_{i \in S} i = 0  \} \}\]
-\[ \texttt{SAT} = \{ \phi : \bin^n \to \bin \, | \, n \in \mathbb{N} \text{ and } \exists a_1 \dots a_n : \phi(a_1, \dots a_n) = 1 \} \]
+\[ \texttt{SUB\_SUM} = \{ G \subset_{fin} \ZZ \, | \, n \in \NN \exists S \subseteq G : \sum_{i \in S} i = 0  \} \}\]
+\[ \texttt{SAT} = \{ \phi : \bin^n \to \bin \, | \, n \in \NN \text{ and } \exists a_1 \dots a_n : \phi(a_1, \dots a_n) = 1 \} \]
 \[ \texttt{GRAPH\_HOM} = \{ (G, H) \, | \, \exists \phi : G \to H \text{ s.t. $\phi$ is a graph homomorphism} \}\]
 
 In particular, the last three languages are instances of $\mathcal{NP}$-complete problems, i.e. problems that are conceptually as hard as any problem in $\mathcal{NP}$ (more on this in the appendix). It is interesting to see that each of this problem involves some sort of search over an exponentially large possibility space, and the correctness can be easily verified by the result of such search. We associate thus $\mathcal{NP}$ class with problems that can be efficiently verified.
@@ -168,7 +168,7 @@ Consider three matrices, $A, B, C$ where $A \in \mathbb{F}^{n \times m}$, $B \in
 Computationally wise, this requires less calculations. Let's assume you can select a random $k$-vector in $\bigO{k}$ steps, then the first step is $\bigO{m}$, the two computations take respectively $\bigO{nm}$ and $\bigO{k (n + m)}$\footnote{This is optimized computing $(B(Cx))$} and the comparison will be $\bigO{n}$. So in total the operation is $\bigO{nm + kn + mk + n}$. We claim that, trivially, if $A = BC$ then the algorithm always answer correctly. Furthermore if $A \neq BC$ then the algorithm answers correctly in the majority of cases. Let $D = BC$ Note that if the algorithm is to output incorrectly, it must be that $Ax = Dx$. Then it must be that $(A - D) x = 0$, and as such $x \in \ker(A - D)$. Note that $A - D \in \mathbb{F}^{n \times m}$ and as such $A - D$ can be seen as a linear transformation from $\mathbb{F}^m \to \mathbb{F}^n$. The whole problem reduces to finding the probability that a vector picked at random belongs to the kernel of a linear transformation. Let $|\mathbb{F}| = q$, the size of the underlying field\footnote{Note that in this case we assume the underlying field to be finite, the infinite case can also be handled but requires more thought}. First of all note that since $A \neq D$ at least one of the of the row of the matrix is non zero, and as such $\dim \ker (A - D) < m$. Since the size of any vector space $V$ over $\mathbb{F}$ is $|V| = q^{\dim V}$, then the size of the kernel is at most $q^{m - 1}$. As such the probability of a random vector belonging to the kernel is at most $\frac{q^{m-1}}{q^m}=\frac{1}{q}$. We can then calculate that, repeating the algorithm $l$ times the probability of getting at least one vector not in the kernel is $1 - \left(\frac{1}{q}\right)^l$ and if we want to ensure that this probability is greater than $\frac{2}{3}$ we can then set:
 \[l > \frac{\log \frac{1}{3}}{\log \frac{1}{q}} = \frac{\log{3}}{\log{q}}\]
 
-Finally, we can see that repeating the procedure $l$ times\footnote{In fact, since $l < 1$ for $q > 3$, repetition is only really needed for the trivial field $\mathbb{Z}_2$} (call this $M$) will have the following result:
+Finally, we can see that repeating the procedure $l$ times\footnote{In fact, since $l < 1$ for $q > 3$, repetition is only really needed for the trivial field $\ZZ_2$} (call this $M$) will have the following result:
 \begin{itemize}
     \item $A = BC \implies \prob{M(A, B,C) = 1} = 1$
     \item $A \neq BC \implies \prob{M(A, B,C) = 0} > \frac{2}{3}$
@@ -267,7 +267,7 @@ Note that the definition is asymmetric, as it only accounts for the output of $B
 Furthermore, we need to accurately represent time complexity in this model, and we say that:
 
 \begin{definition}
-An ITM $A$ has time complexity $t: \mathbb{N} \to \mathbb{N}$ if, for any string $x$ and every linked ITM $B$, and any computation path, it halts within $t(|x|)$ steps. 
+An ITM $A$ has time complexity $t: \NN \to \NN$ if, for any string $x$ and every linked ITM $B$, and any computation path, it halts within $t(|x|)$ steps. 
 \end{definition}
 
 In a nutshell, the above implies that, regardless of the messages that machine $B$ sends, machine $A$ always terminates quickly enough. 
@@ -461,14 +461,14 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
 \subsection{Computational Zero Knowledge}
 Perfect Zero Knowledge Proofs have the extremely strong requirement that the simulation and the actual interaction yields the same identical distribution (of course when the simulator is able to answer accurately i.e. does not output $\bot$). However, this requirement is quite stringent, and as such we can relax it by borrowing from pseudorandom generators. In particular, the key insight is that for a generator to be such, it is not necessary for it to be truly random, but only for it to be impossible for a polynomial time procedure to distinguish it from a truly random sequence. In particular, we can formalize this as follows:
 \begin{definition}
-Two random variable ensembles\footnote{An ensemble $\{A_n\}_{n \in \mathbb{N}}$ is just an infinite set of random variables over $\bin^*$ indexed by either an integer $n$, or by some string in some language} $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{computationally indistinguishable} if for any polynomial time algorithm $D$ the function
+Two random variable ensembles\footnote{An ensemble $\{A_n\}_{n \in \NN}$ is just an infinite set of random variables over $\bin^*$ indexed by either an integer $n$, or by some string in some language} $\{A_n\}_{n \in \NN}$ and $\{B_n\}_{n \in \NN}$ are \textbf{computationally indistinguishable} if for any polynomial time algorithm $D$ the function
 \[ \delta(n) = \left| \; \prob{D(A_n, 1^n) = 1} - \prob{D(B_n, 1^n) = 1} \;  \right|  \] is a negligible function of $n$.
 \end{definition}
 A couple of notes are, as usual, in order. First of all, the $1^n$ parameter are used to rule out degenerate cases where the two distributions yields strings logarithmic in the size of $n$, and as such the $D$ algorithm is unable to run in polynomial time of $n$. The $\delta$ function is often referred to as the attackers advantage. The idea is that this metric can measure how much better the attacker can do over the general strategy of always accepting, rejecting or guessing, which always yield an advantage of\footnote{For example, if an algorithm $D$ always accepts then $\delta(n) = |1 - 1| = 0$} 0. 
 In order to further explain how this is useful let us consider the following two examples \cite{ProvableSecurityComputational}.
 
 \begin{example}
-Consider the two ensembles $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ where $\prob{A_n = n} = \prob{A_n = n+1} = \frac{1}{2}$, and $\prob{B_n = n} = 1$. So $A_n$ is either $n$ or $n+1$, while $B_n$ always equals $n$. Then $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{not} computationally indistinguishable
+Consider the two ensembles $\{A_n\}_{n \in \NN}$ and $\{B_n\}_{n \in \NN}$ where $\prob{A_n = n} = \prob{A_n = n+1} = \frac{1}{2}$, and $\prob{B_n = n} = 1$. So $A_n$ is either $n$ or $n+1$, while $B_n$ always equals $n$. Then $\{A_n\}_{n \in \NN}$ and $\{B_n\}_{n \in \NN}$ are \textbf{not} computationally indistinguishable
 \begin{proof}
 Let $D$ be the algorithm that accepts $(x, 1^n)$ if $x = n$. Then 
 \begin{align*}
@@ -480,7 +480,7 @@ Since $\delta(n)$ is a constant, it is non negligible and as such the two ensemb
 \end{example}
 
 \begin{example}
-Consider the two ensembles $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ where $\prob{A_n = 0^n} = 2^{-n}$, $\prob{A_n = 1^n} = 1 - 2^{-n}$ and $\prob{B_n = 1^n} = 1$. In order to make intuitive, $A_n$ can be generated by an algorithm that flips $n$ coins and outputs $0^n$ if all landed tails, and $1^n$ otherwise, and $B_n$ always outputs $1^n$. Then $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{computationally indistinguishable}
+Consider the two ensembles $\{A_n\}_{n \in \NN}$ and $\{B_n\}_{n \in \NN}$ where $\prob{A_n = 0^n} = 2^{-n}$, $\prob{A_n = 1^n} = 1 - 2^{-n}$ and $\prob{B_n = 1^n} = 1$. In order to make intuitive, $A_n$ can be generated by an algorithm that flips $n$ coins and outputs $0^n$ if all landed tails, and $1^n$ otherwise, and $B_n$ always outputs $1^n$. Then $\{A_n\}_{n \in \NN}$ and $\{B_n\}_{n \in \NN}$ are \textbf{computationally indistinguishable}
 \begin{proof}
 First of all note that the only case in which the distribution of the two differ is when $A_n = 0^n$. Intuitively, this happens only with negligible probability, and as such the overall advantage that any $D$ could gain happens scarcely enough that it does not matter. Let us give a formal proof of this fact. Let $D$ be any polynomial time algorithm. Then let: 
 \begin{align*}
@@ -562,7 +562,7 @@ Formally, we define a bit commitment scheme as follows:
     on common security parameter $n$, satisfy the following requirements.
     \begin{itemize}
         \item \textbf{Secrecy}. For any probabilistic polynomial time interactive machine $E$, 
-            the ensembles $\{ \left<S(0), E\right>(1^n) \}_{n \in \mathbb{N}}$ and $\{ \left<S(1), E\right>(1^n) \}_{n \in \mathbb{N}}$ are computationally indistinguishable.
+            the ensembles $\{ \left<S(0), E\right>(1^n) \}_{n \in \NN}$ and $\{ \left<S(1), E\right>(1^n) \}_{n \in \NN}$ are computationally indistinguishable.
         \item \textbf{Unambiguity} We let $(r, \bar{m})$ be, respectively, the random bits used by the receiver and the messages received by the sender. 
                 Then we say that $(r, \bar{m})$ is a $i$-commitment if for some random string $s$ the machine\footnote{Here we use the notation $M_r(x)$ to denote the machine $M$ running with local coins $r$ on input $x$} $S_s(i, 1^n)$ produces the sequence of messages $\bar{m}$ when interacting with $R$ with local coins $r$. 
                 If $(r, \bar{m})$ is both a 0-commitment and a 1-commitment, then it is ambiguos. 
@@ -601,7 +601,7 @@ As such we define:
 \begin{definition}
     A \textbf{one-way-interaction bit commitment scheme} is a polynomial time algorithm $F$ such that.
     \begin{itemize}
-        \item For $s$ uniformly drawn from $\bin^n$, the ensembles $\{ F_s(0, 1^n) \}_{n \in \mathbb{N}}$ and $\{ F_s(1, 1^n) \}_{n \in \mathbb{N}}$ are computationally indistinguishable.
+        \item For $s$ uniformly drawn from $\bin^n$, the ensembles $\{ F_s(0, 1^n) \}_{n \in \NN}$ and $\{ F_s(1, 1^n) \}_{n \in \NN}$ are computationally indistinguishable.
         \item There does not exists $s$ such that $F_s(0, 1^n) = F_s(1, 1^n)$.
         \item For such a scheme, the (canonical) reveal of $F_s(i, 1^n)$ is $(i, s)$.
     \end{itemize}
@@ -730,7 +730,7 @@ of the discrete logarithm problem, and in particular on the following zero knowl
 discrete logarithm, due to \cite{chaumImprovedProtocolDemonstrating1988}.
 \begin{itemize}
     \item The prover wants to show that it possesses a $x$ such that $\alpha^x \equiv \beta \pmod N$, where $\alpha, \beta, N$
-          are chosen in advance and known to both parties\footnote{In particular $N$ is chosen so that the discrete log is hard in the group $\mathbb{Z}_N^\times$}.
+          are chosen in advance and known to both parties\footnote{In particular $N$ is chosen so that the discrete log is hard in the group $\ZZ_N^\times$}.
     \item The prover choses a $r$ uniformly randomly from the set $1, \dots, \phi(N)$, where $\phi(\cdot)$ is Euler's
           totient function. It then computes the value of $\gamma \equiv \alpha^r$, and sends it to the prover.
     \item The verifier selects a bit $b \in \bin$ uniformly and randomly, and sends it over to the prover
@@ -986,20 +986,20 @@ The discrete logarithm generalizes this to arbitrary groups. In particular:
 \end{definition}
 A couple of things to note. First of all, it is important to note that some times the discrete logarithm does not exists.
 For example, since the equation $2^k \equiv 3 \mod 15$ has no solution\footnote{As $2^2 \equiv 4, 2^3 \equiv 8, 2^4 \equiv 1 \mod 15$, and the cycle repeats}
-then there is no $\log_2 3$ in $(\mathbb{Z}_{15})^\times$. In case $\mathbb{G}$ is a cyclic group, and $g$ is a generator then 
+then there is no $\log_2 3$ in $(\ZZ_{15})^\times$. In case $\mathbb{G}$ is a cyclic group, and $g$ is a generator then 
 every element $h \in \mathbb{G}$ has a $\log_g h$. While the real valued logarithm is generally easy to compute (for integers there 
 are strategies using a method similary to binary search, for real values Newton Methods yield good approximations), there are no 
 general techniques that, for every group $\mathbb{G}$, efficiently solve the problem. In fact, it is generally believed (and one 
 of the core assumptions of a number of protocols such as Diffie Hellman), that there exists groups where the discrete log problem 
 is not only hard to solve in the worst case, but actually seems to be extremely complicated to solve in the average\footnote{It can be shown
 using random self reducibility, that if an hard instance exists than on the average the problem will also be hard} (CITE).
-In particular, cyclic groups such as $\mathbb{Z}_p^\times$ are often good candidates, even tough if $p - 1$ has many factors 
+In particular, cyclic groups such as $\ZZ_p^\times$ are often good candidates, even tough if $p - 1$ has many factors 
 then there are efficient algorithms such as the Pohlig–Hellman \cite{pohligImprovedAlgorithmComputing1978}. In practice, 
 if modular arithmetic is used, the prime $p$ is chosen so that $p = 2q + 1$ for some other prime $q$. Using this and using
 suitably large primes the discrete logarithm problem is considered intractable. The other alternative to 
 modular arithmetic is using elliptic curves. Elliptic curves are defined over a field\footnote{In fact, it is required this 
 field has characteristic not 2 or 3, otherwise the equation becomes more complicated} $\mathbb{F}$. In particular,
-this field is in practice of the form $\mathbb{Z}_p$ for $p$ prime, and it is defined by the set of points $(x, y) \in \mathbb{F}^2 \cup \{ \infty \}$ such that\footnote{In fact the one below is
+this field is in practice of the form $\ZZ_p$ for $p$ prime, and it is defined by the set of points $(x, y) \in \mathbb{F}^2 \cup \{ \infty \}$ such that\footnote{In fact the one below is
 one of the possible equations for elliptic curves, there are many with different advantages, but all of the general form: $\alpha_0 y^2 + \alpha_1 xy = \beta_0 x^3 + \beta_1 x^2 + \beta_2 x + \gamma$}:
 \[ y^2 = x^3 + \alpha x + \beta \]
 For suitable constant parameters $\alpha, \beta$, we can define addition in a geometrical manner, having that the sum of some 
@@ -1045,6 +1045,7 @@ Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $
 So, since $\mathcal{P} \subseteq \mathcal{P}_{prob}$ and $\mathcal{P}_{prob} \subseteq \mathcal{P}$, it must be that $\mathcal{P} = \mathcal{P}_{prob}$
 \end{proof}
 
+
 \begin{definition}
 We say that a language $L \in \mathcal{NP}$ if there exist a relation $R_L \subseteq \bin^* \times \bin^*$ and a polynomial $p(\cdot)$ such that the following hold: 
 \begin{enumerate}
@@ -1053,8 +1054,8 @@ We say that a language $L \in \mathcal{NP}$ if there exist a relation $R_L \subs
 \end{enumerate}
 Such a $y$ is a \textbf{witness for membership of } $x \in L$
 \end{definition}
-In particular, note the bound requirement on the witness $y$. This ensures that the certificate is not more than polynomially bigger than the problem statement. If this were not the case, then let us take for example the language \[TAUT = \{ \phi : \bin^n \to \bin | n \in \mathbb{N}, \forall (x_1, \dots x_n): \phi(x_1, \dots, x_n) = 1\}\]
-i.e. the language of all boolean formulas that return true for every input. If the bounds on the polynomial size of the certificate were to be lifted, then we could allow for a relation language $R_{TAUT} = \{ (\phi, 1^{2n}) | n \in \mathbb{N}, \phi : \bin^n \to \bin, \phi \in TAUT  \}$. Such language is recognizable in polynomial time in the certificate (as evaluating a boolean formula of $n$ variable takes polynomial time in the formula length, and enumerating all possible $n$ boolean variables takes $\bigO{2^n}$ which is polynomial in the length of the certificate), however, if the bound is upheld we have no evidence of the belonging of $TAUT$ in $\mathcal{NP}$ (in fact, we know that $TAUT \in \text{co-}\mathcal{NP}$, and the relation between the two classes is still not clear).
+In particular, note the bound requirement on the witness $y$. This ensures that the certificate is not more than polynomially bigger than the problem statement. If this were not the case, then let us take for example the language \[TAUT = \{ \phi : \bin^n \to \bin | n \in \NN, \forall (x_1, \dots x_n): \phi(x_1, \dots, x_n) = 1\}\]
+i.e. the language of all boolean formulas that return true for every input. If the bounds on the polynomial size of the certificate were to be lifted, then we could allow for a relation language $R_{TAUT} = \{ (\phi, 1^{2n}) | n \in \NN, \phi : \bin^n \to \bin, \phi \in TAUT  \}$. Such language is recognizable in polynomial time in the certificate (as evaluating a boolean formula of $n$ variable takes polynomial time in the formula length, and enumerating all possible $n$ boolean variables takes $\bigO{2^n}$ which is polynomial in the length of the certificate), however, if the bound is upheld we have no evidence of the belonging of $TAUT$ in $\mathcal{NP}$ (in fact, we know that $TAUT \in \text{co-}\mathcal{NP}$, and the relation between the two classes is still not clear).
 
 We can similarly prove that our antecedent definition of $\mathcal{NP}$ (call it $\mathcal{NP}_{prob}$) is the same as the classical one. 
 
