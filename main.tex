@@ -874,6 +874,27 @@ the hash is determined from public parameters the verifier can make sure that th
 that would advantage it. Also, by the fact that the hash function is indistinguishable from a random function, the prover 
 will have to solve a problem of the same difficulty as the one in the interactive proof. A transformation of the above protocol 
 to a non interactive one is as follows:
+
+\begin{figure}[H]
+    \centering
+    \fbox{%
+        \procedure{Non Interactive Proof of knowledge of a discrete log $\beta$ in base $\alpha$}{%
+            \textbf{Prover} \> \> \textbf{Verifier} \pclb
+            \pcintertext[center]{$\alpha, \beta, N$. An Hash function $H(\cdot)$} \\
+            \text{Find } x \text{ s.t. } \alpha^x \equiv \beta \pmod N \> \> \\
+            r \sample \set{1, \dots, \phi(N)} \> \> \\
+            \gamma \equiv \alpha^r \pmod N \> \> \\
+            b \coloneqq H(\alpha, \beta, \gamma)  \> \> \\
+            y \equiv r + bx \pmod{\phi(N)} \> \> \\
+            \> \sendmessageright*{\gamma, y} \> \\
+            \> \> b' \coloneqq H(\alpha, \beta, \gamma) \\
+            \> \> \pcreturn \alpha^y \equiv_? \gamma \beta^{b'} \pmod{N}  
+        }
+    }
+    \caption{An non interactive proof of knowledge for Discrete Log}
+    \label{discretelognoninteractive}
+\end{figure}
+
 \begin{itemize}
     \item The prover has a $x$ such that $\alpha^x \equiv \beta \pmod N$. The conditions are as above.
          Furthermore, both the prover and the verifier have access to an hash function $H(\cdot)$
