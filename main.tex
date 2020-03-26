@@ -30,7 +30,32 @@
 \section{Introduction}
 
 
+
 \section{Motivation}
+Zero Knowledge Proofs have applications in a number of fields outside of theory. 
+Examples space from classical cryptography settings such as message signature and authentication to more 
+practical ones such as online age verification and electronic voting. The development
+\footnote{And the "hype" associated with it} 
+of online blockchain based transaction systems has given indications of another direction that ZKP applications could 
+emerge. In this section we will be focusing on this application, has it gives a good indication of a complex problem that
+ZKP can solve. Consider a blockchain system, such as BitCoin
+\footnote{But not limited to, in fact, as far as I know, every major blockchain system works majorly in the same way}.
+ As you probably are aware, BitCoin accounts are uniquely identified
+by an address, and this address is visible in every transcation that the account is involved in. In fact, knowing the ownership 
+of an account allows anyone to reconstruct from the public ledger the entire transaction history, complete with transaction 
+amounts. Furthermore, the balance of any address is publicly available. What some efforts are working on is to allow 
+for a blockchain system to be completely private, so that transactions can be done between actors while maintaining
+anonimity. Of course, many technical problems arise when trying to do so, but let us focus on one in particular. 
+Suppose account $A$ wants to transfer an amount $X$ to an account $B$. What party $B$ would like to verify is that 
+$A$ actually has enough balance to transfer such amount. However, since the system that we design is private, $B$ does 
+not have the ability to peer into $A$ account or its balance. Instead, to solve this problem, we make it so that 
+when $A$ initiates the transaction, it produces a "proof" that its balance is greater than $X$. 
+This proof has to have three properties. First of all, it must be convincing, so that if $A$ does indeed have 
+enough enough funds, then $B$ will be confident that the proof provided is correct. Secondly, it must be 
+unforgeable, so if $A$ does not have enough funds $B$ will never be convinced that it does. Thirdly, it must 
+be zero knowledge, as it will not leak to $B$ any information about $A$ (like balance, account number ecc.) other 
+than the fact that $A$ has more than $X$ in its balance. This can be done via what is called a Zero Knowledge Range Proof,
+and in this paper we will be building to a very simple ZKRP based on the discrete logarithm problem.  
 
 
 \section{Preliminaries}
