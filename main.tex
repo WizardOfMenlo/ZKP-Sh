@@ -565,7 +565,10 @@ Where $\phi$ is used so not to have to deal with the absolute value.
 First of all note that if $A_n \neq 0^n$ then the two distributions are identical (both equal to $1^n$). So:
 \[\condprob{D(A_n, 1^n) = 1}{ A_n \neq 0^n} = \prob{D(B_n, 1^n)} \]
 Then we can split the case of $D$ accepting $A_n$ into two branches:
-\[ \prob{D(A_n, 1^n) = 1} = \prob{D(A_n, 1^n) = 1 \land A_n \neq 0^n} + \prob{D(A_n, 1^n) = 1 \land A_n = 0^n}   \]
+\begin{align*}
+    \prob{D(A_n, 1^n) = 1} =&  \prob{D(A_n, 1^n) = 1 \land A_n \neq 0^n} \\
+                            &+ \prob{D(A_n, 1^n) = 1 \land A_n = 0^n}
+\end{align*}
 Now note that the second term is greater than 0, and as such:
 \begin{align*}
     \prob{D(A_n, 1^n) = 1} &\geq \prob{D(A_n, 1^n) = 1 \land A_n \neq 0^n} \\
