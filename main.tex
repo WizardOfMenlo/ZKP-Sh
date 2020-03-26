@@ -5,7 +5,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{appendix}
-\usepackage[landau, probability]{cryptocode}
+\usepackage[landau, sets, probability]{cryptocode}
 
 
 
@@ -36,20 +36,20 @@
 \subsection{Mathematical Notation}
 We start by defining some crucial sets of string \footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set. We don't make too much use of it in this text tough.}.
 \begin{definition}
-$\{0, 1\}^n = \{ a_1 a_2 \dots a_n \mid a_i \in \{0, 1\}\}$
+$\bin^n = \{ a_1 a_2 \dots a_n \mid a_i \in \bin\}$
 \end{definition}
 \begin{definition}
-$\{0, 1\}^* = \{ a_1 a_2 \dots a_n \mid a_i \in \{0, 1\} \text{ \normalfont{ and }} n \in \mathbb{N} \}$
+$\bin^* = \{ a_1 a_2 \dots a_n \mid a_i \in \bin \text{ \normalfont{ and }} n \in \mathbb{N} \}$
 \end{definition}
 
-It is important to stress that $\{0, 1\}^*$ is the set of all \textit{finite} strings, and also that the empty string, denoted $\epsilon \in \{0, 1\}^*$.
+It is important to stress that $\bin^*$ is the set of all \textit{finite} strings, and also that the empty string, denoted $\epsilon \in \bin^*$.
 
 \begin{definition}
-A \textbf{language} $L$ is a subset of $\{0, 1\}^*$, i.e. $L \subseteq \{0, 1\}^*$
+A \textbf{language} $L$ is a subset of $\bin^*$, i.e. $L \subseteq \bin^*$
 \end{definition}
 
 Examples of languages include 
-\[ \{ x \in \{0, 1\}^* \mid |x| = 2 \}, \{ \langle(x, y, z)\rangle \mid x^2 + y^2 = z^2 \}, \dots \]
+\[ \{ x \in \bin^* \mid |x| = 2 \}, \{ \langle(x, y, z)\rangle \mid x^2 + y^2 = z^2 \}, \dots \]
 Note in particular the use of $\langle \cdot \rangle$ to denote the binary representation of the inner element. In general, as long as the element can be encoded in binary in polynomial space, we will not concern ourselves too much with said representation, and sometime even omit the brackets. In particular note that, unless specified otherwise, integers are encoded in binary and without brackets.  \par
 
 Now, a couple of utilities for talking about the asymptotic complexity of various functions.
@@ -81,7 +81,7 @@ There a couple of notions of probability that we will most likely need.
     occurring with probability $\theta$. Then the probability of the total number of success $X$ being exactly equal to $k$ follows a binomial distribution and:
     \[ \prob{X = k} = \binom{n}{k} \theta^k (1 - \theta)^{n - k} \]
 \end{definition}
-In particular, we have that in those $n$ trials we expect $\mathbb{E}[X] = n\theta$ events to occurr. This is useful, expecially since 
+In particular, we have that in those $n$ trials we expect $\expect{X} = n\theta$ events to occurr. This is useful, expecially since 
     we have that the probability of an event always occurring is $\prob{X = n} = \theta^n$. This will be useful especially 
     to  estimate the probability of some algorithm succeeding multiple times when it is not supposed to. 
     Note in particular that if a algorithm spuriosly succeeds with probability $\theta \in [0, 1)$ then $\prob{X = n}$ is a 
@@ -111,10 +111,10 @@ The computational model used in this paper is that of Turing Machines (TMs) \cit
 
 In particular, we will be providing an uniform probability based definition for the complexity classes. The traditional (and equivalent) definitions are in the appendix.
 
-The Turing machine that we will be using have a slightly relaxed transition function, which allows for two different actions to be taken on the same step (as in a non deterministic machine). Also, for a polynomial time Turing Machine $M$ we will write $M_r(x)$ for the output of $M$ on $x$, where $r$ is a binary string, where the $i$-th character specifies which action the machine should take on step $i$\footnote{Note the polynomial bound, this is needed since in theory decisions taken early in the string can effect the running time and such the length of the string. If the machine $M$ is always polynomial time we can then find a bound $p$ s.t. $\forall r, T(M_r(x))) \leq p(|x|) $, and as such having $r \in \{0,1\}^{p(|x|)}$ will be enough}. We can then let $l$ be the maximum length that $r$ can take and define the probability of $M$ outputting $y$ on input $x$ to be:
+The Turing machine that we will be using have a slightly relaxed transition function, which allows for two different actions to be taken on the same step (as in a non deterministic machine). Also, for a polynomial time Turing Machine $M$ we will write $M_r(x)$ for the output of $M$ on $x$, where $r$ is a binary string, where the $i$-th character specifies which action the machine should take on step $i$\footnote{Note the polynomial bound, this is needed since in theory decisions taken early in the string can effect the running time and such the length of the string. If the machine $M$ is always polynomial time we can then find a bound $p$ s.t. $\forall r, T(M_r(x))) \leq p(|x|) $, and as such having $r \in \bin^{p(|x|)}$ will be enough}. We can then let $l$ be the maximum length that $r$ can take and define the probability of $M$ outputting $y$ on input $x$ to be:
 
 \begin{definition} The probability of machine $M$ outputting $y$ on input $x$
-\[ \prob{M(x) = y} = \frac{|\{r \in \{0, 1\}^{l} \mid M_r(x) = y \}|}{2^{l}}\]
+\[ \prob{M(x) = y} = \frac{|\{r \in \bin^{l} \mid M_r(x) = y \}|}{2^{l}}\]
 \end{definition}
 
 Using this definition, we can then define our complexity classes. 
@@ -141,7 +141,7 @@ The definition implies that there is at least one path for which the input is ac
 
 \[ \texttt{INT\_FACT} = \{ (n, k) \, | \, \exists f : 1 < f < k \text { and } f \text{ divides } n\}\]
 \[ \texttt{SUB\_SUM} = \{ G \subset_{fin} \mathbb{Z} \, | \, n \in \mathbb{N} \exists S \subseteq G : \sum_{i \in S} i = 0  \} \}\]
-\[ \texttt{SAT} = \{ \phi : \{0,1\}^n \to \{0,1\} \, | \, n \in \mathbb{N} \text{ and } \exists a_1 \dots a_n : \phi(a_1, \dots a_n) = 1 \} \]
+\[ \texttt{SAT} = \{ \phi : \bin^n \to \bin \, | \, n \in \mathbb{N} \text{ and } \exists a_1 \dots a_n : \phi(a_1, \dots a_n) = 1 \} \]
 \[ \texttt{GRAPH\_HOM} = \{ (G, H) \, | \, \exists \phi : G \to H \text{ s.t. $\phi$ is a graph homomorphism} \}\]
 
 In particular, the last three languages are instances of $\mathcal{NP}$-complete problems, i.e. problems that are conceptually as hard as any problem in $\mathcal{NP}$ (more on this in the appendix). It is interesting to see that each of this problem involves some sort of search over an exponentially large possibility space, and the correctness can be easily verified by the result of such search. We associate thus $\mathcal{NP}$ class with problems that can be efficiently verified.
@@ -184,7 +184,7 @@ In cryptography, in order to achieve sound schemes, it is common to work in what
 Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently well endowed attacker might take. \par
 
 The capability of the attacker will vary depending on the level of security that the protocol needs to be hold to. For example, the computational power that the adversary has will affect the class of problems that it can solve.
-As an instance, if a construction relies on (hard) instances of an $\mathcal{NP}$-complete problem (and if $\mathcal{P} \neq \mathcal{NP}$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \mathcal{NP}$ there exist a deterministically recognizable $R_L \subseteq \{0, 1\}^* \times \{0, 1\}^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \text{poly}(|x|)$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
+As an instance, if a construction relies on (hard) instances of an $\mathcal{NP}$-complete problem (and if $\mathcal{P} \neq \mathcal{NP}$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \mathcal{NP}$ there exist a deterministically recognizable $R_L \subseteq \bin^* \times \bin^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \text{poly}(|x|)$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
 
 
 \subsection{Notion of Proof}
@@ -290,7 +290,7 @@ $\mathcal{NP} \subseteq \mathcal{IP}$
 \begin{proof}
 If $L$ is in $\mathcal{NP}$ then\footnote{Here we are using the certificate definition of $\mathcal{NP}$, see the appendix for details} there exists a polynomially recognizable relation $R_L$ such that $x \in L \iff \exists y : (x, y) \in R_L$. Also, such a $y$ satisfies $|y| < p(|x|)$ for some polynomial $p$. \\
 We design the following interactive system, which has as common input $x$. 
-First of all, the prover finds such $y$. This can be done by searching for any string $s$ in $ \bigcup_{i = 0}^{p(|x|)} \{0, 1\}^i$ that satisfies $(x, s) \in R_L$. Since the prover has no computational bound this can be done without issues. The prover then sends this $s$ to the verifier. On a message $s$ the verifier accepts if $(x, s) \in R_L$, rejects otherwise. Since $R_L$ is recognizable in polynomial time, the verifier runs in polynomial time as required.  \\ 
+First of all, the prover finds such $y$. This can be done by searching for any string $s$ in $ \bigcup_{i = 0}^{p(|x|)} \bin^i$ that satisfies $(x, s) \in R_L$. Since the prover has no computational bound this can be done without issues. The prover then sends this $s$ to the verifier. On a message $s$ the verifier accepts if $(x, s) \in R_L$, rejects otherwise. Since $R_L$ is recognizable in polynomial time, the verifier runs in polynomial time as required.  \\ 
 Completeness is easily verified, as in fact the verifier will accept with probability 1. Soundness requires a little more thought, but essentially since $x \notin L \implies \forall y : (x, y) \notin R_L $ then the verifier will never accept. This combined implies that the above is an interactive proof system for $L$. Since $L$ was an arbitrary element of $\mathcal{NP}$, then $\mathcal{NP} \subseteq \mathcal{IP}$ .
 \end{proof}
 In fact, as we will see next, $\mathcal{IP}$ actually contains languages that are not believed to be in $\mathcal{NP}$. We will not prove this, but it turns out $\mathcal{IP} = \mathcal{PSPACE}$, i.e. the set of all languages that use polynomial space\footnote{And this class is considered to be much bigger than $\mathcal{NP}$}. Also note that in the case of $\mathcal{NP}$ problems we can even make the prover machine polynomial time, if we use the additional input model and give the prover the certificate. 
@@ -461,7 +461,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
 \subsection{Computational Zero Knowledge}
 Perfect Zero Knowledge Proofs have the extremely strong requirement that the simulation and the actual interaction yields the same identical distribution (of course when the simulator is able to answer accurately i.e. does not output $\bot$). However, this requirement is quite stringent, and as such we can relax it by borrowing from pseudorandom generators. In particular, the key insight is that for a generator to be such, it is not necessary for it to be truly random, but only for it to be impossible for a polynomial time procedure to distinguish it from a truly random sequence. In particular, we can formalize this as follows:
 \begin{definition}
-Two random variable ensembles\footnote{An ensemble $\{A_n\}_{n \in \mathbb{N}}$ is just an infinite set of random variables over $\{0, 1\}^*$ indexed by either an integer $n$, or by some string in some language} $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{computationally indistinguishable} if for any polynomial time algorithm $D$ the function
+Two random variable ensembles\footnote{An ensemble $\{A_n\}_{n \in \mathbb{N}}$ is just an infinite set of random variables over $\bin^*$ indexed by either an integer $n$, or by some string in some language} $\{A_n\}_{n \in \mathbb{N}}$ and $\{B_n\}_{n \in \mathbb{N}}$ are \textbf{computationally indistinguishable} if for any polynomial time algorithm $D$ the function
 \[ \delta(n) = \left| \; \prob{D(A_n, 1^n) = 1} - \prob{D(B_n, 1^n) = 1} \;  \right|  \] is a negligible function of $n$.
 \end{definition}
 A couple of notes are, as usual, in order. First of all, the $1^n$ parameter are used to rule out degenerate cases where the two distributions yields strings logarithmic in the size of $n$, and as such the $D$ algorithm is unable to run in polynomial time of $n$. The $\delta$ function is often referred to as the attackers advantage. The idea is that this metric can measure how much better the attacker can do over the general strategy of always accepting, rejecting or guessing, which always yield an advantage of\footnote{For example, if an algorithm $D$ always accepts then $\delta(n) = |1 - 1| = 0$} 0. 
@@ -566,7 +566,7 @@ Formally, we define a bit commitment scheme as follows:
         \item \textbf{Unambiguity} We let $(r, \bar{m})$ be, respectively, the random bits used by the receiver and the messages received by the sender. 
                 Then we say that $(r, \bar{m})$ is a $i$-commitment if for some random string $s$ the machine\footnote{Here we use the notation $M_r(x)$ to denote the machine $M$ running with local coins $r$ on input $x$} $S_s(i, 1^n)$ produces the sequence of messages $\bar{m}$ when interacting with $R$ with local coins $r$. 
                 If $(r, \bar{m})$ is both a 0-commitment and a 1-commitment, then it is ambiguos. 
-                We require that for all but a negligible fraction of $r \in {0, 1}^{\text{poly(n)}}$ there exists no $\bar{m}$ such that $(r, \bar{m})$ is ambiguos.
+                We require that for all but a negligible fraction of $r \in \bin^{\text{poly(n)}}$ there exists no $\bar{m}$ such that $(r, \bar{m})$ is ambiguos.
     \end{itemize}
 \end{definition}
 As you can see, the unambiguity requirement is much more involved then the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
@@ -585,9 +585,9 @@ efficiently find a $s'$ such that $f(s) = f(s')$, and so effectively we won't be
 On the other hand, since $h$ is an hard core, the other party will not be able to guess it effectively from $f(s)$, and such $h(s) \oplus b$ and consequently $b$ cannot 
 be recovered by it. Of course, revealing $s, b$ will make the other party efficiently be able to verify that we did not cheat.
 \begin{theorem}
-    Let $f: \{0, 1\}^* \to \{0, 1\}^*$ be a one-way permutation. Let $b: \{0, 1\}^* \to \{0, 1\}$ be an hard-core of $f$. Then the following is a bit commitment scheme.
+    Let $f: \bin^* \to \bin^*$ be a one-way permutation. Let $b: \bin^* \to \bin$ be an hard-core of $f$. Then the following is a bit commitment scheme.
     \begin{itemize}
-        \item \textbf{Commitment}. To commit the value $i$, uniformly select $s \in {0, 1}^n$. Send $(f(s), b(s) \oplus i)$ to the receiver.
+        \item \textbf{Commitment}. To commit the value $i$, uniformly select $s \in \bin^n$. Send $(f(s), b(s) \oplus i)$ to the receiver.
         \item \textbf{Reveal}. To reveal, the sender reveals $s, i$. The receiver, which had received commit $(\alpha, j)$, accepts if $f(s) = \alpha$ and $b(s) \oplus i = j$.
     \end{itemize}
 \end{theorem}
@@ -601,7 +601,7 @@ As such we define:
 \begin{definition}
     A \textbf{one-way-interaction bit commitment scheme} is a polynomial time algorithm $F$ such that.
     \begin{itemize}
-        \item For $s$ uniformly drawn from $\{0, 1\}^n$, the ensembles $\{ F_s(0, 1^n) \}_{n \in \mathbb{N}}$ and $\{ F_s(1, 1^n) \}_{n \in \mathbb{N}}$ are computationally indistinguishable.
+        \item For $s$ uniformly drawn from $\bin^n$, the ensembles $\{ F_s(0, 1^n) \}_{n \in \mathbb{N}}$ and $\{ F_s(1, 1^n) \}_{n \in \mathbb{N}}$ are computationally indistinguishable.
         \item There does not exists $s$ such that $F_s(0, 1^n) = F_s(1, 1^n)$.
         \item For such a scheme, the (canonical) reveal of $F_s(i, 1^n)$ is $(i, s)$.
     \end{itemize}
@@ -631,11 +631,11 @@ from one scheme to the other is trivial and only requires using the bit commitme
     This graph is 3-colorable, with coloring $\pi$, which is unknown to the verifier\footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}. 
     \begin{enumerate}
         \item The prover randomly uniformly selects $\sigma \in S_3$. It sets $\phi \equiv \sigma \circ \pi$.
-                For each $i \in V$, it generates a random string $s_i \in \{0, 1\}^n$ and computes $c_i \equiv C_{s_i}(\phi(i))$.
+                For each $i \in V$, it generates a random string $s_i \in \bin^n$ and computes $c_i \equiv C_{s_i}(\phi(i))$.
                 The prover the sends $c_1, \dots, c_n$ to the verifier.
         \item The verifier uniformly selects a edge $(u, v) \in E$, and sends it to the prover
         \item The prover sends $(s_u, \phi(u))$ and $(s_v, \phi(v))$ to the verifier
-        \item On the messages $(\alpha, i)$, $(\beta, j)$, with $\alpha, \beta \in \{0, 1\}^n$ and $i, j \in  \{1, 2, 3\}$, the verifier checks that $c_u = C_\alpha(i)$ and that 
+        \item On the messages $(\alpha, i)$, $(\beta, j)$, with $\alpha, \beta \in \bin^n$ and $i, j \in  \{1, 2, 3\}$, the verifier checks that $c_u = C_\alpha(i)$ and that 
                 $c_v = C_\beta(j)$. If not it rejects. Finally, it accepts if $i \neq j$, and if as such the edges are differently coloured.
     \end{enumerate}
     A small discussion is, of course, in order. The fundamental idea is that the prover creates $n$ boxes, each with a inside a color.
@@ -665,8 +665,8 @@ from one scheme to the other is trivial and only requires using the bit commitme
         For any verifier $V'$, we show a simulator $M_{V'}$ that shows that the prover has the zero knowledge property.
         \begin{itemize}
             \item Let the input be $G = (V, E)$, where $V = \{1, \dots, n \}$.
-            \item Again, let $q(|G|)$ be a polynomial bound on the running time of $V'$. Allocate a uniformly randomly selected string $r \in \{0, 1\}^{q(|G|)}$ random bits to be used.
-            \item Uniformly select $e_i \in \{1, 2, 3\}$, and $s_i \in \{ 0, 1\}^n$, for $i \in V$. Compute $d_i \equiv C_{s_i}(e_i)$, 
+            \item Again, let $q(|G|)$ be a polynomial bound on the running time of $V'$. Allocate a uniformly randomly selected string $r \in \bin^{q(|G|)}$ random bits to be used.
+            \item Uniformly select $e_i \in \{1, 2, 3\}$, and $s_i \in \bin^n$, for $i \in V$. Compute $d_i \equiv C_{s_i}(e_i)$, 
             \item Simulate $V'$ with $G$ as input, and $r$ as the random bits. Also, put the sequence of commitments $d_1, \dots d_n$ in $V'$ incoming messages tapes.
             \item After $V'$ has been simulated, we can assume that it will have some message $m$ on its out message tape. We can also
                   assume that $m \in E$, as if it is not we can adapt $M_{V'}$ so that is selected some edge in $E$ to be used.
@@ -697,7 +697,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
         and the output of the simulator are distributed over tuples of the form $(r, (\alpha_1, \dots , \alpha_n), (s_u, e_u, s_v, e_v))$ where (at least in the view 
         of the actual interaction)
         we have $r$ as the random tape of the verifier, $\alpha_i$ as the commitment of the vertex colors, $e_i$ the color of the $i$ vertex and $s_i$ the 
-        random string used for committing it. First of all note that $r$ is in both cases uniformly distributed over $\{0, 1\}^q(n)$ where again we 
+        random string used for committing it. First of all note that $r$ is in both cases uniformly distributed over $\bin^q(n)$ where again we 
         use $q$ as a polynomial bound on the runtime of $V'$. It suffices now to show that if the two distributions are
         not computationally indistinguishable, then we will reach a contradiction with the properties of the commitment scheme. 
         While the actual proof is quite technical, the main idea is that any verifier for any verifier $V'$ we can
@@ -733,7 +733,7 @@ discrete logarithm, due to \cite{chaumImprovedProtocolDemonstrating1988}.
           are chosen in advance and known to both parties\footnote{In particular $N$ is chosen so that the discrete log is hard in the group $\mathbb{Z}_N^\times$}.
     \item The prover choses a $r$ uniformly randomly from the set $1, \dots, \phi(N)$, where $\phi(\cdot)$ is Euler's
           totient function. It then computes the value of $\gamma \equiv \alpha^r$, and sends it to the prover.
-    \item The verifier selects a bit $b \in \{0,1\}$ uniformly and randomly, and sends it over to the prover
+    \item The verifier selects a bit $b \in \bin$ uniformly and randomly, and sends it over to the prover
     \item The prover computes the exponent $y \equiv r + bx \pmod{\phi(N)}$ and send it to the verifier
     \item The verifier accepts if $\alpha^y =^? \gamma \beta^b $
 \end{itemize}
@@ -768,8 +768,8 @@ where $t$ is a security parameter. In fact, it was later shown \cite{nevenHashFu
 are required. The scheme works as follows:
 \begin{itemize}
     \item The prover has a private $x$ such that $\alpha^x \equiv \beta \pmod N$. $\alpha, \beta, N$ 
-          are published so that both parties know it. Also $H$ is a known hash function such that: $H: \{0, 1\}^n \to \{0, \dots, 2^t - 1\}$
-    \item Let us suppose that the prover has a message $M \in \{0, 1 \}^*$ that he wants to sign. 
+          are published so that both parties know it. Also $H$ is a known hash function such that: $H: \bin^n \to \{0, \dots, 2^t - 1\}$
+    \item Let us suppose that the prover has a message $M \in \bin^*$ that he wants to sign. 
     \item The prover chooses a random $r$ uniformly as before. Set $\gamma \equiv \alpha^r$.
     \item The prover computes $e \equiv H(\gamma || M)$, and $y \equiv r - ex$.
     \item Finally, the provers sends $(e, y)$ as the signature
@@ -862,7 +862,7 @@ that we can encode $x =\sum^N_{i=1} b_i 2^i$ where each $b_i \in [0, 1]$. A non 
 \end{itemize}
 
 Just to fill in the gap, the proof of partial knowledge in this case can be extracted and simplified, and it works as following. 
-Recall that in that step of the proof the prover has committed $c_i = g^{b_i} h^{r_i}$. We know that $b_i \in \{ 0, 1 \}$. And $c_i = h^{r_i}$ or $c_i = g h^{r_i}$.
+Recall that in that step of the proof the prover has committed $c_i = g^{b_i} h^{r_i}$. We know that $b_i \in \bin$. And $c_i = h^{r_i}$ or $c_i = g h^{r_i}$.
 Note that in the first case we know a discrete log of $c_i$, while in the second we know the discrete log of $g^{-1} c_i$ (in both cases in base $h$ and in both cases the log is $r_i$). 
 If we manage to prove either one of the facts, without letting the verifier know which actually holds, then we will be set. 
 A protocol for this works as following (due to \cite{maoGuaranteedCorrectSharing1998b}):
@@ -923,18 +923,18 @@ One way functions are, arguably, the basis of a great deal of cryptography.
 Conceptually, a function is one way if it is easy to compute (i.e. computable in polynomial time), yet hard to invert.
 Formally, we have two definition of one way functions:
 \begin{definition}
-    A function $f: {0, 1}^* \to {0, 1}^*$ is \textbf{strongly one way} if:
+    A function $f: \bin^* \to \bin^*$ is \textbf{strongly one way} if:
     \begin{enumerate}
         \item There exists a deterministic polynomial time algorithm $A$ such that $A(x) = f(x)$
-        \item For every probabilistic polynomial time algorithm $E$, every sufficiently large $n$, and $U^n$ uniformly distributed over ${0, 1}^n$ the following is negligible:
+        \item For every probabilistic polynomial time algorithm $E$, every sufficiently large $n$, and $U^n$ uniformly distributed over $\bin^n$ the following is negligible:
             \[ \prob{E(f(U^n), 1^n) \in f^{-1}(f(U^n))  } \]
     \end{enumerate}
 \end{definition}
 \begin{definition}
-    A function $f: {0, 1}^* \to {0, 1}^*$ is \textbf{weakly one way} if:
+    A function $f: \bin^* \to \bin^*$ is \textbf{weakly one way} if:
     \begin{enumerate}
         \item There exists a deterministic polynomial time algorithm $A$ such that $A(x) = f(x)$
-        \item For every probabilistic polynomial time algorithm $E$, every sufficiently large $n$, and $U_n$ uniformly distributed over ${0, 1}^n$ the following is non-negligible:
+        \item For every probabilistic polynomial time algorithm $E$, every sufficiently large $n$, and $U_n$ uniformly distributed over $\bin^n$ the following is non-negligible:
             \[ \prob{E(f(U_n), 1^n) \notin f^{-1}(f(U_n))  } \]
     \end{enumerate}
 \end{definition}
@@ -961,7 +961,7 @@ For example, if $f$ is one way we can define the function $g(x, r) = f(x) || r$ 
 On the other hand, there is some information that such $g$ does not leak, for example (if $f$ is strongly one way): $x \circ r$. 
 Using this we can define the following:
 \begin{definition}
-    Let $f: \{0, 1\}^* \to \{0, 1\}^*$ be a one way function. A predicate $b: \{0,1\}^* \to \{0, 1\}$ is 
+    Let $f: \bin^* \to \bin^*$ be a one way function. A predicate $b: \bin^* \to \bin$ is 
     a \textbf{hard-core of} $f$ if:
     \begin{itemize}
         \item $b$ is computable in polynomial time.
@@ -1028,7 +1028,7 @@ we can yield cryptosystems that are resistant to any non quantum attacker that w
 \begin{definition}
 We say that a language $L \in \mathcal{P}$ if there exist a deterministic TM $M$ and a polynomial $p(\cdot)$ such that both the following hold true:
 \begin{enumerate}
-    \item On input $x \in \{0, 1\}^*$, $M$ halts within $p(|x|)$ steps.
+    \item On input $x \in \bin^*$, $M$ halts within $p(|x|)$ steps.
     \item $x \in L \iff M(x) = 1$
 \end{enumerate}
 Also, if $L \in \mathcal{P}$ we say that $L$ is \textbf{recognizable in polynomial time}
@@ -1040,21 +1040,21 @@ We can now prove the equivalence of our two definition of $\mathcal{P}$, let us 
 Let $L \in \mathcal{P}$, then there exist a Turing Machine $M$ such that the machine outputs one for each $x \in L$ and always halts in polynomially many steps. 
 Construct a probabilistic TM $M_1$ as follows: copy everything from $M$, except the transition function, replacing each transition of the form $\phi(s, i) = x$ with $\phi_1(s, i) = (x, x)$. Recall from the definition that on each step the machine $M_1$ will randomly choose between left and right transition. Since for each transition left and right are always equal, the choice is meaningless and for each transition it will take the same action as $M$ (taking of course the same exact number of steps). Since $M$ recognized $L$, then $M_1$ will also, and as such $L \in \mathcal{P}_{prob}$, which implies $\mathcal{P} \subseteq \mathcal{P}_{prob}$.  \par
 
-Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \prob{M(x) = 1} = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in \{0,1\}^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \mathcal{P}$, which in turn implies $\mathcal{P}_{prob} \subseteq \mathcal{P}$  \par
+Conversely, let $L \in \mathcal{P}_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \prob{M(x) = 1} = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in \bin^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \mathcal{P}$, which in turn implies $\mathcal{P}_{prob} \subseteq \mathcal{P}$  \par
 
 So, since $\mathcal{P} \subseteq \mathcal{P}_{prob}$ and $\mathcal{P}_{prob} \subseteq \mathcal{P}$, it must be that $\mathcal{P} = \mathcal{P}_{prob}$
 \end{proof}
 
 \begin{definition}
-We say that a language $L \in \mathcal{NP}$ if there exist a relation $R_L \subseteq \{0, 1\}^* \times \{0, 1\}^*$ and a polynomial $p(\cdot)$ such that the following hold: 
+We say that a language $L \in \mathcal{NP}$ if there exist a relation $R_L \subseteq \bin^* \times \bin^*$ and a polynomial $p(\cdot)$ such that the following hold: 
 \begin{enumerate}
     \item $R_L$ is recognizable in polynomial time
     \item $x \in L \iff$ there exists $y$ s.t. $|y| \leq p(|x|)$ and $(x, y) \in R_L$
 \end{enumerate}
 Such a $y$ is a \textbf{witness for membership of } $x \in L$
 \end{definition}
-In particular, note the bound requirement on the witness $y$. This ensures that the certificate is not more than polynomially bigger than the problem statement. If this were not the case, then let us take for example the language \[TAUT = \{ \phi : \{0,1\}^n \to \{0,1\} | n \in \mathbb{N}, \forall (x_1, \dots x_n): \phi(x_1, \dots, x_n) = 1\}\]
-i.e. the language of all boolean formulas that return true for every input. If the bounds on the polynomial size of the certificate were to be lifted, then we could allow for a relation language $R_{TAUT} = \{ (\phi, 1^{2n}) | n \in \mathbb{N}, \phi : \{0,1\}^n \to \{0,1\}, \phi \in TAUT  \}$. Such language is recognizable in polynomial time in the certificate (as evaluating a boolean formula of $n$ variable takes polynomial time in the formula length, and enumerating all possible $n$ boolean variables takes $\bigO{2^n}$ which is polynomial in the length of the certificate), however, if the bound is upheld we have no evidence of the belonging of $TAUT$ in $\mathcal{NP}$ (in fact, we know that $TAUT \in \text{co-}\mathcal{NP}$, and the relation between the two classes is still not clear).
+In particular, note the bound requirement on the witness $y$. This ensures that the certificate is not more than polynomially bigger than the problem statement. If this were not the case, then let us take for example the language \[TAUT = \{ \phi : \bin^n \to \bin | n \in \mathbb{N}, \forall (x_1, \dots x_n): \phi(x_1, \dots, x_n) = 1\}\]
+i.e. the language of all boolean formulas that return true for every input. If the bounds on the polynomial size of the certificate were to be lifted, then we could allow for a relation language $R_{TAUT} = \{ (\phi, 1^{2n}) | n \in \mathbb{N}, \phi : \bin^n \to \bin, \phi \in TAUT  \}$. Such language is recognizable in polynomial time in the certificate (as evaluating a boolean formula of $n$ variable takes polynomial time in the formula length, and enumerating all possible $n$ boolean variables takes $\bigO{2^n}$ which is polynomial in the length of the certificate), however, if the bound is upheld we have no evidence of the belonging of $TAUT$ in $\mathcal{NP}$ (in fact, we know that $TAUT \in \text{co-}\mathcal{NP}$, and the relation between the two classes is still not clear).
 
 We can similarly prove that our antecedent definition of $\mathcal{NP}$ (call it $\mathcal{NP}_{prob}$) is the same as the classical one. 
 
