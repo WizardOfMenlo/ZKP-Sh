@@ -5,6 +5,9 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{appendix}
+\usepackage[landau, probability]{cryptocode}
+
+
 
 \title{Zero Knowledge Proofs: Theory and Applications}
 \author{Giacomo Fenzi}
@@ -53,15 +56,14 @@ Now, a couple of utilities for talking about the asymptotic complexity of variou
 
 \begin{definition} We define the following sets:
 \begin{align*}
-    O(f) &= \{ g \mid \exists r \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : g(n) \leq r f(n)  \} \\
-    O(f) &= \{ g \mid \exists r \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : g(n) \leq r f(n)  \} \\
-    \Omega(f) &= \{ g \mid \exists r \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : r g(n) \geq f(n)  \} \\
-    \Theta(f) &= \{ g \mid \exists r_1,r_2 \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : r_1 g(n) \leq f(n) \leq r_2 g(n)  \}
+    \bigO{f} &= \{ g \mid \exists r \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : g(n) \leq r f(n)  \} \\
+    \bigOmega{f} &= \{ g \mid \exists r \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : r g(n) \geq f(n)  \} \\
+    \bigsmallO{f} &= \{ g \mid \exists r_1,r_2 \in \mathbb{R}^+, N \in \mathbb{N} \text{ s.t } \forall n \geq N : r_1 g(n) \leq f(n) \leq r_2 g(n)  \}
 \end{align*}
 \end{definition}
-We also allow for two slight relaxation of notation, writing for example $O(f)$ as $O(f(n))$ and $f \in O(g)$ as $f = O(g)$. Furthermore, we define the following useful set:
+We also allow for two slight relaxation of notation, writing for example $\bigO{f}$ as $\bigO{f(n)}$ and $f \in \bigO{g}$ as $f = \bigO{g}$. Furthermore, we define the following useful set:
 \begin{definition} We define
-\[\text{\normalfont{poly}} = \bigcup_{i = 0}^\infty O(n^i)\]
+\[\text{\normalfont{poly}} = \bigcup_{i = 0}^\infty \bigO{n^i}\]
 as the set of all functions bounded above by a polynomial. 
 \end{definition}
 As before, we will allow a slight relaxation and use $\text{poly}(\cdot)$ to specify some fixed but unspecified polynomial.
@@ -79,7 +81,7 @@ There a couple of notions of probability that we will most likely need.
     occurring with probability $\theta$. Then the probability of the total number of success $X$ being exactly equal to $k$ follows a binomial distribution and:
     \[ \Pr[X = k] = \binom{n}{k} \theta^k (1 - \theta)^{n - k} \]
 \end{definition}
-In particular, we have that in those $n$ trials we expect $n\theta$ events to occurr. This is useful, expecially since 
+In particular, we have that in those $n$ trials we expect $\mathbb{E}[X] = n\theta$ events to occurr. This is useful, expecially since 
     we have that the probability of an event always occurring is $\Pr[X = n] = \theta^n$. This will be useful especially 
     to  estimate the probability of some algorithm succeeding multiple times when it is not supposed to. 
     Note in particular that if a algorithm spuriosly succeeds with probability $\theta \in [0, 1)$ then $\Pr[X = n]$ is a 
@@ -155,15 +157,15 @@ In this case we say that $L$ is \textbf{recognizable in probabilistic polynomial
 
 Note in particular that we can replace the $\frac{2}{3}$ constant with $\frac{1}{2} + \epsilon$ for any $0 < \epsilon < \frac{1}{2}.$\footnote{This can be done by running the machine multiples times and taking majority vote}
 
-$\mathcal{BPP}$ is referred to as the class of bounded polynomial time languages. It is evident that $\mathcal{P} \subseteq \mathcal{BPP}$ but, while it is believed that the classes are equal, no proof was yet found. This class is significant, as it is intrinsically associated with efficient computation. This is because of a few factors, first of all because the probabilistic computation closely mimics the capabilities of general purpose computer, which can use the external environment as a source of randomness. Secondly, polynomial time computation is feasible, and, as long as Moore's law holds, modern computer can every year improve faster than one can increase the problem size\footnote{What I mean is, if an algorithm takes $poly(|x|)$ steps, and on year $n$ a computer can perform $O(2^n)$ steps, }. Let us have an example to clarify:
+$\mathcal{BPP}$ is referred to as the class of bounded polynomial time languages. It is evident that $\mathcal{P} \subseteq \mathcal{BPP}$ but, while it is believed that the classes are equal, no proof was yet found. This class is significant, as it is intrinsically associated with efficient computation. This is because of a few factors, first of all because the probabilistic computation closely mimics the capabilities of general purpose computer, which can use the external environment as a source of randomness. Secondly, polynomial time computation is feasible, and, as long as Moore's law holds, modern computer can every year improve faster than one can increase the problem size\footnote{What I mean is, if an algorithm takes $poly(|x|)$ steps, and on year $n$ a computer can perform $\bigO{2^n}$ steps, }. Let us have an example to clarify:
 \begin{example}
-Consider three matrices, $A, B, C$ where $A \in \mathbb{F}^{n \times m}$, $B \in \mathbb{F}^{n \times k}$, $C \in \mathbb{F}^{k \times m}$. We want to solve the question $A =_? B C$. Of course, in a deterministic setting, we can simply multiply the two matrices (taking $O(nkm)$ steps) and compare it with the first (in $O(nm)$ steps), in a total of $O(nmk + nm))$ steps. We can do better if we allow for some probabilistic error. Take the following procedure.
+Consider three matrices, $A, B, C$ where $A \in \mathbb{F}^{n \times m}$, $B \in \mathbb{F}^{n \times k}$, $C \in \mathbb{F}^{k \times m}$. We want to solve the question $A =_? B C$. Of course, in a deterministic setting, we can simply multiply the two matrices (taking $\bigO{nkm}$ steps) and compare it with the first (in $\bigO{nm}$ steps), in a total of $\bigO{nmk + nm}$ steps. We can do better if we allow for some probabilistic error. Take the following procedure.
 \begin{enumerate}
     \item Take a random vector $x \in \mathbb{F}^m$
     \item Compute $Ax$ and $BCx$.
     \item Compare the two resulting vectors (in $\mathbb{F}^n$). If they are the same return true, else return false. 
 \end{enumerate}
-Computationally wise, this requires less calculations. Let's assume you can select a random $k$-vector in $O(k)$ steps, then the first step is $O(m)$, the two computations take respectively $O(nm)$ and $O(k (n + m))$\footnote{This is optimized computing $(B(Cx))$} and the comparison will be $O(n)$. So in total the operation is $O(nm + kn + mk + n)$. We claim that, trivially, if $A = BC$ then the algorithm always answer correctly. Furthermore if $A \neq BC$ then the algorithm answers correctly in the majority of cases. Let $D = BC$ Note that if the algorithm is to output incorrectly, it must be that $Ax = Dx$. Then it must be that $(A - D) x = 0$, and as such $x \in \ker(A - D)$. Note that $A - D \in \mathbb{F}^{n \times m}$ and as such $A - D$ can be seen as a linear transformation from $\mathbb{F}^m \to \mathbb{F}^n$. The whole problem reduces to finding the probability that a vector picked at random belongs to the kernel of a linear transformation. Let $|\mathbb{F}| = q$, the size of the underlying field\footnote{Note that in this case we assume the underlying field to be finite, the infinite case can also be handled but requires more thought}. First of all note that since $A \neq D$ at least one of the of the row of the matrix is non zero, and as such $\dim \ker (A - D) < m$. Since the size of any vector space $V$ over $\mathbb{F}$ is $|V| = q^{\dim V}$, then the size of the kernel is at most $q^{m - 1}$. As such the probability of a random vector belonging to the kernel is at most $\frac{q^{m-1}}{q^m}=\frac{1}{q}$. We can then calculate that, repeating the algorithm $l$ times the probability of getting at least one vector not in the kernel is $1 - \left(\frac{1}{q}\right)^l$ and if we want to ensure that this probability is greater than $\frac{2}{3}$ we can then set:
+Computationally wise, this requires less calculations. Let's assume you can select a random $k$-vector in $\bigO{k}$ steps, then the first step is $\bigO{m}$, the two computations take respectively $\bigO{nm}$ and $\bigO{k (n + m)}$\footnote{This is optimized computing $(B(Cx))$} and the comparison will be $\bigO{n}$. So in total the operation is $\bigO{nm + kn + mk + n}$. We claim that, trivially, if $A = BC$ then the algorithm always answer correctly. Furthermore if $A \neq BC$ then the algorithm answers correctly in the majority of cases. Let $D = BC$ Note that if the algorithm is to output incorrectly, it must be that $Ax = Dx$. Then it must be that $(A - D) x = 0$, and as such $x \in \ker(A - D)$. Note that $A - D \in \mathbb{F}^{n \times m}$ and as such $A - D$ can be seen as a linear transformation from $\mathbb{F}^m \to \mathbb{F}^n$. The whole problem reduces to finding the probability that a vector picked at random belongs to the kernel of a linear transformation. Let $|\mathbb{F}| = q$, the size of the underlying field\footnote{Note that in this case we assume the underlying field to be finite, the infinite case can also be handled but requires more thought}. First of all note that since $A \neq D$ at least one of the of the row of the matrix is non zero, and as such $\dim \ker (A - D) < m$. Since the size of any vector space $V$ over $\mathbb{F}$ is $|V| = q^{\dim V}$, then the size of the kernel is at most $q^{m - 1}$. As such the probability of a random vector belonging to the kernel is at most $\frac{q^{m-1}}{q^m}=\frac{1}{q}$. We can then calculate that, repeating the algorithm $l$ times the probability of getting at least one vector not in the kernel is $1 - \left(\frac{1}{q}\right)^l$ and if we want to ensure that this probability is greater than $\frac{2}{3}$ we can then set:
 \[l > \frac{\log \frac{1}{3}}{\log \frac{1}{q}} = \frac{\log{3}}{\log{q}}\]
 
 Finally, we can see that repeating the procedure $l$ times\footnote{In fact, since $l < 1$ for $q > 3$, repetition is only really needed for the trivial field $\mathbb{Z}_2$} (call this $M$) will have the following result:
@@ -172,7 +174,7 @@ Finally, we can see that repeating the procedure $l$ times\footnote{In fact, sin
     \item $A \neq BC \implies \Pr[M(A, B,C) = 0] > \frac{2}{3}$
 \end{itemize}
 
-Note that that brings the final complexity to $O(l(nm + kn + mk + n))$ so for some values of $l$ this might actually be slower than the deterministic algorithm.
+Note that that brings the final complexity to $\bigO{l(nm + kn + mk + n)}$ so for some values of $l$ this might actually be slower than the deterministic algorithm.
 
 \end{example}
 
@@ -823,6 +825,7 @@ below holds for any random $a, b, u$, and for $v = g^x$:
 Of course, the security lies in the fact that assuming the hardness of the discrete logarithm, computing 
 $x$ from $g^x$ should be unfeasible.
 \subsection{Zero Knowledge Range Proofs}
+\label{zkrp}
 Let us consider an interesting class of problems. Imagine that a user has some sort of information associated
 with it say $x$. The other party in play would like to verify that the value $x \in_? [a, b]$, for some 
 interval $[a, b]$. How would the user be able to verify this, without leaking the value of $x$ to the 
@@ -895,8 +898,21 @@ an excellent overview of what is the state of the art \cite{moraisSurveyZeroKnow
 As supplemental material to this document, we produced a variety of Sagemath worksheets that allow the user to experiment 
 with most of the Zero Knowledge Proofs presented in the text. In particular, the protocols presented are those for:
 \begin{enumerate}
-    \item 
+    \item Probabilistic Matrix Multiplication checking
+    \item Graph Non Isomorphism Interactive protocol
+    \item Graph Isomorphism Perfect Zero Knowledge Proof
+    \item Graph 3-Coloring Computational Zero Knowledge Proof
+    \item Discrete Logarithm Interactive Zero Knowledge Proof
+    \item Discrete Logarithm Non Interactive Zero Knowledge Proof
+    \item Schnorr Signature protocol
+    \item Secure Remote Password protocol
 \end{enumerate}
+
+We considered providing a worksheet for the the Zero Knowledge Range Proof described in \ref{zkrp}, but the branching that 
+is needed for the implementation translated very poorly to worksheets, and as such it would have not been insightful.
+In the first four worksheets we also provided "experiments", that is we set the worksheet up so that the corresponding 
+protocol is executed multiple times serially, in order to show that the probabilities that we derived correspond to 
+the experimental results. 
 
 \section{Conclusion}
 
@@ -1038,7 +1054,7 @@ We say that a language $L \in \mathcal{NP}$ if there exist a relation $R_L \subs
 Such a $y$ is a \textbf{witness for membership of } $x \in L$
 \end{definition}
 In particular, note the bound requirement on the witness $y$. This ensures that the certificate is not more than polynomially bigger than the problem statement. If this were not the case, then let us take for example the language \[TAUT = \{ \phi : \{0,1\}^n \to \{0,1\} | n \in \mathbb{N}, \forall (x_1, \dots x_n): \phi(x_1, \dots, x_n) = 1\}\]
-i.e. the language of all boolean formulas that return true for every input. If the bounds on the polynomial size of the certificate were to be lifted, then we could allow for a relation language $R_{TAUT} = \{ (\phi, 1^{2n}) | n \in \mathbb{N}, \phi : \{0,1\}^n \to \{0,1\}, \phi \in TAUT  \}$. Such language is recognizable in polynomial time in the certificate (as evaluating a boolean formula of $n$ variable takes polynomial time in the formula length, and enumerating all possible $n$ boolean variables takes $O(2^n)$ which is polynomial in the length of the certificate), however, if the bound is upheld we have no evidence of the belonging of $TAUT$ in $\mathcal{NP}$ (in fact, we know that $TAUT \in \text{co-}\mathcal{NP}$, and the relation between the two classes is still not clear).
+i.e. the language of all boolean formulas that return true for every input. If the bounds on the polynomial size of the certificate were to be lifted, then we could allow for a relation language $R_{TAUT} = \{ (\phi, 1^{2n}) | n \in \mathbb{N}, \phi : \{0,1\}^n \to \{0,1\}, \phi \in TAUT  \}$. Such language is recognizable in polynomial time in the certificate (as evaluating a boolean formula of $n$ variable takes polynomial time in the formula length, and enumerating all possible $n$ boolean variables takes $\bigO{2^n}$ which is polynomial in the length of the certificate), however, if the bound is upheld we have no evidence of the belonging of $TAUT$ in $\mathcal{NP}$ (in fact, we know that $TAUT \in \text{co-}\mathcal{NP}$, and the relation between the two classes is still not clear).
 
 We can similarly prove that our antecedent definition of $\mathcal{NP}$ (call it $\mathcal{NP}_{prob}$) is the same as the classical one. 
 
