@@ -945,6 +945,27 @@ $H(\cdot)$ allows us to fairly select a challenge without possibility of cheatin
 modification of the protocol allows us to get Schnorr signatures, a way to sign a message using $4t$-bit signatures,
 where $t$ is a security parameter. In fact, it was later shown \cite{nevenHashFunctionRequirements2009} that only $3t$-bits 
 are required. The scheme works as follows:
+
+\begin{figure}[H]
+    \centering
+    \fbox{%
+        \procedure{Schnorr Signature, for message $M$}{%
+            \textbf{Prover} \> \> \textbf{Verifier} \pclb
+            \pcintertext[center]{$\alpha, \beta, N$. Hash function $H(\cdot)$} \\
+            \text{Find } x \text{ s.t. } \alpha^x \equiv \beta \pmod N \> \> \\
+            r \sample \set{1, \dots, \phi(N)} \> \> \\
+            \gamma \equiv \alpha^r \pmod N \> \> \\
+            e \coloneqq H(\gamma, M) \> \> \\
+            y \equiv r - ex \pmod{\phi(N)} \> \> \\
+            \> \sendmessageright*{e, y} \> \\
+            \> \> \gamma' \equiv \alpha^y \beta^e \pmod N \\
+            \> \> \pcreturn e =_? H(\gamma', M)  
+        }
+    }
+    \caption{Schnorr Signatures}
+    \label{schnorrsig}
+\end{figure}
+
 \begin{itemize}
     \item The prover has a private $x$ such that $\alpha^x \equiv \beta \pmod N$. $\alpha, \beta, N$ 
           are published so that both parties know it. Also $H$ is a known hash function such that: $H: \bin^n \to \set{0, \dots, 2^t - 1}$
@@ -1108,14 +1129,14 @@ an excellent overview of what is the state of the art \cite{moraisSurveyZeroKnow
 As supplemental material to this document, we produced a variety of Sagemath worksheets that allow the user to experiment 
 with most of the Zero Knowledge Proofs presented in the text. In particular, the protocols presented are those for:
 \begin{enumerate}
-    \item Probabilistic Matrix Multiplication checking
-    \item Graph Non Isomorphism Interactive protocol
-    \item Graph Isomorphism Perfect Zero Knowledge Proof
-    \item Graph 3-Coloring Computational Zero Knowledge Proof
-    \item Discrete Logarithm Interactive Zero Knowledge Proof
-    \item Discrete Logarithm Non Interactive Zero Knowledge Proof
-    \item Schnorr Signature protocol
-    \item Secure Remote Password protocol
+    \item Probabilistic Matrix Multiplication checking (Figure \ref{matrixmultiplication})
+    \item Graph Non Isomorphism Interactive protocol (Figure \ref{graphnonisomorphism})
+    \item Graph Isomorphism Perfect Zero Knowledge Proof (Figure \ref{graphisomorphismzkp})
+    \item Graph 3-Coloring Computational Zero Knowledge Proof (Figure \ref{graph3col})
+    \item Discrete Logarithm Interactive Zero Knowledge Proof (Figure \ref{discretelog})
+    \item Discrete Logarithm Non Interactive Zero Knowledge Proof (Figure \ref{discretelognoninteractive})
+    \item Schnorr Signature protocol (Figure \ref{schnorrsig})
+    \item Secure Remote Password protocol (Figure \ref{srp})
 \end{enumerate}
 
 We considered providing a worksheet for the the Zero Knowledge Range Proof described in \ref{zkrp}, but the branching that 
@@ -1125,7 +1146,7 @@ protocol is executed multiple times serially, in order to show that the probabil
 the experimental results. 
 
 \section{Conclusion}
-
+In conclusion, in this paper we provided a survey of 
 
 \appendix
 \section{One Way Functions}
