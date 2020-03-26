@@ -37,10 +37,10 @@
 \subsection{Mathematical Notation}
 We start by defining some crucial sets of string \footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set. We don't make too much use of it in this text tough.}.
 \begin{definition}
-$\bin^n = \{ a_1 a_2 \dots a_n \mid a_i \in \bin\}$
+$\bin^n = \set{ a_1 a_2 \dots a_n \mid a_i \in \bin}$
 \end{definition}
 \begin{definition}
-$\bin^* = \{ a_1 a_2 \dots a_n \mid a_i \in \bin \text{ \normalfont{ and }} n \in \NN \}$
+$\bin^* = \set{ a_1 a_2 \dots a_n \mid a_i \in \bin \text{ \normalfont{ and }} n \in \NN }$
 \end{definition}
 
 It is important to stress that $\bin^*$ is the set of all \textit{finite} strings, and also that the empty string, denoted $\epsilon \in \bin^*$.
@@ -50,16 +50,16 @@ A \textbf{language} $L$ is a subset of $\bin^*$, i.e. $L \subseteq \bin^*$
 \end{definition}
 
 Examples of languages include 
-\[ \{ x \in \bin^* \mid |x| = 2 \}, \{ \langle(x, y, z)\rangle \mid x^2 + y^2 = z^2 \}, \dots \]
+\[ \set{ x \in \bin^* \mid |x| = 2 }, \set{ \langle(x, y, z)\rangle \mid x^2 + y^2 = z^2 }, \dots \]
 Note in particular the use of $\langle \cdot \rangle$ to denote the binary representation of the inner element. In general, as long as the element can be encoded in binary in polynomial space, we will not concern ourselves too much with said representation, and sometime even omit the brackets. In particular note that, unless specified otherwise, integers are encoded in binary and without brackets.  \par
 
 Now, a couple of utilities for talking about the asymptotic complexity of various functions.
 
 \begin{definition} We define the following sets:
 \begin{align*}
-    \bigO{f} &= \{ g \mid \exists r \in \RR^+, N \in \NN \text{ s.t } \forall n \geq N : g(n) \leq r f(n)  \} \\
-    \bigOmega{f} &= \{ g \mid \exists r \in \RR^+, N \in \NN \text{ s.t } \forall n \geq N : r g(n) \geq f(n)  \} \\
-    \bigsmallO{f} &= \{ g \mid \exists r_1,r_2 \in \RR^+, N \in \NN \text{ s.t } \forall n \geq N : r_1 g(n) \leq f(n) \leq r_2 g(n)  \}
+    \bigO{f} &= \set{ g \mid \exists r \in \RR^+, N \in \NN \text{ s.t } \forall n \geq N : g(n) \leq r f(n)  } \\
+    \bigOmega{f} &= \set{ g \mid \exists r \in \RR^+, N \in \NN \text{ s.t } \forall n \geq N : r g(n) \geq f(n)  } \\
+    \bigsmallO{f} &= \set{ g \mid \exists r_1,r_2 \in \RR^+, N \in \NN \text{ s.t } \forall n \geq N : r_1 g(n) \leq f(n) \leq r_2 g(n)  }
 \end{align*}
 \end{definition}
 We also allow for two slight relaxation of notation, writing for example $\bigO{f}$ as $\bigO{f(n)}$ and $f \in \bigO{g}$ as $f = \bigO{g}$. Furthermore, we define the following useful set:
@@ -104,7 +104,7 @@ A \textbf{graph} $G = (V, E)$ is a pair of sets, where $V$ is referred to as the
 Finally, we introduce the following useful notation, for the graph obtained by permuting all vertexes of another graph.
 \begin{definition}
     Let $G = (V, E)$, and $\pi \in S_V$, i.e. a permutation on the set $V$. Then we define $\pi(G) = (V, E')$ where:
-    \[ E' = \{ (\pi(v), \pi(v')) | (v, v') \in E \} \]
+    \[ E' = \set{ (\pi(v), \pi(v')) | (v, v') \in E } \]
     Clearly, $G \cong \pi(G)$.
 \end{definition}
 
@@ -116,7 +116,7 @@ In particular, we will be providing an uniform probability based definition for 
 The Turing machine that we will be using have a slightly relaxed transition function, which allows for two different actions to be taken on the same step (as in a non deterministic machine). Also, for a polynomial time Turing Machine $M$ we will write $M_r(x)$ for the output of $M$ on $x$, where $r$ is a binary string, where the $i$-th character specifies which action the machine should take on step $i$\footnote{Note the polynomial bound, this is needed since in theory decisions taken early in the string can effect the running time and such the length of the string. If the machine $M$ is always polynomial time we can then find a bound $p$ s.t. $\forall r, T(M_r(x))) \leq p(|x|) $, and as such having $r \in \bin^{p(|x|)}$ will be enough}. We can then let $l$ be the maximum length that $r$ can take and define the probability of $M$ outputting $y$ on input $x$ to be:
 
 \begin{definition} The probability of machine $M$ outputting $y$ on input $x$
-\[ \prob{M(x) = y} = \frac{|\{r \in \bin^{l} \mid M_r(x) = y \}|}{2^{l}}\]
+\[ \prob{M(x) = y} = \frac{|\set{r \in \bin^{l} \mid M_r(x) = y }|}{2^{l}}\]
 \end{definition}
 
 Using this definition, we can then define our complexity classes. 
@@ -127,8 +127,8 @@ We say that a language $L \in \pol$ if there exist a probabilistic polynomial ti
 \end{definition}
 
 The complexity class $\pol$ is the one we most closely associate with "efficient" computation. Notable examples of languages which belong in $\pol$ are finite languages, regular languages, context free languages, and more. For example, the following are all in $\pol$ : 
-\[ \{(a_1, ... a_n) \, | \, n \in \NN \text{ and } a_i \leq a_{i+1} \}\]
-\[ \{ p \,|\, p \in \NN \text{ and } p \text{ prime } \}\]
+\[ \set{(a_1, ... a_n) \, | \, n \in \NN \text{ and } a_i \leq a_{i+1} }\]
+\[ \set{ p \,|\, p \in \NN \text{ and } p \text{ prime } }\]
 
 In general, a language being in $\pol$ implies there exist a machine such that all the computation paths recognize the input if the input is indeed in the language. \par
 
@@ -141,10 +141,10 @@ We say that a language $L \in \npol$ if there exist a probabilistic polynomial t
 
 The definition implies that there is at least one path for which the input is accepted. It is easy to see that $\pol \subseteq \npol$, but the question of $\pol =_? \npol$ is still open \cite{cookComplexityTheoremprovingProcedures1971} \cite{jaffeMillenniumGrandChallenge2006}. There are many $\npol$ problems for which there is no evidence of their belonging in $\pol$, such as the following:
 
-\[ \texttt{INT\_FACT} = \{ (n, k) \, | \, \exists f : 1 < f < k \text { and } f \text{ divides } n\}\]
-\[ \texttt{SUB\_SUM} = \{ G \subset_{fin} \ZZ \, | \, n \in \NN \exists S \subseteq G : \sum_{i \in S} i = 0  \} \}\]
-\[ \texttt{SAT} = \{ \phi : \bin^n \to \bin \, | \, n \in \NN \text{ and } \exists a_1 \dots a_n : \phi(a_1, \dots a_n) = 1 \} \]
-\[ \texttt{GRAPH\_HOM} = \{ (G, H) \, | \, \exists \phi : G \to H \text{ s.t. $\phi$ is a graph homomorphism} \}\]
+\[ \texttt{INT\_FACT} = \set{ (n, k) \, | \, \exists f : 1 < f < k \text { and } f \text{ divides } n}\]
+\[ \texttt{SUB\_SUM} = \set{ G \subset_{fin} \ZZ \, | \, n \in \NN \exists S \subseteq G : \sum_{i \in S} i = 0  } \]
+\[ \texttt{SAT} = \set{ \phi : \bin^n \to \bin \, | \, n \in \NN \text{ and } \exists a_1 \dots a_n : \phi(a_1, \dots a_n) = 1 } \]
+\[ \texttt{GRAPH\_HOM} = \set{ (G, H) \, | \, \exists \phi : G \to H \text{ s.t. $\phi$ is a graph homomorphism} }\]
 
 In particular, the last three languages are instances of $\npol$-complete problems, i.e. problems that are conceptually as hard as any problem in $\npol$ (more on this in the appendix). It is interesting to see that each of this problem involves some sort of search over an exponentially large possibility space, and the correctness can be easily verified by the result of such search. We associate thus $\npol$ class with problems that can be efficiently verified.
 
@@ -370,12 +370,12 @@ Intuitively, for the soundness bound, we claim that a possibly malicious prover 
 We start by proving this preliminary claim:
 
 \begin{theorem}
-Let $I$ be a random variable uniformly selected from $\{1, 2\}$. Let $G_1, G_2$ be two graphs such that $G_1 \cong G_2$. We also let $\Pi$ be a random variable uniformly distributed over the set of permutations of the vertex set of $G_1$ (which without loss of generality we assume being equal to the vertex set of $G_2$). Then we want to show, for every graph $F \cong G_1 \cong G_2$ the following hold:
+Let $I$ be a random variable uniformly selected from $\set{1, 2}$. Let $G_1, G_2$ be two graphs such that $G_1 \cong G_2$. We also let $\Pi$ be a random variable uniformly distributed over the set of permutations of the vertex set of $G_1$ (which without loss of generality we assume being equal to the vertex set of $G_2$). Then we want to show, for every graph $F \cong G_1 \cong G_2$ the following hold:
 \[ \condprob{I = 1}{\Pi(G_I) = F} = \condprob{I = 2}{\Pi(G_I) = F} = \frac{1}{2} \]
 \end{theorem}
 \begin{proof}
 First of all let $F$ be a graph isomorphic to $G_1, G_2$. 
-Then consider the sets $S_1, S_2$ defined by $S_\delta = \{ \pi : \pi(G_\delta) = F \}$. We first claim that $|S_1| = |S_2|$. To see this, note that $G_1 \cong G_2 \implies \exists \phi : G_1 = \phi(G_2) $. Then $\pi \in S_1 \implies \pi(G_1) = F \implies \pi(\phi(G_2)) = F \implies \pi \circ \phi \in S_2$, where the last step is justified since $\alpha(\beta(G)) = (\alpha \circ \beta) (G)$. So we can see that $f: S_1 \to S_2$ defined as $f(\sigma) = \sigma \circ \phi$ is well defined, and we can prove that it is a bijection\footnote{Injectivity: $f(\sigma) = f(\sigma') \implies \sigma \phi = \sigma' \phi \implies \sigma = \sigma'$. Surjectivity: $\pi \in S_2 \implies \pi(G_2) = F \implies \pi (\phi ^ {-1} (G_1)) = F \implies \pi \circ \phi^{-1} \in S_1$. Then $f(\pi \circ \phi^{-1}) = \pi \circ \phi^{-1} \circ \phi = \pi$}. and as such $|S_1| = |S_2|$. Now using this fact we have that:
+Then consider the sets $S_1, S_2$ defined by $S_\delta = \set{ \pi : \pi(G_\delta) = F }$. We first claim that $|S_1| = |S_2|$. To see this, note that $G_1 \cong G_2 \implies \exists \phi : G_1 = \phi(G_2) $. Then $\pi \in S_1 \implies \pi(G_1) = F \implies \pi(\phi(G_2)) = F \implies \pi \circ \phi \in S_2$, where the last step is justified since $\alpha(\beta(G)) = (\alpha \circ \beta) (G)$. So we can see that $f: S_1 \to S_2$ defined as $f(\sigma) = \sigma \circ \phi$ is well defined, and we can prove that it is a bijection\footnote{Injectivity: $f(\sigma) = f(\sigma') \implies \sigma \phi = \sigma' \phi \implies \sigma = \sigma'$. Surjectivity: $\pi \in S_2 \implies \pi(G_2) = F \implies \pi (\phi ^ {-1} (G_1)) = F \implies \pi \circ \phi^{-1} \in S_1$. Then $f(\pi \circ \phi^{-1}) = \pi \circ \phi^{-1} \circ \phi = \pi$}. and as such $|S_1| = |S_2|$. Now using this fact we have that:
 \begin{align*}
     & \condprob{I = 1}{\Pi(G_I) = F} \\
     &= \prob{\Pi(G_1) = F }  \\
@@ -402,14 +402,14 @@ Using this, proving the soundness property is not too hard.
     \condprob{E(G') = I}{\Pi(G_I) = G'} &= \sum_i \condprob{E(G') = i \; \land \; I = i}{\Pi(G_I) = G'} \\
     &= \sum_i \prob{E(G') = i } \condprob{ I = i}{\Pi(G_I) = G'} 
     \end{align*}
-    Here we can use the fact proved before, and for $i \in \{1, 2\}$ we have that the rigth expression is equal to $\frac{1}{2}$ and as such
+    Here we can use the fact proved before, and for $i \in \set{1, 2}$ we have that the rigth expression is equal to $\frac{1}{2}$ and as such
     \begin{align*}
          &\sum_i \prob{E(G') = i } \prob{ I = i}{\Pi(G_I) = G' } \\
          &= \frac{\prob{E(G') = 1 } + \prob{E(G') = 2}}{2} \\
-         &= \frac{\prob{E(G') \in \{ 1, 2\}}}{2} \\
+         &= \frac{\prob{E(G') \in \set{ 1, 2}}}{2} \\
          &\leq \frac{1}{2}
     \end{align*}
-    Where the last inequality is taking the case $E$ always outputs an element of $ \{ 1, 2\}$. Going back to the original equation:
+    Where the last inequality is taking the case $E$ always outputs an element of $ \set{ 1, 2}$. Going back to the original equation:
     \[\prob{E(\Pi(G_i)) = I} \leq \frac{1}{2} \sum_{G'} \prob{\Pi(G_I) = G'} = \frac{1}{2} \]
     Since $E$ was arbitrary, this implies that any possible prover can fool the verifier with maximum probability $\frac{1}{2}$.
 \end{proof}
@@ -442,7 +442,7 @@ Using this, we can replace the $\left<P, V\right>(x)$ by $\text{view}^{P}_{V'}(x
 With this definition, let us give now an example of a Perfect Zero Knowledge Proof for the language of Graph Isomorphism.
 \begin{example}
     First of all, let us define the language \texttt{GI}.
-    \[ \texttt{GI} = \{ (G, H) | G \cong H \}\]
+    \[ \texttt{GI} = \set{ (G, H) | G \cong H }\]
     Note that \texttt{GI} is\footnote{In the most general case, as we actually do know polynomial time algorithm for special cases such as trees}, as far as we know, not $\npol$-complete nor in $\bpp$. 
     This is important since every language in $\bpp$ has a trivial proof, while known ZKP languages that are $\npol$-complete require further assumptions.
     The following protocol \cite{goldreichFoundationsCryptographyVol2007} is a Perfect Zero Knowledge Proof System for \texttt{GI}.
@@ -477,7 +477,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
               isomorphism $\phi : V_1 \to V_2$. We stress that this $\phi$ is not publicly know\footnote{By this we mean that the prover either uses its superior computational ability to find $\phi$, or that it is only known to the prover. Strictly speaking the second formulation requires a slightly different formulation of ZKP, but the proof follows similarly }.
         \item On the first step, $P$ uniformly randomly selects a permutation $\sigma \in S_{V_2}$, and computes the graph $G' = \sigma(G_2)$.
               Then $P$ sends such graph to $V$. 
-        \item Once $V$ receives the graph $G'$ from $P$, it randomly selects an $i \in \{1, 2\}$, and sends it to $P$. 
+        \item Once $V$ receives the graph $G'$ from $P$, it randomly selects an $i \in \set{1, 2}$, and sends it to $P$. 
         \item When $P$ receives $i$, it acts as follows. If $i = 2$, then $P$ sends $\sigma$, else it sends $\sigma \circ \phi$.
         \item Finally, if the permutation received from $P$ is an isomorphism between $G_i$ and $G'$, then $V$ accepts, else it rejects.
     \end{enumerate}
@@ -496,7 +496,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
                   $\phi(G_1) = G_2$. Then $G' = \sigma(G_2) = (\sigma \circ \phi) (G_1)$. Then the prover can always satisfy the verifier challenge,
                   and as such the completeness bound is 1.
             \item Soundness. If $(G_1, G_2) \notin \texttt{GI}$, then there is no isomorphism between the two input graphs. Therefore for any $G'$ that a 
-                    possibly cheating prover $E$ might choose, there exists a $j \in \{1, 2\}$ such that $G_j \ncong G'$. So, since the verifier chooses $i \in_R \{1, 2\}$ after $G'$ is fixed, $\prob{i = j} = \frac{1}{2}$ and as such the prover will fail to convince the verifier 
+                    possibly cheating prover $E$ might choose, there exists a $j \in \set{1, 2}$ such that $G_j \ncong G'$. So, since the verifier chooses $i \in_R \set{1, 2}$ after $G'$ is fixed, $\prob{i = j} = \frac{1}{2}$ and as such the prover will fail to convince the verifier 
                     at least $\frac{1}{2}$ of the times, and that is the soundness bound.
         \end{itemize}
         Now, for the arguably more challenging section of the proof let us prove that the above protocol is indeed zero knowledge.
@@ -504,7 +504,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
         Let $V'$ be an arbitrary polynomial time randomized ITM. We define the following simulator $M_V'$, that runs on input $x \equiv (G_1, G_2)$:
         \begin{enumerate}
             \item First of all, let $q(|x|)$ be a polynomial bound on the running time of $V'$. We will be simulating $V'$ on $M_V'$, and to do so we will first allocate a string of $q(|x|)$ random bits to be used\footnote{An alternative would be interactively answering $V'$ queries for random bits, but this is conceptually easier}. We call such bits $r$. 
-            \item The simulator randomly selects $j \in \{1, 2 \}$, and permutation $\pi \in S_{V_j}$, computes the graph $H = \pi(G_j)$. 
+            \item The simulator randomly selects $j \in \set{1, 2 }$, and permutation $\pi \in S_{V_j}$, computes the graph $H = \pi(G_j)$. 
             \item The simulator now starts simulating $V'$, giving it $x$ as common input, $r$ as the random tape, $H$ in the incoming message tape.
             \item After polynomially many steps, $V'$ will place a message $i$ on its outgoing message tape. The simulator reads this value, normalizes it\footnote{This makes the discussion easier, also if $V'$ terminated we can still apply the normalization and proceed as before} by setting $i = 1$ if $i \neq 2$. 
             \item If $i = j$ then the simulator outputs $(x, r, H, \pi)$.
@@ -517,7 +517,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
         Let $x \equiv (G_1, G_2) \in \texttt{GI}$.
         We first show that: 
         \[ \prob{M_{V'}(x) = \bot} \leq \frac{1}{2} \]
-        Recall that \footnote{In proving the soundness bound for the interactive proof of \texttt{GNI}} we showed that, for any randomized algorithm $E$, any two isomorphic graph $G_1, G_2$, and with the variables $\Pi \in_R S_{V_1}, I \in_R \{1, 2\}$ we have that:
+        Recall that \footnote{In proving the soundness bound for the interactive proof of \texttt{GNI}} we showed that, for any randomized algorithm $E$, any two isomorphic graph $G_1, G_2$, and with the variables $\Pi \in_R S_{V_1}, I \in_R \set{1, 2}$ we have that:
         \[ \prob{E(\Pi(G_I)) = I} \leq \frac{1}{2} \]
         Since we see that $\prob{M_{V'}(x) = \bot} \leq \prob{E(\Pi(G_I)) = I}$ (as the simulation only fails when $V'$ is able to find out $i$ from $H = \pi(G_i)$), the claim is proved. \\
         Using now the alternative characterization of zero knowledge, we aim to show that $\text{view}^{P}_{V'}(x)$ and $m_{V'}(x)$ are identically distributed.
@@ -525,7 +525,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
         Let us define $s(x,r)$ be the last two elements of the quadruple outputted by the simulator (as long as the simulation succeeds), and similarly $p(x,r)$ the same elements of the quadruple of the verifier's view of the interaction.
         We aim to show these are identically distributed. First of all not that once $x,r,H$ are fixed, the output of $V'$, which we will call $v(x,r,H)$ is uniquely determined.
         It turns out that $s(x,r)$, $p(x,r)$ are identically distributed over the set:
-        \[ C_{x,r} = \{ (H, \pi) | H = \pi(G_{v(x,r,H)}) \} \]
+        \[ C_{x,r} = \set{ (H, \pi) | H = \pi(G_{v(x,r,H)}) } \]
         Unfortunately, the proof is rather tedious\footnote{The first element of the pair can be shown to be identically distributed easily, but the second part requires apparently at least a discussion of the authomorphisms of a graph, which I don't really get right now :)}, and not particularly related to cryptography, so for now I have decided to skip it until I find a simpler one.
         This concludes out proof that the above is a valid Perfect Zero Knowledge simulator for the interactive proof system, and as such we are done.
         \end{proof}
@@ -534,14 +534,14 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
 \subsection{Computational Zero Knowledge}
 Perfect Zero Knowledge Proofs have the extremely strong requirement that the simulation and the actual interaction yields the same identical distribution (of course when the simulator is able to answer accurately i.e. does not output $\bot$). However, this requirement is quite stringent, and as such we can relax it by borrowing from pseudorandom generators. In particular, the key insight is that for a generator to be such, it is not necessary for it to be truly random, but only for it to be impossible for a polynomial time procedure to distinguish it from a truly random sequence. In particular, we can formalize this as follows:
 \begin{definition}
-Two random variable ensembles\footnote{An ensemble $\{A_n\}_{n \in \NN}$ is just an infinite set of random variables over $\bin^*$ indexed by either an integer $n$, or by some string in some language} $\{A_n\}_{n \in \NN}$ and $\{B_n\}_{n \in \NN}$ are \textbf{computationally indistinguishable} if for any polynomial time algorithm $D$ the function
+Two random variable ensembles\footnote{An ensemble $\set{A_n}_{n \in \NN}$ is just an infinite set of random variables over $\bin^*$ indexed by either an integer $n$, or by some string in some language} $\set{A_n}_{n \in \NN}$ and $\set{B_n}_{n \in \NN}$ are \textbf{computationally indistinguishable} if for any polynomial time algorithm $D$ the function
 \[ \delta(n) = \left| \; \prob{D(A_n, 1^n) = 1} - \prob{D(B_n, 1^n) = 1} \;  \right|  \] is a negligible function of $n$.
 \end{definition}
 A couple of notes are, as usual, in order. First of all, the $1^n$ parameter are used to rule out degenerate cases where the two distributions yields strings logarithmic in the size of $n$, and as such the $D$ algorithm is unable to run in polynomial time of $n$. The $\delta$ function is often referred to as the attackers advantage. The idea is that this metric can measure how much better the attacker can do over the general strategy of always accepting, rejecting or guessing, which always yield an advantage of\footnote{For example, if an algorithm $D$ always accepts then $\delta(n) = |1 - 1| = 0$} 0. 
 In order to further explain how this is useful let us consider the following two examples \cite{ProvableSecurityComputational}.
 
 \begin{example}
-Consider the two ensembles $\{A_n\}_{n \in \NN}$ and $\{B_n\}_{n \in \NN}$ where $\prob{A_n = n} = \prob{A_n = n+1} = \frac{1}{2}$, and $\prob{B_n = n} = 1$. So $A_n$ is either $n$ or $n+1$, while $B_n$ always equals $n$. Then $\{A_n\}_{n \in \NN}$ and $\{B_n\}_{n \in \NN}$ are \textbf{not} computationally indistinguishable
+Consider the two ensembles $\set{A_n}_{n \in \NN}$ and $\set{B_n}_{n \in \NN}$ where $\prob{A_n = n} = \prob{A_n = n+1} = \frac{1}{2}$, and $\prob{B_n = n} = 1$. So $A_n$ is either $n$ or $n+1$, while $B_n$ always equals $n$. Then $\set{A_n}_{n \in \NN}$ and $\set{B_n}_{n \in \NN}$ are \textbf{not} computationally indistinguishable
 \begin{proof}
 Let $D$ be the algorithm that accepts $(x, 1^n)$ if $x = n$. Then 
 \begin{align*}
@@ -553,7 +553,7 @@ Since $\delta(n)$ is a constant, it is non negligible and as such the two ensemb
 \end{example}
 
 \begin{example}
-Consider the two ensembles $\{A_n\}_{n \in \NN}$ and $\{B_n\}_{n \in \NN}$ where $\prob{A_n = 0^n} = 2^{-n}$, $\prob{A_n = 1^n} = 1 - 2^{-n}$ and $\prob{B_n = 1^n} = 1$. In order to make intuitive, $A_n$ can be generated by an algorithm that flips $n$ coins and outputs $0^n$ if all landed tails, and $1^n$ otherwise, and $B_n$ always outputs $1^n$. Then $\{A_n\}_{n \in \NN}$ and $\{B_n\}_{n \in \NN}$ are \textbf{computationally indistinguishable}
+Consider the two ensembles $\set{A_n}_{n \in \NN}$ and $\set{B_n}_{n \in \NN}$ where $\prob{A_n = 0^n} = 2^{-n}$, $\prob{A_n = 1^n} = 1 - 2^{-n}$ and $\prob{B_n = 1^n} = 1$. In order to make intuitive, $A_n$ can be generated by an algorithm that flips $n$ coins and outputs $0^n$ if all landed tails, and $1^n$ otherwise, and $B_n$ always outputs $1^n$. Then $\set{A_n}_{n \in \NN}$ and $\set{B_n}_{n \in \NN}$ are \textbf{computationally indistinguishable}
 \begin{proof}
 First of all note that the only case in which the distribution of the two differ is when $A_n = 0^n$. Intuitively, this happens only with negligible probability, and as such the overall advantage that any $D$ could gain happens scarcely enough that it does not matter. Let us give a formal proof of this fact. Let $D$ be any polynomial time algorithm. Then let: 
 \begin{align*}
@@ -609,8 +609,8 @@ Let $L$ be a language. Then $L$ has a \textbf{computational zero knowledge proof
     \item $P, V$ is an interactive proof system for $L$
     \item For any probabilistic polynomial time ITM $V'$, there exists a probabilistic polynomial time TM $M_{V'}$ such that the following ensembles are computationally indistinguishable:
     \begin{enumerate}
-        \item $\{ \left<P, V \right>(x) \}_{x \in L}$
-        \item $\{ M_{V'}(x) \}_{x \in L}$
+        \item $\set{ \left<P, V \right>(x) }_{x \in L}$
+        \item $\set{ M_{V'}(x) }_{x \in L}$
     \end{enumerate}
         
 \end{itemize}
@@ -635,7 +635,7 @@ Formally, we define a bit commitment scheme as follows:
     on common security parameter $n$, satisfy the following requirements.
     \begin{itemize}
         \item \textbf{Secrecy}. For any probabilistic polynomial time interactive machine $E$, 
-            the ensembles $\{ \left<S(0), E\right>(1^n) \}_{n \in \NN}$ and $\{ \left<S(1), E\right>(1^n) \}_{n \in \NN}$ are computationally indistinguishable.
+            the ensembles $\set{ \left<S(0), E\right>(1^n) }_{n \in \NN}$ and $\set{ \left<S(1), E\right>(1^n) }_{n \in \NN}$ are computationally indistinguishable.
         \item \textbf{Unambiguity} We let $(r, \bar{m})$ be, respectively, the random bits used by the receiver and the messages received by the sender. 
                 Then we say that $(r, \bar{m})$ is a $i$-commitment if for some random string $s$ the machine\footnote{Here we use the notation $M_r(x)$ to denote the machine $M$ running with local coins $r$ on input $x$} $S_s(i, 1^n)$ produces the sequence of messages $\bar{m}$ when interacting with $R$ with local coins $r$. 
                 If $(r, \bar{m})$ is both a 0-commitment and a 1-commitment, then it is ambiguos. 
@@ -674,7 +674,7 @@ As such we define:
 \begin{definition}
     A \textbf{one-way-interaction bit commitment scheme} is a polynomial time algorithm $F$ such that.
     \begin{itemize}
-        \item For $s$ uniformly drawn from $\bin^n$, the ensembles $\{ F_s(0, 1^n) \}_{n \in \NN}$ and $\{ F_s(1, 1^n) \}_{n \in \NN}$ are computationally indistinguishable.
+        \item For $s$ uniformly drawn from $\bin^n$, the ensembles $\set{ F_s(0, 1^n) }_{n \in \NN}$ and $\set{ F_s(1, 1^n) }_{n \in \NN}$ are computationally indistinguishable.
         \item There does not exists $s$ such that $F_s(0, 1^n) = F_s(1, 1^n)$.
         \item For such a scheme, the (canonical) reveal of $F_s(i, 1^n)$ is $(i, s)$.
     \end{itemize}
@@ -688,15 +688,15 @@ These are problems that are efficiently reducible to any other problem in $\npol
 It follows that by finding a ZKP for a single one of these problems, we can show that any problem in the class has a Zero Knowledge Proof. 
 In particular, the language that we will tackle is that of Graph Three Coloring.
 \begin{definition}
-    Let $G = (V, E)$ be a simple\footnote{Where by simple we disallow loops and parallel edges} finite graph. A \textbf{3-coloring} for the graph is a function $\pi: V \to \{1, 2, 3\}$
+    Let $G = (V, E)$ be a simple\footnote{Where by simple we disallow loops and parallel edges} finite graph. A \textbf{3-coloring} for the graph is a function $\pi: V \to \set{1, 2, 3}$
     such that $(u, v) \in E \implies \pi(u) \neq \pi(v)$
 \end{definition}
 \begin{definition}
-    \[ \texttt{3COL} = \{ G \; | \; G \text{ has a valid 3-coloring} \} \]
+    \[ \texttt{3COL} = \set{ G \; | \; G \text{ has a valid 3-coloring} } \]
 \end{definition}
 The language \texttt{3COL} as defined is $\npol$-complete. 
 Let us now present a computational ZKP \cite{goldreichProofsThatYield1991} \cite{goldreichMethodologyCryptographicProtocol} for this language. We use a one-way-interaction bit commitment scheme which denotes by 
-$C_s(i)$ the commitment of value $i \in \{1, 2, 3\}$ using random coins $s$ (That is $C_s(i) = F_s(i, 1^n)$). Note how the commitment schemes 
+$C_s(i)$ the commitment of value $i \in \set{1, 2, 3}$ using random coins $s$ (That is $C_s(i) = F_s(i, 1^n)$). Note how the commitment schemes 
 presented before only allow us to commit a single bit, while this one is able to commit a ternary bit of sorts. Of course, the transformation
 from one scheme to the other is trivial and only requires using the bit commitment scheme twice for every value (e.g. committing 00 for 1, 01 for 2, 10 for 3).
 \begin{example}
@@ -728,7 +728,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
     \end{figure}
 
 
-    Let the common input be $G = (V, E)$, where $V = \{1, \dots, n \}$.
+    Let the common input be $G = (V, E)$, where $V = \set{1, \dots, n }$.
     This graph is 3-colorable, with coloring $\pi$, which is unknown to the verifier\footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}. 
     \begin{enumerate}
         \item The prover randomly uniformly selects $\sigma \in S_3$. It sets $\phi \equiv \sigma \circ \pi$.
@@ -736,7 +736,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
                 The prover the sends $c_1, \dots, c_n$ to the verifier.
         \item The verifier uniformly selects a edge $(u, v) \in E$, and sends it to the prover
         \item The prover sends $(s_u, \phi(u))$ and $(s_v, \phi(v))$ to the verifier
-        \item On the messages $(\alpha, i)$, $(\beta, j)$, with $\alpha, \beta \in \bin^n$ and $i, j \in  \{1, 2, 3\}$, the verifier checks that $c_u = C_\alpha(i)$ and that 
+        \item On the messages $(\alpha, i)$, $(\beta, j)$, with $\alpha, \beta \in \bin^n$ and $i, j \in  \set{1, 2, 3}$, the verifier checks that $c_u = C_\alpha(i)$ and that 
                 $c_v = C_\beta(j)$. If not it rejects. Finally, it accepts if $i \neq j$, and if as such the edges are differently coloured.
     \end{enumerate}
     A small discussion is, of course, in order. The fundamental idea is that the prover creates $n$ boxes, each with a inside a color.
@@ -755,7 +755,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
             \item Completeness: If $G$ is indeed 3-colorable with coloring $\pi$, then the above protocol always accepts.
             \item Soundness: Let us suppose that $G$ is not 3-colorable. Then the $n$ commited values cannot 
                             correspond to a 3-coloring, and as such there must be at least one edge $(v, v')$ such that
-                            $c_v, c_{v'}$ are commitment of the same value $k \in \{1, 2, 3\}$. So no matter what the 
+                            $c_v, c_{v'}$ are commitment of the same value $k \in \set{1, 2, 3}$. So no matter what the 
                             prover commits, the verifier will reject with probability at least $\frac{1}{|E|}$. Since we can bound 
                             the number of edges with $|E| \leq \binom{n}{2}$, we have a polynomial bound of $\frac{2}{n(n+1)}$.
         \end{itemize}
@@ -765,9 +765,9 @@ from one scheme to the other is trivial and only requires using the bit commitme
         Luckily, the sequential composition lemma that we assumed earlier and here ensures that this is the case}. 
         For any verifier $V'$, we show a simulator $M_{V'}$ that shows that the prover has the zero knowledge property.
         \begin{itemize}
-            \item Let the input be $G = (V, E)$, where $V = \{1, \dots, n \}$.
+            \item Let the input be $G = (V, E)$, where $V = \set{1, \dots, n }$.
             \item Again, let $q(|G|)$ be a polynomial bound on the running time of $V'$. Allocate a uniformly randomly selected string $r \in \bin^{q(|G|)}$ random bits to be used.
-            \item Uniformly select $e_i \in \{1, 2, 3\}$, and $s_i \in \bin^n$, for $i \in V$. Compute $d_i \equiv C_{s_i}(e_i)$, 
+            \item Uniformly select $e_i \in \set{1, 2, 3}$, and $s_i \in \bin^n$, for $i \in V$. Compute $d_i \equiv C_{s_i}(e_i)$, 
             \item Simulate $V'$ with $G$ as input, and $r$ as the random bits. Also, put the sequence of commitments $d_1, \dots d_n$ in $V'$ incoming messages tapes.
             \item After $V'$ has been simulated, we can assume that it will have some message $m$ on its out message tape. We can also
                   assume that $m \in E$, as if it is not we can adapt $M_{V'}$ so that is selected some edge in $E$ to be used.
@@ -912,18 +912,18 @@ where $t$ is a security parameter. In fact, it was later shown \cite{nevenHashFu
 are required. The scheme works as follows:
 \begin{itemize}
     \item The prover has a private $x$ such that $\alpha^x \equiv \beta \pmod N$. $\alpha, \beta, N$ 
-          are published so that both parties know it. Also $H$ is a known hash function such that: $H: \bin^n \to \{0, \dots, 2^t - 1\}$
+          are published so that both parties know it. Also $H$ is a known hash function such that: $H: \bin^n \to \set{0, \dots, 2^t - 1}$
     \item Let us suppose that the prover has a message $M \in \bin^*$ that he wants to sign. 
     \item The prover chooses a random $r$ uniformly as before. Set $\gamma \equiv \alpha^r$.
-    \item The prover computes $e \equiv H(\gamma || M)$, and $y \equiv r - ex$.
+    \item The prover computes $e \equiv H(\gamma, M)$, and $y \equiv r - ex$.
     \item Finally, the provers sends $(e, y)$ as the signature
     \item To verify, the verifier computes $\gamma' \equiv \alpha^y \beta^e \pmod N$, and finally 
-          verifies that $e =^? H(\gamma' || M)$
+          verifies that $e =^? H(\gamma', M)$
 \end{itemize}
 
 It is easy to check that if both parties follow the procedure then 
 $\gamma' = \alpha^y \beta ^e = \alpha^y \alpha^{ex} = \alpha^{r - ex} \alpha{ex} = \alpha^r = \gamma$
-and as such $H(\gamma || M) = H(\gamma' || M)$.
+and as such $H(\gamma, M) = H(\gamma', M)$.
 
 
 \subsection{Secure Remote Password}
@@ -1101,7 +1101,7 @@ While it is true that if $\pol = \npol$ then $f_{ssum}$ is not one way, the conv
 In fact, $\pol \neq \npol$ is necessary but not sufficient condition for one way functions to exist.
 It turns out \cite{goldreichFoundationsCryptographyVol2007} that the strongly one way functions exist if and only if weakly one way functions do. This justifies our assuming only the existance of vague one way functions, without specifying the type.
 While for one way functions it is hard to recover the complete input in general, there is nothing stopping a possible attacker from computing some partial information about the input.
-For example, if $f$ is one way we can define the function $g(x, r) = f(x) || r$ which will be one way, yet always leak half of its input to the attacker.
+For example, if $f$ is one way we can define the function\footnote{We use $||$ to denote concatenation} $g(x, r) = f(x) || r$ which will be one way, yet always leak half of its input to the attacker.
 On the other hand, there is some information that such $g$ does not leak, for example (if $f$ is strongly one way): $x \circ r$. 
 Using this we can define the following:
 \begin{definition}
@@ -1143,7 +1143,7 @@ if modular arithmetic is used, the prime $p$ is chosen so that $p = 2q + 1$ for 
 suitably large primes the discrete logarithm problem is considered intractable. The other alternative to 
 modular arithmetic is using elliptic curves. Elliptic curves are defined over a field\footnote{In fact, it is required this 
 field has characteristic not 2 or 3, otherwise the equation becomes more complicated} $\FF$. In particular,
-this field is in practice of the form $\ZZ_p$ for $p$ prime, and it is defined by the set of points $(x, y) \in \FF^2 \cup \{ \infty \}$ such that\footnote{In fact the one below is
+this field is in practice of the form $\ZZ_p$ for $p$ prime, and it is defined by the set of points $(x, y) \in \FF^2 \cup \set{ \infty }$ such that\footnote{In fact the one below is
 one of the possible equations for elliptic curves, there are many with different advantages, but all of the general form: $\alpha_0 y^2 + \alpha_1 xy = \beta_0 x^3 + \beta_1 x^2 + \beta_2 x + \gamma$}:
 \[ y^2 = x^3 + \alpha x + \beta \]
 For suitable constant parameters $\alpha, \beta$, we can define addition in a geometrical manner, having that the sum of some 
@@ -1198,8 +1198,8 @@ We say that a language $L \in \npol$ if there exist a relation $R_L \subseteq \b
 \end{enumerate}
 Such a $y$ is a \textbf{witness for membership of } $x \in L$
 \end{definition}
-In particular, note the bound requirement on the witness $y$. This ensures that the certificate is not more than polynomially bigger than the problem statement. If this were not the case, then let us take for example the language \[TAUT = \{ \phi : \bin^n \to \bin | n \in \NN, \forall (x_1, \dots x_n): \phi(x_1, \dots, x_n) = 1\}\]
-i.e. the language of all boolean formulas that return true for every input. If the bounds on the polynomial size of the certificate were to be lifted, then we could allow for a relation language $R_{TAUT} = \{ (\phi, 1^{2n}) | n \in \NN, \phi : \bin^n \to \bin, \phi \in TAUT  \}$. Such language is recognizable in polynomial time in the certificate (as evaluating a boolean formula of $n$ variable takes polynomial time in the formula length, and enumerating all possible $n$ boolean variables takes $\bigO{2^n}$ which is polynomial in the length of the certificate), however, if the bound is upheld we have no evidence of the belonging of $TAUT$ in $\npol$ (in fact, we know that $TAUT \in \text{co-}\npol$, and the relation between the two classes is still not clear).
+In particular, note the bound requirement on the witness $y$. This ensures that the certificate is not more than polynomially bigger than the problem statement. If this were not the case, then let us take for example the language \[TAUT = \set{ \phi : \bin^n \to \bin | n \in \NN, \forall (x_1, \dots x_n): \phi(x_1, \dots, x_n) = 1}\]
+i.e. the language of all boolean formulas that return true for every input. If the bounds on the polynomial size of the certificate were to be lifted, then we could allow for a relation language $R_{TAUT} = \set{ (\phi, 1^{2n}) | n \in \NN, \phi : \bin^n \to \bin, \phi \in TAUT  }$. Such language is recognizable in polynomial time in the certificate (as evaluating a boolean formula of $n$ variable takes polynomial time in the formula length, and enumerating all possible $n$ boolean variables takes $\bigO{2^n}$ which is polynomial in the length of the certificate), however, if the bound is upheld we have no evidence of the belonging of $TAUT$ in $\npol$ (in fact, we know that $TAUT \in \text{co-}\npol$, and the relation between the two classes is still not clear).
 
 We can similarly prove that our antecedent definition of $\npol$ (call it $\npol_{prob}$) is the same as the classical one. 
 
@@ -1213,7 +1213,7 @@ Let $L \in \npol$, then there exist a relation $R_L$ s.t. that $R_L$ is recogniz
 
 Since the certificate exists, and it is polynomial in the size of $x$, there will always be at least one extremely lucky machine that will guess it, and as such $\prob{M(x) = 1} > 0$ for $x \in L$. So $L \in \npol_{prob}$, which implies $\npol \subseteq \npol_{prob}$. 
 
-Conversely, let $L \in \npol_{prob}$. Then there exist a probabilistic time machine $M$ s.t. $x \in L \iff \prob{M(x) = y} > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \{ (x, r) | x \in L \text { and } M_r(x) = 1 \}$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existance is met by our above reasoning. Finally, since $r$ is bound by the bound on the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \npol$, which in turn implies $\npol_{prob} \subseteq \npol$. \par
+Conversely, let $L \in \npol_{prob}$. Then there exist a probabilistic time machine $M$ s.t. $x \in L \iff \prob{M(x) = y} > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \set{ (x, r) | x \in L \text { and } M_r(x) = 1 }$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existance is met by our above reasoning. Finally, since $r$ is bound by the bound on the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \npol$, which in turn implies $\npol_{prob} \subseteq \npol$. \par
 
 So, since $\npol \subseteq \npol_{prob}$ and $\npol_{prob} \subseteq \npol$, it must be that $\npol = \npol_{prob}$
 
