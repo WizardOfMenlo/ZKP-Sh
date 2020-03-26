@@ -3,9 +3,10 @@
 \usepackage[nottoc]{tocbibind}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{float}
 \usepackage{amsthm}
 \usepackage{appendix}
-\usepackage[landau, sets, probability, complexity]{cryptocode}
+\usepackage[landau, sets, operators, probability, complexity, asymptotics]{cryptocode}
 
 
 
@@ -63,18 +64,19 @@ Now, a couple of utilities for talking about the asymptotic complexity of variou
 \end{definition}
 We also allow for two slight relaxation of notation, writing for example $\bigO{f}$ as $\bigO{f(n)}$ and $f \in \bigO{g}$ as $f = \bigO{g}$. Furthermore, we define the following useful set:
 \begin{definition} We define
-\[\text{\normalfont{poly}} = \bigcup_{i = 0}^\infty \bigO{n^i}\]
+\[\poly[] = \bigcup_{i = 0}^\infty \bigO{n^i}\]
 as the set of all functions bounded above by a polynomial. 
 \end{definition}
-As before, we will allow a slight relaxation and use $\text{poly}(\cdot)$ to specify some fixed but unspecified polynomial.
+As before, we will allow a slight relaxation and use $\poly[\cdot]$ to specify some fixed but unspecified polynomial.
 
 \begin{definition}
-Let $\mu : \NN \to \RR$. We say $\mu$ is \textbf{negligible} if for every positive polynomial $p(\cdot)$ there exist a $N \in \NN$ s.t for every $n > N$ we have:
-\[\mu(n) < \frac{1}{p(n)}\]
+Let $\mu : \NN \to \RR$. We say $\mu$ is \textbf{negligible} if for every positive $\poly[\cdot]$ there exist a $N \in \NN$ s.t for every $n > N$ we have:
+\[\mu(n) < \frac{1}{\poly}\]
 \end{definition}
-As an example, functions such $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of poly. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. \par
+As an example, functions such $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of $\poly$. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. \par
 
 There a couple of notions of probability that we will most likely need.
+First of all, we will use the notation $x \sample A$ to say that $x$ is uniformly selected from the set $A$. 
 
 \begin{definition}
     Suppose we have a series of $n$ independent event $X_i$, each one of them 
@@ -159,7 +161,23 @@ Note in particular that we can replace the $\frac{2}{3}$ constant with $\frac{1}
 
 $\bpp$ is referred to as the class of bounded polynomial time languages. It is evident that $\pol \subseteq \bpp$ but, while it is believed that the classes are equal, no proof was yet found. This class is significant, as it is intrinsically associated with efficient computation. This is because of a few factors, first of all because the probabilistic computation closely mimics the capabilities of general purpose computer, which can use the external environment as a source of randomness. Secondly, polynomial time computation is feasible, and, as long as Moore's law holds, modern computer can every year improve faster than one can increase the problem size\footnote{What I mean is, if an algorithm takes $poly(|x|)$ steps, and on year $n$ a computer can perform $\bigO{2^n}$ steps, }. Let us have an example to clarify:
 \begin{example}
-Consider three matrices, $A, B, C$ where $A \in \FF^{n \times m}$, $B \in \FF^{n \times k}$, $C \in \FF^{k \times m}$. We want to solve the question $A =_? B C$. Of course, in a deterministic setting, we can simply multiply the two matrices (taking $\bigO{nkm}$ steps) and compare it with the first (in $\bigO{nm}$ steps), in a total of $\bigO{nmk + nm}$ steps. We can do better if we allow for some probabilistic error. Take the following procedure.
+
+\begin{figure}[H]
+    \centering
+        \fbox{%
+            \procedure{Matrix Multiplication Probabilistic}{%
+                \text{Inputs: } A \in \FF^{n \times m}, B \in \FF^{n \times k}, C \in \FF^{k \times m} \\
+                x \sample \FF^m \\
+                \pcreturn Ax =_? BCx
+            }
+    }
+    \caption{Algorithm for Checking Matrix Multiplication using probability}
+    \label{matrixmultiplication}
+\end{figure}
+
+Consider three matrices, $A, B, C$ where $A \in \FF^{n \times m}$, $B \in \FF^{n \times k}$, $C \in \FF^{k \times m}$.
+We want to solve the question $A =_? B C$. Of course, in a deterministic setting, we can simply multiply the two matrices (taking $\bigO{nkm}$ steps) and compare it with the first (in $\bigO{nm}$ steps), in a total of $\bigO{nmk + nm}$ steps.
+We can do better if we allow for some probabilistic error. Take the following procedure (also in Figure \ref{matrixmultiplication}) :
 \begin{enumerate}
     \item Take a random vector $x \in \FF^m$
     \item Compute $Ax$ and $BCx$.
@@ -184,7 +202,7 @@ In cryptography, in order to achieve sound schemes, it is common to work in what
 Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently well endowed attacker might take. \par
 
 The capability of the attacker will vary depending on the level of security that the protocol needs to be hold to. For example, the computational power that the adversary has will affect the class of problems that it can solve.
-As an instance, if a construction relies on (hard) instances of an $\npol$-complete problem (and if $\pol \neq \npol$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \npol$ there exist a deterministically recognizable $R_L \subseteq \bin^* \times \bin^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \text{poly}(|x|)$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
+As an instance, if a construction relies on (hard) instances of an $\npol$-complete problem (and if $\pol \neq \npol$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \npol$ there exist a deterministically recognizable $R_L \subseteq \bin^* \times \bin^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \poly[|x|]$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
 
 
 \subsection{Notion of Proof}
@@ -193,7 +211,12 @@ The notion of a proof has extremely overloaded meaning, as it used in many dispa
 \section{Proof Requirements}
 In order to start visualizing the concept of ZKP, we can start with a couple of toy examples that are helpful. Here and in the rest of text we will refer to the prover as Peggy and to the verifier as Victor.
 \begin{example}
-Assume that Victor is completely colorblind\footnote{i.e. that he cannot distinguish object based on color alone}. Peggy wants to prove to Victor that she is not colorblind, so she devises an experiment. Peggy takes two balls completely identical, save for their colour, and gives them to Victor, one in his left and one in his right hand. Peggy asks Victor to put the balls behind his back, and to decide whether to swap them or not, without telling her. She then asks Victor to show the two balls. Peggy concludes by telling Victor whether he swapped the balls or not.\\
+Assume that Victor is completely colorblind\footnote{i.e. that he cannot distinguish object based on color alone}.
+Peggy wants to prove to Victor that she is not colorblind, so she devises an experiment.
+Peggy takes two balls completely identical, save for their colour, and gives them to Victor, one in his left and one in his right hand.
+Peggy asks Victor to put the balls behind his back, and to decide whether to swap them or not, without telling her.
+She then asks Victor to show the two balls.
+Peggy concludes by telling Victor whether he swapped the balls or not.\\
 This is a zero knowledge proof in the sense that:
 \begin{enumerate}
     \item If Peggy were colorblind, she would not be able to tell whether Victor switched the balls or not, and so the best she could do is guess, getting it right $\frac{1}{2}$ of the time\footnote{And as such repeating the experiment $n$ times will bring her probability of always guessing right to $\frac{1}{2^n}$}.
@@ -204,7 +227,13 @@ This is a zero knowledge proof in the sense that:
 
 \begin{example}
 This proof is due to Jean-Jacques Quisquater \cite{quisquaterHowExplainZeroknowledge1989}.
-Consider a cave shaped like a ring, with a single entrance. On the side opposite to the entrance, there is a gate that divides the cave into two. The gate can only be opened by a secret word, that only Peggy knows. Peggy wants to prove to Victor that she possesses this secret word, without of course letting him in on the secret. She devises and experiment as follows. She tells Victor to wait at the entrance of the cave, and she goes by one of the two possible paths (without letting Victor know which one she took) to the gate, where she can utter the secret word without being heard. Then she asks Victor to name one of the two paths, and she goes back trough the named path. 
+Consider a cave shaped like a ring, with a single entrance.
+On the side opposite to the entrance, there is a gate that divides the cave into two.
+The gate can only be opened by a secret word, that only Peggy knows. 
+Peggy wants to prove to Victor that she possesses this secret word, without of course letting him in on the secret.
+She devises an experiment as follows.
+She tells Victor to wait at the entrance of the cave, and she goes by one of the two possible paths (without letting Victor know which one she took) to the gate, where she can utter the secret word without being heard.
+Then she asks Victor to name one of the two paths, and she goes back trough the named path. 
 As before:
 \begin{enumerate}
     \item If Peggy did not know the secret word, she would not be able to go back on a path different from the one she initially took, and as such has only a $\frac{1}{2}$ chance of getting it right.
@@ -298,11 +327,30 @@ In fact, as we will see next, $\mathsf{IP}$ actually contains languages that are
 Let us consider the Graph Non Isomorphism problem, a decision problem which is not known to be in $\bpp \cup \npol$. This quite aptly named problem concerns deciding whether two graphs are not isomorphic.
 Before, presenting the system, let us try to give some intuition onto how we will be approaching the problem. As in the coffee problem that we examined in the completeness section, we will have the verifier issuing challenges to the prover, which will use its superior computational abilities to solve. In particular, we rely on the fact if the two graphs are not isomorphic then it will always be possible to distinguish the two. 
 Here is a interactive proof system that decides this problem.
+
+\begin{figure}[H]
+    \centering
+    \fbox{%
+        \procedure{Proof that $G_1, G_2$ are not isomorphic}{%
+            \textbf{Prover} \> \> \textbf{Verifier} \pclb
+            \pcintertext[center]{$G_1 = (V_1, E_1), G_2 = (V_2, E_2)$}
+            \> \> i \sample \set{1, 2} \\
+            \> \> \pi \sample S_{V_i} \\
+            \> \> F = \pi(G_i) \\
+            \> \sendmessageleft*{F} \> \\
+            \text{Find } j \text{ s.t. } G_j \cong F \> \> \\
+            \> \sendmessageright*{j} \> \\
+            \> \> \pcreturn i =_? j 
+        }
+    }
+    \caption{An interactive proof for Graph Non Isomorphism}
+    \label{graphnonisomorphism}
+\end{figure}
+
 \begin{example}
 Let the common input be a pair of graphs, $G_1, G_2$ such that $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$.
 \begin{itemize}
-    
-    \item The verifier starts the interaction, uniformly selecting at random $i \in {1, 2}$ and then randomly selects a permutation $\pi \in S_{V_i}$.
+    \item The verifier starts the interaction, uniformly selecting at random $i \in \set{1, 2}$ and then randomly selects a permutation $\pi \in S_{V_i}$.
           It then sends the the graph $F = \pi(G_i)$ to the prover.
     \item The prover finds which of the two input graphs $F$ is isomorphic to, and sends the answer $j$ to the verifier
     \item If $i = j$ the verifier accepts (concludes that the two graphs are not isomorphic), else it rejects (is not convinced that the graphs are not isomorphic). 
@@ -398,6 +446,31 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
     Note that \texttt{GI} is\footnote{In the most general case, as we actually do know polynomial time algorithm for special cases such as trees}, as far as we know, not $\npol$-complete nor in $\bpp$. 
     This is important since every language in $\bpp$ has a trivial proof, while known ZKP languages that are $\npol$-complete require further assumptions.
     The following protocol \cite{goldreichFoundationsCryptographyVol2007} is a Perfect Zero Knowledge Proof System for \texttt{GI}.
+
+    \begin{figure}[H]
+        \centering
+        \fbox{%
+            \procedure{Proof that $G_1 \cong G_2$}{%
+                \textbf{Prover} \> \> \textbf{Verifier} \pclb
+                \pcintertext[center]{$G_1 = (V_1, E_1), G_2 = (V_2, E_2)$}
+                \text{Find } \phi \text{ s.t. } \phi(G_1) = G_2 \> \> \\
+                \sigma \sample {S_{V_2}} \> \> \\
+                G' = \sigma(G_2) \> \> \\
+                \> \sendmessageright*{G'} \> \\
+                \> \> i \sample \set{1, 2} \\
+                \> \sendmessageleft*{i} \> \\
+                \pcif i =_? 2 \> \> \\
+                \pcind \pi \coloneqq \sigma \> \> \\
+                \pcelse \> \> \\
+                \pcind \pi \coloneqq \sigma \circ \phi \> \> \\
+                \> \sendmessageright*{\pi} \> \\
+                \> \> \pcreturn \pi(G_i) =_? G'
+            }
+        }
+        \caption{An perfect zero knowledge proof for Graph Isomorphism}
+        \label{graphisomorphismzkp}
+    \end{figure} 
+
     \begin{enumerate}
         \item Let the common inputs of $P, V$ be two graphs $G_1, G_2$ s.t. $G_i = (V_i, E_i)$.
               Also if $(G_1, G_2) \in \texttt{GI}$ it must be that $G_1 \cong G_2$ and as such there exists an 
@@ -627,6 +700,34 @@ $C_s(i)$ the commitment of value $i \in \{1, 2, 3\}$ using random coins $s$ (Tha
 presented before only allow us to commit a single bit, while this one is able to commit a ternary bit of sorts. Of course, the transformation
 from one scheme to the other is trivial and only requires using the bit commitment scheme twice for every value (e.g. committing 00 for 1, 01 for 2, 10 for 3).
 \begin{example}
+    \begin{figure}[H]
+        \centering
+        \fbox{%
+            \procedure{Proof that $G$ is 3-colorable}{%
+                \textbf{Prover} \> \> \textbf{Verifier} \pclb
+                \pcintertext[center]{$G = (V, E)$, bit commitment scheme $C_r(s)$}
+                \pi \text{ a 3-coloring of } G \> \> \\
+                \sigma \sample S_3 \> \>  \\
+                \phi \coloneqq \sigma \circ \pi \> \> \\
+                s_i \sample \bin^n, \forall i \in V \> \> \\
+                c_i \coloneqq C_{s_i}(\phi(i)) \> \> \\
+                \> \sendmessageright*{c_1, \dots, c_n} \> \\
+                \> \> (u, v) \sample E \\
+                \> \sendmessageleft*{u, v} \> \\
+                \gamma_u \coloneqq \phi(u) \> \> \\
+                \gamma_v \coloneqq \phi(v) \> \> \\
+                \> \sendmessageright*{s_u, \gamma_u, s_v, \gamma_v} \> \\
+                \> \> \pcfail \pcif C_{s_u}(\gamma_u) \neq_? c_u \\
+                \> \> \pcfail \pcif C_{s_v}(\gamma_v) \neq_? c_v \\
+                \> \> \pcfail \pcif i =_? j \\
+                \> \> \pcreturn \pctrue
+            }
+        }
+        \caption{An zero knowledge proof for Graph 3-Coloring}
+        \label{graph3col}
+    \end{figure}
+
+
     Let the common input be $G = (V, E)$, where $V = \{1, \dots, n \}$.
     This graph is 3-colorable, with coloring $\pi$, which is unknown to the verifier\footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}. 
     \begin{enumerate}
@@ -728,6 +829,28 @@ solve is that of signing a message, so that the receiver can ensure that it was 
 helpful in practice, since there are ways to make the signatures attractively small. Schnorr algorithm is based on the hardness
 of the discrete logarithm problem, and in particular on the following zero knowledge protocol of knowledge of the 
 discrete logarithm, due to \cite{chaumImprovedProtocolDemonstrating1988}.
+
+\begin{figure}[H]
+    \centering
+    \fbox{%
+        \procedure{Proof of knowledge of a discrete log $\beta$ in base $\alpha$}{%
+            \textbf{Prover} \> \> \textbf{Verifier} \pclb
+            \pcintertext[center]{$\alpha, \beta, N$} \\
+            \text{Find } x \text{ s.t. } \alpha^x \equiv \beta \pmod N \> \> \\
+            r \sample \set{1, \dots, \phi(N)} \> \> \\
+            \gamma \equiv \alpha^r \pmod N \> \> \\
+            \> \sendmessageright*{\gamma} \> \\
+            \> \> b \sample \bin \\
+            \> \sendmessageleft*{b} \> \\
+            y \equiv r + bx \pmod{\phi(N)} \> \> \\
+            \> \sendmessageright*{y} \> \\
+            \> \> \pcreturn \alpha^y \equiv_? \gamma \beta^b \pmod N
+        }
+    }
+    \caption{An zero knowledge proof for Discrete Log}
+    \label{discretelog}
+\end{figure}
+
 \begin{itemize}
     \item The prover wants to show that it possesses a $x$ such that $\alpha^x \equiv \beta \pmod N$, where $\alpha, \beta, N$
           are chosen in advance and known to both parties\footnote{In particular $N$ is chosen so that the discrete log is hard in the group $\ZZ_N^\times$}.
@@ -1026,9 +1149,9 @@ we can yield cryptosystems that are resistant to any non quantum attacker that w
 
 \section{Complexity Classes}
 \begin{definition}
-We say that a language $L \in \pol$ if there exist a deterministic TM $M$ and a polynomial $p(\cdot)$ such that both the following hold true:
+We say that a language $L \in \pol$ if there exist a deterministic TM $M$ and a polynomial $\poly[\cdot]$ such that both the following hold true:
 \begin{enumerate}
-    \item On input $x \in \bin^*$, $M$ halts within $p(|x|)$ steps.
+    \item On input $x \in \bin^*$, $M$ halts within $\poly[|x|]$ steps.
     \item $x \in L \iff M(x) = 1$
 \end{enumerate}
 Also, if $L \in \pol$ we say that $L$ is \textbf{recognizable in polynomial time}
