@@ -23,6 +23,14 @@
 \maketitle
 
 \begin{abstract}
+In this paper we will provide a survey of the theory underlying Zero Knowledge Proofs,
+building up from Interactive Proofs to Perfect Zero Knowledge Proofs. In the process, we will have shown interactive 
+proofs for Graph Non Isomorphism (a co-$\npol$ problem), and zero knowledge proofs for both Graph Isomorphism and Graph 3-Colorability.
+Finally, we will have detailed some applications of the theory, showing various "flavours" of ZKP for the Discrete Logarithm problem that will culminate in 
+Schnorr Signature. We will compound this with the Secure Remote Protocol, a protocol that uses a similar ZKP in order 
+to authenticate without communicating your password to the server. Finally, we show a very simple Zero Knowledge
+Range Proof, an instance of a very general class that has a wide range of applications and is currently one of the hottest avenues of research.
+
 \end{abstract}
 
 \tableofcontents
@@ -38,7 +46,35 @@ Given a true proposition, what is the minimal amount of knowledge that I need to
 We will formalize such query, investigate the structure of the resulting class, and show many examples of elements of said class.
 Finally, we will survey some applications of Zero Knowledge Proofs, in the fields of digital signatures and authentication.
 
+\section{Structure}
+The structure of the paper will be as following. Section \ref{motivation} will provide some motivation that show why
+the effort of developing Zero Knowledge Proofs is justified. Section \ref{preliminaries} will cover the preliminaries, 
+that includes both the mathematical machinery needed and the definition of the computational settings that we will
+be extensively using, namely that of Turing Machines. This Section will also introduce complexity classes that are
+relevant to our analysis, such a $\pol, \npol, \bpp$, and introduce the concept of a proof in a computational sense.
+Section \ref{proofreq} will explore this concept in more depths, exploring via examples the characterization of 
+Zero Knowledge Proofs, such as the general setup, soundness, completeness and the zero knowledge property. 
+Section \ref{interactiveproofs} will formalize the notion of proofs by introducting Interactive Turing Machine, and
+introduce the wide class of interactive proofs, of which Zero Knowledge Proofs are a subset. We will then give an 
+example of an interactive proof for the Graph Non Isomorphism problem, complete with a proof of the fact. 
+In the following Section \ref{zkp} we will finally introduce Zero Knowledge Proofs, in both the perfect and computational
+formulation. We will continue by providing an example of a Perfect Zero Knowledge Proof for deciding the Graph Isomorphism 
+language, and conclude the section by introducing bit commitments, and showing that if one way permutations
+\footnote{In fact this holds for one way functions as well, but the permutation proof is simpler} exist 
+then every language in $\npol$ has a Zero Knowledge Proof. This is done in Subsection \ref{np} by providing a 
+computational Zero Knowledge Proof for the $\npol$-complete problem of Graph 3-coloring. 
+In Section \ref{applications} we will then look at some applications, in three different context. First we will 
+show how we can use a ZKP for the Discrete Logarithm in order to digitally sign a message (Schnorr signatures). Secondly,
+we will show how fundamentally similar proof can be used in order to implement an authentication scheme in which the 
+server never receives the user's password. Finally, we will show an extremely simple example of a Zero Knowledge Range 
+proof, which is a strategy by which a party can prove that a certain value that it knows is within a suitable range, while 
+maintaining anonimity to what that value actually is. This family of proofs have a far-reaching implication, as they allow 
+to implement complex systems upholding invariants while maintaining anonimity, such as payment systems or goverment sanctioned
+age verification. Finally, Section \ref{implementation} will refer the reader to the Sage implementation of the proofs described 
+in the paper. 
+
 \section{Motivation}
+\label{motivation}
 Zero Knowledge Proofs have applications in a number of fields outside of theory. 
 Examples space from classical cryptography settings such as message signature and authentication to more 
 practical ones such as online age verification and electronic voting. The development
@@ -66,6 +102,7 @@ and in this paper we will be building to a very simple ZKRP based on the discret
 
 
 \section{Preliminaries}
+\label{preliminaries}
 \subsection{Mathematical Notation}
 We start by defining some crucial sets of string \footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set. We don't make too much use of it in this text tough.}.
 \begin{definition}
@@ -241,6 +278,7 @@ As an instance, if a construction relies on (hard) instances of an $\npol$-compl
 The notion of a proof has extremely overloaded meaning, as it used in many disparate fields. In particular, the notion of a proof in Mathematics most closely comes to mind and, while mathematical proofs and ZKP ultimately aim to ascertain the validity of a statement, the way that they achieve that result varies. In formal logic, a proof is a fixed sequence of steps (derivations) that, from commonly agreed statement (axioms), reach the statement that we are wanting to prove. In contrast, in a ZKP the process is a dynamic interaction between multiple parties, more akin to the notion of proof in law or debating. 
 
 \section{Proof Requirements}
+\label{proofreq}
 In order to start visualizing the concept of ZKP, we can start with a couple of toy examples that are helpful. Here and in the rest of text we will refer to the prover as Peggy and to the verifier as Victor.
 \begin{example}
 Assume that Victor is completely colorblind\footnote{i.e. that he cannot distinguish object based on color alone}.
@@ -293,6 +331,7 @@ This is the exact subject of hypothesis testing, in particular it reduces to the
 Formalizing the notion of zero knowledge requires a bit more work. We would like to be able to say that in any interaction with the prover the verifier does not gain any knowledge that it did not posses already. That shifts the conversation to what it means to gain knowledge. Let us consider for example the interaction of a prover and a verifier with a common input of a suitably large graph. If the prover reveals to the verifier whether the graph is connected or Eulerian or the average degree of its vertexes then in a sense the verifier does not gain any knowledge, as these are all easily (polynomial time) computable without any additional information. Instead if the prover reveals whether the graph is Hamiltonian, or the chromatic number of the graph, or a $k$-coloring of it\footnote{And of course assuming $\pol \neq \npol$ and that the corresponding problems cannot be solved in polynomial time} then the verifier gains knowledge, as it would have not been able to answer that question itself using an efficient procedure. This gives us an hint of what gaining knowledge can entail. In particular, we say that the verifier gains knowledge from an interaction with the prover if, after the interaction, it can efficiently compute something which it would have not been able to before. How to rigorously express this is non trivial, and we defer the discussion to the following sections.
 
 \section{Proof Systems}
+\label{interactiveproofs}
 In our drive to formalize the intuition that we gained in the previous sections, we will start by extending the model of a Turing Machine to allow for two Turing Machines to interact. Then we will define formally interactive proofs and give examples.
 
 \subsection{Interactive Turing Machine}
@@ -450,6 +489,7 @@ This shows that the soundness bound of the protocol is $\frac{1}{2}$, and repeat
 
 
 \section{Zero Knowledge Proof}
+\label{zkp}
 Now that we have introduced interactive proofs, we can naturally extend them to encompass the idea of zero knowledge. In the previous sections we have given some intuition on what gaining knowledge does mean, and now we aim to formalize this. As before, we consider an interactive proof system, composed of a prover and a verifier, respectively $P, V$. The first observation is that in an interactive proof system the prover usually (either by being more powerful computationally or by having some additional information) has a "knowledge advantage" over the verifier. With zero knowledge we aim to make so that this advantage does not transfer to the verifier, no matter what clever things it may do. From this we can conclude that being zero knowledge is strictly a property of the prover in the interaction, in the same way that soundness is a property of verifier. Secondly, in a sense, we can express the zero knowledge requirement as the fact that any verifier $V'$, when interacting with prover on input $x$, will not be able to compute anything that it wouldn't have been able to compute on input $x$ alone. In order to formalize this, we turn to the idea of a simulation of the interaction of $P, V'$. \\
 In particular, the idea is that a language $L$ is zero knowledge if it has an interactive proof system $P, V$ such that, for every possible verifier $V'$, there exists a probabilistic polynomial time Turing machine $M_{V'}$ that for any $x \in L$ satisfies that $\left<P, V\right>(x)$ and $M_{V'}(x)$ are similary distributed\footnote{More on this later, essentially the level of similarity of the two distributions yields the definition of \textit{perfect}, \textit{statistical} and \textit{computational} zero knowledge.}
 Using this intuition and playing around with the loose parts of it, we can start defining the interesting classes of zero knowledge proofs. 
@@ -717,6 +757,7 @@ As such we define:
 With this we can see that the one-way permutation construction yields a one-way-interaction bit commitment scheme where $F_s(i, 1^n) = (f(s), b(s) \oplus i)$.
 
 \subsection{ZKP for $\npol$-complete problems}
+\label{np}
 Now that we have defined our machinery, we can make use of the structure of problems in the $\npol$ space.
 In particular, as detailed in the appendix, there is a class of problems in $\npol$ known as the $\npol$-complete problems.
 These are problems that are efficiently reducible to any other problem in $\npol$, i.e. such that the existance of an efficient solution for any of them will imply efficient solutions to each problem in $\npol$.
@@ -853,6 +894,7 @@ also guarantee that this is zero knowledge. Secondly, the main significance of t
 This in effect yields that, if one way functions exists, then every language in $\npol$ has a computational zero knowledge proof.
 
 \section{Applications}
+\label{applications}
 In the above sections, we discussed some of the mathematical definition of zero knowledge proofs, their properties and some basic
 proofs for languages such as \texttt{GI} and \texttt{3COL}. Of course, all would be for naught if Zero Knowledge Proofs
 did not have practical applications, and were not a capable tool for solving various problems. 
@@ -1007,11 +1049,11 @@ The protocol consists of two steps: the registration step and the authentication
             \> \sendmessageright*{s, v} \> \\
             \> \> \text{store } I, s, v \pclb
             \pcintertext[dotted]{Authentication}
-            a \sample \set{1, \abs{\mathbb{G}}} \> \> \\
+            a \sample \set{1, \dots, \abs{\mathbb{G}}} \> \> \\
             A \coloneqq g^a \> \> \\
             \> \sendmessageright*{I, A} \> \\
             \> \> \text{lookup } s, v \text{ from } I \\
-            \> \> b \sample \set{1, \abs{\mathbb{G}}} \\
+            \> \> b \sample \set{1, \dots, \abs{\mathbb{G}}} \\
             \> \> B \coloneqq kv + g^b \\
             \> \sendmessageleft*{s, B} \> \pclb
             \pcintertext[center]{$u \coloneqq H(A, B)$}
@@ -1126,6 +1168,7 @@ transcript of size $\approx 196.9$ kB. However, many examples in the literature 
 an excellent overview of what is the state of the art \cite{moraisSurveyZeroKnowledge2019}.
 
 \section{Implementation}
+\label{implementation}
 As supplemental material to this document, we produced a variety of Sagemath worksheets that allow the user to experiment 
 with most of the Zero Knowledge Proofs presented in the text. In particular, the protocols presented are those for:
 \begin{enumerate}
@@ -1145,18 +1188,10 @@ In the first four worksheets we also provided "experiments", that is we set the 
 protocol is executed multiple times serially, in order to show that the probabilities that we derived correspond to 
 the experimental results. 
 
-\section{Conclusion}
-In conclusion, in this paper we provided a survey of the theory underlying Zero Knowledge Proofs,
-building up from Interactive Proofs to Perfect Zero Knowledge Proofs. In the process, we have shown interactive 
-proofs for \texttt{GNI}, and zero knowledge proofs for both \texttt{GI} and \texttt{3COL}. Finally, we have detailed some
-applications of the theory, showing various "flavours" of ZKP for the Discrete Logarithm problem that culminated in 
-Schnorr Signature. We compounded this with the Secure Remote Protocol, a protocol that uses a similar ZKP in order 
-to authenticate without communicating your password to the server. Finally, we have shown a very simple Zero Knowledge
-Range Proof, a very general class that has a wide range of applications and is currently one of the hottest avenues of research.
 
 
 \appendix
-\section{One Way Functions}
+\section{Appendix: One Way Functions}
 One way functions are, arguably, the basis of a great deal of cryptography.
 Conceptually, a function is one way if it is easy to compute (i.e. computable in polynomial time), yet hard to invert.
 Formally, we have two definition of one way functions:
@@ -1210,7 +1245,7 @@ Using this we can define the following:
 In other words, any algorithm that aims to compute $b(x)$ by only having access to $f(x)$ will succeed with probability
 only negligibly better than guessing. As you have seen in the bit commitment section, hard cores are really useful, and it turns out \cite{goldreichFoundationsCryptographyVol2007} the the existance of one way functions implies the existance of such hard cores. 
 
-\section{Discrete Logarithm}
+\section{Appendix: Discrete Logarithm}
 The discrete logarithm problem is a generalization of the real valued logarithm to arbitrary groups. Recall that:
 \begin{definition}
     Let $a, b > 0$. We define $\log_a b$ to be the unique real number  such that:
@@ -1262,7 +1297,7 @@ we can yield cryptosystems that are resistant to any non quantum attacker that w
 
 
 
-\section{Complexity Classes}
+\section{Appendix: Complexity Classes}
 \begin{definition}
 We say that a language $L \in \pol$ if there exist a deterministic TM $M$ and a polynomial $\poly[\cdot]$ such that both the following hold true:
 \begin{enumerate}
