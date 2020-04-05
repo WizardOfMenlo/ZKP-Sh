@@ -203,6 +203,7 @@ Using this definition, we can then define our complexity classes.
 The complexity class $\pol$ is the one we most closely associate with "efficient" computation. Notable examples of languages which belong in $\pol$ are finite languages, regular languages, context free languages, and more. For example, the following are all in $\pol$ :
 \[ \set{(a_1, ... a_n) \, | \, n \in \NN \text{ and } a_i \leq a_{i+1} }\]
 \[ \set{ p \,|\, p \in \NN \text{ and } p \text{ prime } }\]
+\[ \set{ (a, b, c) \, | \, a^2 + b^2 = c^2 } \]
 
 In general, a language being in $\pol$ implies there exists a machine such that all the computation paths recognize the input if the input is indeed in the language. \par
 
@@ -213,7 +214,7 @@ Compare this to the definition of $\npol$.
     \[x \in L \iff \prob{M(x) = 1} > 0\]
 \end{definition}
 
-The definition implies that there is at least one path for which the input is accepted. It is easy to see that $\pol \subseteq \npol$, but the question of $\pol =_? \npol$ is still open \cite{cookComplexityTheoremprovingProcedures1971} \cite{jaffeMillenniumGrandChallenge2006}. There are many $\npol$ problems for which there is no evidence of their belonging in $\pol$, such as the following:
+The definition implies that there is at least one path for which the input is accepted. It is easy to see that $\pol \subseteq \npol$, but the question of $\pol =_? \npol$ is still open \cite{cookComplexityTheoremprovingProcedures1971} \cite{jaffeMillenniumGrandChallenge2006}. There are many $\npol$ problems that we believe do not belong in $\pol$, such as the following:
 
 \[ \texttt{INT\_FACT} = \set{ (n, k) \, | \, \exists f : 1 < f < k \text { and } f \text{ divides } n}\]
 \[ \texttt{SUB\_SUM} = \set{ G \subset_{fin} \ZZ \, | \, \exists S \subseteq G : \sum_{i \in S} i = 0  } \]
@@ -396,7 +397,7 @@ Furthermore, we need to accurately represent time complexity in this model, and 
 In a nutshell, the above implies that, regardless of the messages that machine $B$ sends, machine $A$ always terminates quickly enough.
 
 \subsection{Interactive Proof Systems}
-With the above machinery, we can now start introducing Interactive Proofs.
+With the above machinery, we can now start introducing Interactive Proofs (\cite{goldwasserKnowledgeComplexityInteractive1989}).
 \begin{definition}
     A pair of ITMs $(P, V)$ are an \textbf{interactive proof system} for a language $L$ if $V$ is polynomial time and the following hold:
     \begin{itemize}
@@ -411,7 +412,7 @@ There are some things to note in the above definition. First of all, note that o
     $\npol \subseteq \mathsf{IP}$
 \end{theorem}
 \begin{proof}
-    If $L$ is in $\npol$ then\footnote{Here we are using the certificate definition of $\npol$, see the appendix for details} there exists a polynomially recognizable relation $R_L$ such that $x \in L \iff \exists y : (x, y) \in R_L$. Also, such a $y$ satisfies $|y| < p(|x|)$ for some polynomial $p$. \\
+    If $L$ is in $\npol$ then\footnote{Here we are using the certificate definition of $\npol$, see Appendix \ref{complex} for details} there exists a polynomially recognizable relation $R_L$ such that $x \in L \iff \exists y : (x, y) \in R_L$. Also, such a $y$ satisfies $|y| < p(|x|)$ for some polynomial $p$. \\
     We design the following interactive system, which has as common input $x$.
     First of all, the prover finds such $y$. This can be done by searching for any string $s$ in $ \bigcup_{i = 0}^{p(|x|)} \bin^i$ that satisfies $(x, s) \in R_L$. Since the prover has no computational bound this can be done without issues. The prover then sends this $s$ to the verifier. On a message $s$ the verifier accepts if $(x, s) \in R_L$, rejects otherwise. Since $R_L$ is recognizable in polynomial time, the verifier runs in polynomial time as required.  \\
     Completeness is easily verified, as in fact the verifier will accept with probability 1. Soundness requires a little more thought, but essentially since $x \notin L \implies \forall y : (x, y) \notin R_L $ then the verifier will never accept (i.e. accept with probability 0). This combined implies that the above is an interactive proof system for $L$. Since $L$ was an arbitrary element of $\npol$, then $\npol \subseteq \mathsf{IP}$ .
@@ -531,13 +532,16 @@ The first and stricter class of zero knowledge proofs are the so called perfect 
 \end{definition}
 
 As always, the bound on how often the simulator is allowed to fail can be made negligible.
+It is interesting to note how the identical distribution requirement mentioned is a notion that is mostly used in information
+theoric contexts, and as such this scheme is in a sense perfectly secure. To be more precise, this implies that even
+a possibly cheating computationally unbounded verifier cannot, quite amusingly, detect if it is in a simulation or in a real interaction.
 Furthermore, we can make the observation that, for any verifier $V'$, its execution is completely determined by the contents of its random tape and the messages that
 are sent on the communication tape by $P$. Knowing this we can define a random variable $\text{view}^{P}_{V'}(x)$ to describe the transcript of the interaction between $P$ and $V'$, including the contents of $V'$ random tape and all the messages sent from $P$ to $V'$.
 Using this, we can replace the $\left<P, V\right>(x)$ by $\text{view}^{P}_{V'}(x)$ and obtain an equivalent definition that is slightly easier to work with, as it allows to account for verifiers that arbitrarily deviate from the protocol (e.g. some that terminate between steps).
 With this definition, let us give now an example of a Perfect Zero Knowledge Proof for the language of Graph Isomorphism.
 \begin{example}
     First of all, let us define the language \texttt{GI}.
-    \[ \texttt{GI} = \set{ (G, H) | G \cong H }\]
+    \[ \texttt{GI} = \set{ (G, H) | \; G,H \text{ graphs and } G \cong H }\]
     Note that \texttt{GI} is\footnote{In the most general case, as we actually do know polynomial time algorithm for special cases such as trees}, as far as we know, not $\npol$-complete nor in $\bpp$.
     This is important since every language in $\bpp$ has a trivial proof, while known ZKP languages that are $\npol$-complete require further assumptions.
     The following protocol \cite{goldreichFoundationsCryptographyVol2007} is a Perfect Zero Knowledge Proof System for \texttt{GI}.
@@ -621,7 +625,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
         We aim to show these are identically distributed. First of all not that once $x,r,H$ are fixed, the output of $V'$, which we will call $v(x,r,H)$ is uniquely determined.
         It turns out that $s(x,r)$, $p(x,r)$ are identically distributed over the set:
         \[ C_{x,r} = \set{ (H, \pi) | H = \pi(G_{v(x,r,H)}) } \]
-        Unfortunately, the proof is rather tedious\footnote{The first element of the pair can be shown to be identically distributed easily, but the second part requires apparently at least a discussion of the authomorphisms of a graph, which I don't really get right now :)}, and not particularly related to cryptography, so for now I have decided to skip it until I find a simpler one.
+        Unfortunately, the proof is rather tedious\footnote{The first element of the pair can be shown to be identically distributed easily, but the second part requires apparently at least a discussion of the authomorphisms of a graph, which is beyond our scope}, and not particularly related to cryptography, so for now I have decided to skip it until I find a simpler one.
         This concludes out proof that the above is a valid Perfect Zero Knowledge simulator for the interactive proof system, and as such we are done.
     \end{proof}
 \end{example}
@@ -713,7 +717,8 @@ Using this we can define the idea of a Computational Zero Knowledge proof.
 
     \end{itemize}
 \end{definition}
-As you can see, other than the different level of "closeness" of the two distributions, the main other difference is that we do not require bounded failure of the simulation by the $\bot$ symbol. The rationale between this is quite simple. First of all, remember that in perfect zero knowledge we can repeat the interaction multiple times \footnote{In order for this to be formal we would actually need to prove that sequential composition of zero knowledge proofs does not yield any knowledge, but for the sake of this discussion just know this holds} to reduce the probability of outputting $\bot$ to a negligible one (in the size of the input). In particular this implies that the simulator only differs from the interaction a negligible percentage of times, and the above example shows how two ensembles that only differ with negligible probability are computationally indistinguishable. Computational Zero Knowledge Proofs are in a sense more efficient then Perfect Zero Knowledge proofs, as in practical applications there is no need to perfectly simulate the interaction to guarantee zero knowledge. From an historical standpoint as well, the first proposed kinds of Zero Knowledge Proofs were computational, in particular regarding the quadratic residue problem \cite{goldwasserKnowledgeComplexityInteractive1989}.
+As you can see, other than the different level of "closeness" of the two distributions, the main other difference is that we do not require bounded failure of the simulation by the $\bot$ symbol. The rationale between this is quite simple. First of all, remember that in perfect zero knowledge we can repeat the interaction multiple times \footnote{In order for this to be formal we would actually need to prove that sequential composition of zero knowledge proofs does not yield any knowledge, but for the sake of this discussion just know this holds} to reduce the probability of outputting $\bot$ to a negligible one (in the size of the input). In particular this implies that the simulator only differs from the interaction a negligible percentage of times, and the above example shows how two ensembles that only differ with negligible probability are computationally indistinguishable. Computational Zero Knowledge Proofs are in a sense more efficient then Perfect Zero Knowledge proofs, as in practical applications there is no need to perfectly simulate the interaction to guarantee zero knowledge.
+From a practical standpoint as well, computational Zero Knowledge Proofs are those that are generally referred to as simply ZKP, and those around which applications mostly focus.
 
 
 
@@ -741,25 +746,29 @@ Formally, we define a bit commitment scheme as follows:
     \end{itemize}
 \end{definition}
 As you can see, the unambiguity requirement is much more involved than the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
+In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoric flavour.
+\footnote{There is also a corresponding "dual"-like notion of perfectly hiding commitment schemes, in which the secrecy
+    requirement is information theoric and the unambiguity is computational. This can be used to provide perfect ZKP for
+    languages in $\npol$, but they are relatively more advanced and as such will not be discussed here}
 In particular, note that once $S$ has committed a value, in order to provide verification, it can send its private input and the random coin it used to $R$, which can then
 run $S$'s algorithm to verify the certificate in polynomial time. \par
 As far as we know, the existence of bit commitment schemes requires some assumptions, namely the existence of one way functions, functions that are easy to compute but hard to invert.
-For a more through description, look no further than the appendix.
+For a more through description, look no further than Appendix \ref{oneway}.
 While a proof that uses solely those kind of function exists, it requires some discussion of pseudorandom generators, which are not particularly insightful nor too related.
 Instead, we can use the stronger assumption of the existence of one way permutations (i.e. one way functions that are also bijections), which results in a simpler proof.\par
 Let us first discuss the intuition that makes the following construction useful. Let us assume that we have access to a one way permutation $f$.
 We want to commit to a bit $b$. What we can do is select a random string. We can make use of a property of one way functions, that is the
-property that they have hard cores. This is some property of the input of a one way function that cannot be guessed from the output.
+property that they have hard cores. This is some property of the input of a one way function that cannot be guessed from the output (discussed extensively in Appendix \ref{oneway}).
 Let us denote $h(\cdot)$ as one of those hard core. Then let us select some random string $s$ that we will call the certificate. We will be sending to
 the other party the pair $(f(s), h(s) \oplus b)$. This has a double effect. First of all, since the function is one way, we won't be able to
 efficiently find a $s'$ such that $f(s) = f(s')$, and so effectively we won't be able to find another certificate with which to trick the other party.
 On the other hand, since $h$ is a hard core, the other party will not be able to guess it effectively from $f(s)$, and such $h(s) \oplus b$ and consequently $b$ cannot
 be recovered by it. Of course, revealing $s, b$ will make the other party be able to efficiently verify that we did not cheat.
 \begin{theorem}
-    Let $f: \bin^* \to \bin^*$ be a one-way permutation. Let $b: \bin^* \to \bin$ be a hard-core of $f$. Then the following is a bit commitment scheme.
+    Let $f: \bin^* \to \bin^*$ be a one-way permutation. Let $h: \bin^* \to \bin$ be a hard-core of $f$. Then the following is a bit commitment scheme.
     \begin{itemize}
-        \item \textbf{Commitment}. To commit the value $i$, uniformly select $s \in \bin^n$. Send $(f(s), b(s) \oplus i)$ to the receiver.
-        \item \textbf{Reveal}. To reveal, the sender reveals $s, i$. The receiver, which had received commit $(\alpha, j)$, accepts if $f(s) = \alpha$ and $b(s) \oplus i = j$.
+        \item \textbf{Commitment}. To commit the value $i$, uniformly select $s \in \bin^n$. Send $(f(s), h(s) \oplus i)$ to the receiver.
+        \item \textbf{Reveal}. To reveal, the sender reveals $s, i$. The receiver, which had received commit $(\alpha, j)$, accepts if $f(s) = \alpha$ and $h(s) \oplus i = j$.
     \end{itemize}
 \end{theorem}
 \begin{proof}
@@ -777,12 +786,12 @@ As such we define:
         \item For such a scheme, the (canonical) reveal of $F_s(i, 1^n)$ is $(i, s)$.
     \end{itemize}
 \end{definition}
-With this we can see that the one-way permutation construction yields a one-way-interaction bit commitment scheme where $F_s(i, 1^n) = (f(s), b(s) \oplus i)$.
+With this we can see that the one-way permutation construction yields a one-way-interaction bit commitment scheme where $F_s(i, 1^n) = (f(s), h(s) \oplus i)$.
 
 \subsection{ZKP for $\npol$-complete problems}
 \label{np}
 Now that we have defined our machinery, we can make use of the structure of problems in the $\npol$ space.
-In particular, as detailed in the appendix, there is a class of problems in $\npol$ known as the $\npol$-complete problems.
+In particular, as detailed in Appendix \ref{complex}, there is a class of problems in $\npol$ known as the $\npol$-complete problems.
 These are problems that are efficiently reducible to any other problem in $\npol$, i.e. such that the existence of an efficient solution for any of them will imply efficient solutions to each problem in $\npol$.
 It follows that by finding a ZKP for a single one of these problems, we can show that any problem in the class has a Zero Knowledge Proof.
 In particular, the language that we will tackle is that of Graph Three Coloring.
@@ -972,8 +981,10 @@ interactive proof into a non interactive one. In summary, since the only contrib
 is to provide a challenge, we can replace this interaction with the use of a cryptographic hash function.
 We make the verifier compute a hash of the parameters, and use the hash as the challenge. By the fact that
 the hash is determined from public parameters the verifier can make sure that the prover is not cheating selecting one
-that would advantage it. Also, by the fact that the hash function is indistinguishable from a random function, the prover
-will have to solve a problem of the same difficulty as the one in the interactive proof. A transformation of the above protocol
+that would advantage it. Also, by the fact that the hash function is indistinguishable from a random function, in order to
+fool the verifier the prover will have to find a collision in the hash function output, which is computationally at least
+comparably hard to solving the original problem!.
+A transformation of the above protocol
 to a non interactive one is as follows:
 
 \begin{figure}[H]
@@ -1051,8 +1062,8 @@ and as such $H(\gamma, M) = H(\gamma', M)$.
 \subsection{Secure Remote Password}
 The Secure Remote Password protocol \cite{wuSecureRemotePassword1997}, or SRP for short, is the most common
 example of zero knowledge proofs used for authentication. Common schemes usually use a plaintext approach,
-in which the user communicates a username and a password to a server, which is considered trusted and that
-which then has burden of securely maintaining said information. On the other end, SRP only requires that
+in which the user communicates a username and a password to a (trusted) server, that then has the burden of securely maintaining said information.
+On the other end, SRP only requires that
 the user itself maintains a secret key, is resistant to dictionary attacks, and crucially requires no trusted party.
 In particular, one of its most attractive features is that it can work as a drop in replacement that does not require users
 to change their workflows.
@@ -1208,7 +1219,7 @@ with most of the Zero Knowledge Proofs presented in the text. In particular, the
 
 We considered providing a worksheet for the Zero Knowledge Range Proof described in \ref{zkrp}, but the branching that
 is needed for the implementation translated very poorly to worksheets, and as such it would have not been insightful.
-In the first four worksheets we also provided "experiments", that is we set the worksheet up so that the corresponding
+In the first four worksheets we also provided "experiments", that is we set the worksheet up in such a way so that the corresponding
 protocol is executed multiple times serially, in order to show that the probabilities that we derived correspond to
 the experimental results.
 
@@ -1216,6 +1227,7 @@ the experimental results.
 
 \appendix
 \section{Appendix: One Way Functions}
+\label{oneway}
 One way functions are the basis of a great deal of cryptography.
 Conceptually, a function is one way if it is easy to compute (i.e. computable in polynomial time), yet hard to invert.
 Formally, we have two definitions of one way functions:
@@ -1246,11 +1258,11 @@ Surprisingly, at the moment we do not know of any functions that are definitely 
 Where $f_{mult}$ is simply multiplying two integers together, and, assuming intractability of integer factorization, it is weakly one way.
 The second problem, $f_{discrete}$ is the discrete logarithm problem, where $g^x$ is taken to be in some group in which the discrete log is assumed
 to be hard, and $g$ is a generator for the group (more in the discrete log appendix).
-Instead, $f_{ssum}$ is very closely linked to the $\npol$-complete problem known as subset sum\footnote{In fact, we
-    report here $f_{ssum}$ only for historical relevance, as originally it was thought to be a good candidate, while nowadays
-    it is known that the \texttt{SSUM} problem is actually efficiently solved in many commonly arising cases \cite{lagariasSolvingLowdensitySubset1985}, and a such
-    not a good candidate}.
+Instead, $f_{ssum}$ is very closely linked to the $\npol$-complete problem known as subset sum.
 While it is true that if $\pol = \npol$ then $f_{ssum}$ is not one way, the converse does not hold. To see this, note that subset sum could have \textit{worst case} exponentially running time, yet be polynomially solvable in the average case, and as such making $f_{ssum}$ not one way.
+\footnote{In fact, we
+    report here $f_{ssum}$ only for historical relevance, as originally it was thought to be a good candidate, while nowadays
+    it is known that the \texttt{SSUM} problem is actually efficiently solved in many commonly arising cases \cite{lagariasSolvingLowdensitySubset1985}, and a such we know that it is not}
 In fact, $\pol \neq \npol$ is necessary but not sufficient condition for one way functions to exist.
 It turns out \cite{goldreichFoundationsCryptographyVol2007} that strongly one way functions exist if and only if weakly one way functions do. This justifies our assuming only the existence of vague one way functions, without specifying the type.
 While for one way functions it is hard to recover the complete input in general, there is nothing stopping a possible attacker from computing some partial information about the input.
@@ -1289,7 +1301,7 @@ are strategies using a method similary to binary search, for real values Newton 
 general techniques that, for every group $\mathbb{G}$, efficiently solve the problem. In fact, it is generally believed (and one
 of the core assumptions of a number of protocols such as Diffie Hellman), that there exist groups where the discrete log problem
 is not only hard to solve in the worst case, but actually seems to be extremely complicated to solve in the average\footnote{It can be shown
-    using random self reducibility, that if a hard instance exists than on the average the problem will also be hard} (CITE).
+    using random self reducibility, that if a hard instance exists than on the average the problem will also be hard}.
 In particular, cyclic groups such as $\ZZ_p^\times$ are often good candidates, even though if $p - 1$ has many factors
 then there are efficient algorithms such as the Pohlig–Hellman \cite{pohligImprovedAlgorithmComputing1978}. In practice,
 if modular arithmetic is used, the prime $p$ is chosen so that $p = 2q + 1$ for some other prime $q$. Using this and using
@@ -1322,6 +1334,7 @@ we can yield cryptosystems that are resistant to any non quantum attacker that w
 
 
 \section{Appendix: Complexity Classes}
+\label{complex}
 \begin{definition}
     We say that a language $L \in \pol$ if there exists a deterministic TM $M$ and a polynomial $\poly[\cdot]$ such that both the following hold true:
     \begin{enumerate}
