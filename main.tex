@@ -104,7 +104,7 @@ and in this paper we will be building to a very simple ZKRP based on the discret
 \section{Preliminaries}
 \label{preliminaries}
 \subsection{Mathematical Notation}
-We start by defining some crucial sets of string \footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set. We don't make too much use of it in this text tough.}.
+We start by defining some crucial sets of string \footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set. We don not make too much use of it in this text though}.
 \begin{definition}
     $\bin^n = \set{ a_1 a_2 \dots a_n \mid a_i \in \bin}$
 \end{definition}
@@ -139,14 +139,14 @@ We also allow for two slight relaxation of notation, writing for example $\bigO{
 As before, we will allow a slight relaxation and use $\poly[\cdot]$ to specify some fixed but unspecified polynomial.
 
 \begin{definition}
-    Let $\mu : \NN \to \RR$. We say $\mu$ is \textbf{negligible} if for every positive $\poly[\cdot]$ there exist a $N \in \NN$ s.t for every $n > N$ we have:
+    Let $\mu : \NN \to \RR$. We say $\mu$ is \textbf{negligible} if for every positive $\poly[\cdot]$ there exists a $N \in \NN$ s.t for every $n > N$ we have:
     \[\mu(n) < \frac{1}{\poly}\]
 \end{definition}
-As an example, functions such $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of $\poly$. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. \par
+As an example, functions such as $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of $\poly$. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. \par
 
 There a couple of notions of probability that we will most likely need.
 First of all, we will use the notation $x \sample A$ to say that $x$ is uniformly selected from the set $A$
-\footnote{Equivalently, when $A$ finite, we have defined a random variable $X$ such that for every $a \in A$ we have  $\prob{X = a} = \frac{1}{|A|} $.}
+\footnote{Equivalently, when $A$ finite, we have defined a random variable $X$ such that for every $a \in A$ we have  $\prob{X = a} = \frac{1}{|A|} $}
 
 \begin{definition}
     Suppose we have a series of $n$ independent event $X_i$, each one of them
@@ -192,7 +192,7 @@ The Turing machine that we will be using have a slightly relaxed transition func
 Using this definition, we can then define our complexity classes.
 
 \begin{definition}
-    We say that a language $L \in \pol$ if there exist a probabilistic polynomial time TM $M$ such that:
+    We say that a language $L \in \pol$ if there exists a probabilistic polynomial time TM $M$ such that:
     \[x \in L \iff \prob{M(x) = 1} = 1\]
 \end{definition}
 
@@ -200,12 +200,12 @@ The complexity class $\pol$ is the one we most closely associate with "efficient
 \[ \set{(a_1, ... a_n) \, | \, n \in \NN \text{ and } a_i \leq a_{i+1} }\]
 \[ \set{ p \,|\, p \in \NN \text{ and } p \text{ prime } }\]
 
-In general, a language being in $\pol$ implies there exist a machine such that all the computation paths recognize the input if the input is indeed in the language. \par
+In general, a language being in $\pol$ implies there exists a machine such that all the computation paths recognize the input if the input is indeed in the language. \par
 
 Compare this to the definition of $\npol$.
 
 \begin{definition}
-    We say that a language $L \in \npol$ if there exist a probabilistic polynomial time TM $M$ such that:
+    We say that a language $L \in \npol$ if there exists a probabilistic polynomial time TM $M$ such that:
     \[x \in L \iff \prob{M(x) = 1} > 0\]
 \end{definition}
 
@@ -219,7 +219,7 @@ The definition implies that there is at least one path for which the input is ac
 In particular, the last three languages are instances of $\npol$-complete problems, i.e. problems that are conceptually as hard as any problem in $\npol$ (more on this in the appendix). It is interesting to see that each of this problem involves some sort of search over an exponentially large possibility space, and the correctness can be easily verified by the result of such search. We associate thus $\npol$ class with problems that can be efficiently verified.
 
 \begin{definition}
-    We say that a language $L \in \bpp$ if there exist a probabilistic polynomial time TM $M$ such that the following hold
+    We say that a language $L \in \bpp$ if there exists a probabilistic polynomial time TM $M$ such that the following hold
     \begin{enumerate}
         \item $x \in L \iff \prob{M(x) = 1} \geq \frac{2}{3}$
         \item $x \notin L \iff \prob{M(x) = 0} \geq \frac{2}{3}$
@@ -258,7 +258,7 @@ Let us have an example to clarify how a probabilistic algorithm works:
         \item Compute $Ax$ and $BCx$.
         \item Compare the two resulting vectors (in $\FF^n$). If they are the same return true, else return false.
     \end{enumerate}
-    Computationally wise, this requires less calculations. Let's assume you can select a random $k$-vector in $\bigO{k}$ steps, then the first step is $\bigO{m}$, the two computations take respectively $\bigO{nm}$ and $\bigO{k (n + m)}$\footnote{This is optimized computing $B(Cx)$} and the comparison will be $\bigO{n}$. So in total the operation is $\bigO{nm + kn + mk + n}$. We claim that, trivially, if $A = BC$ then the algorithm always answer correctly. Furthermore if $A \neq BC$ then the algorithm answers correctly in the majority of cases. Let $D = BC$ Note that if the algorithm is to output incorrectly, it must be that $Ax = Dx$. Then it must be that $(A - D) x = 0$, and as such $x \in \ker(A - D)$. Note that $A - D \in \FF^{n \times m}$ and as such $A - D$ can be seen as a linear transformation from $\FF^m \to \FF^n$. The whole problem reduces to finding the probability that a vector picked at random belongs to the kernel of a linear transformation. Let $|\FF| = q$, the size of the underlying field\footnote{Note that in this case we assume the underlying field to be finite, the infinite case can also be handled but requires more thought}. First of all note that since $A \neq D$ at least one of the of the row of the matrix is non zero, and as such $\dim \ker (A - D) < m$. Since the size of any vector space $V$ over $\FF$ is $|V| = q^{\dim V}$, then the size of the kernel is at most $q^{m - 1}$. As such the probability of a random vector belonging to the kernel is at most $\frac{q^{m-1}}{q^m}=\frac{1}{q}$. We can then calculate that, repeating the algorithm $l$ times the probability of getting at least one vector not in the kernel is $1 - \left(\frac{1}{q}\right)^l$ and if we want to ensure that this probability is greater than $\frac{2}{3}$ we can then set:
+    Computationally wise, this requires less calculations. Let's assume you can select a random $k$-vector in $\bigO{k}$ steps, then the first step is $\bigO{m}$, the two computations take respectively $\bigO{nm}$ and $\bigO{k (n + m)}$\footnote{This is optimized computing $B(Cx)$} and the comparison will be $\bigO{n}$. So in total the operation is $\bigO{nm + kn + mk + n}$. We claim that, trivially, if $A = BC$ then the algorithm always answer correctly. Furthermore if $A \neq BC$ then the algorithm answers correctly in the majority of cases. Let $D = BC$ Note that if the algorithm is to output incorrectly, it must be that $Ax = Dx$. Then it must be that $(A - D) x = 0$, and as such $x \in \ker(A - D)$. Note that $A - D \in \FF^{n \times m}$ and as such $A - D$ can be seen as a linear transformation from $\FF^m \to \FF^n$. The whole problem reduces to finding the probability that a vector picked at random belongs to the kernel of a linear transformation. Let $|\FF| = q$, the size of the underlying field.\footnote{Note that in this case we assume the underlying field to be finite, the infinite case can also be handled but requires more thought} First of all note that since $A \neq D$ at least one of the of the row of the matrix is non zero, and as such $\dim \ker (A - D) < m$. Since the size of any vector space $V$ over $\FF$ is $|V| = q^{\dim V}$, then the size of the kernel is at most $q^{m - 1}$. As such the probability of a random vector belonging to the kernel is at most $\frac{q^{m-1}}{q^m}=\frac{1}{q}$. We can then calculate that, repeating the algorithm $l$ times the probability of getting at least one vector not in the kernel is $1 - \left(\frac{1}{q}\right)^l$ and if we want to ensure that this probability is greater than $\frac{2}{3}$ we can then set:
     \[l > \frac{\log \frac{1}{3}}{\log \frac{1}{q}} = \frac{\log{3}}{\log{q}}\]
 
     Finally, we can see that repeating the procedure $l$ times\footnote{In fact, since $l < 1$ for $q > 3$, repetition is only really needed for the trivial field $\ZZ_2$} (call this $M$) will have the following result:
@@ -277,7 +277,7 @@ In cryptography, in order to achieve sound schemes, it is common to work in what
 Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently well endowed attacker might take. \par
 
 The capability of the attacker will vary depending on the level of security that the protocol needs to be hold to. For example, the computational power that the adversary has will affect the class of problems that it can solve.
-As an instance, if a construction relies on (hard) instances of an $\npol$-complete problem (and if $\pol \neq \npol$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \npol$ there exist a deterministically recognizable $R_L \subseteq \bin^* \times \bin^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \poly[|x|]$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
+As an instance, if a construction relies on (hard) instances of an $\npol$-complete problem (and if $\pol \neq \npol$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \npol$ there exists a deterministically recognizable $R_L \subseteq \bin^* \times \bin^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \poly[|x|]$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
 
 In general, the most strict level of security that we might require is that of information theoric security, which holds even in the case that
 an attacker has infinite computational power. We will see that Perfect Zero Knowledge Proofs have an information theoretic flavour, even
@@ -286,7 +286,7 @@ though saying that they are secure against an infinitely powerful attacker might
     an information theoric level of accuracy. However, any ZKP usually deals with an underlying language that is only interesting when it is not
     decidable in polynomial time. For example, Graph Isomorphism is one of such problems. While we can devise a perfect ZKP for this problem, this
     does not mean that an unbounded computational attacker cannot decided the problem. It merely means that even a perfect attacker cannot
-    understand whether it is in a simulation or a real interaction. On a less formal note tough, we can see that the zero knowledge
+    understand whether it is in a simulation or a real interaction. On a less formal note though, we can see that the zero knowledge
     property still holds, as an unbounded attacker in a sense already has all of the knowledge, and as such it cannot gain any more!}.
 After that level, we usually require that the attacker has computational capabilities that are bounded by a polynomial.
 This quite closely mirrors the real world requirements for most schemes. We will see that Computational Zero Knowledge Proofs
@@ -300,7 +300,7 @@ The notion of a proof has extremely overloaded meaning, as it used in many dispa
 \label{proofreq}
 In order to start visualizing the concept of ZKP, we can start with a couple of toy examples that are helpful. Here and in the rest of text we will refer to the prover as Peggy and to the verifier as Victor.
 \begin{example}
-    Assume that Victor is completely colorblind\footnote{i.e. that he cannot distinguish object based on color alone}.
+    Assume that Victor is completely colorblind.\footnote{i.e. that he cannot distinguish object based on color alone}
     Peggy wants to prove to Victor that she is not colorblind, so she devises an experiment.
     Peggy takes two balls completely identical, save for their colour, and gives them to Victor, one in his left and one in his right hand.
     Peggy asks Victor to put the balls behind his back, and to decide whether to swap them or not, without telling her.
@@ -331,7 +331,7 @@ In order to start visualizing the concept of ZKP, we can start with a couple of 
     \end{enumerate}
 \end{example}
 
-This illustrates the general idea of Zero Knowledge Proofs. The proof part is devised as an experiment or challenge from the verifier to the prover, that the prover can only answer by having the necessary piece of information or "power". The prover cannot fool the verifier consistently and an honest prover and honest verifier will agree on the fact. Furthermore no new information is learned by the verifier. Also, if external observers were to have witnessed the exchange they would not be convinced of the the fact (as Peggy and Victor could have coordinated their answers).
+This illustrates the general idea of Zero Knowledge Proofs. The proof part is devised as an experiment or challenge from the verifier to the prover, that the prover can only answer by having the necessary piece of information or "power". The prover cannot fool the verifier consistently and an honest prover and honest verifier will agree on the fact. Furthermore no new information is learned by the verifier. Also, if external observers were to have witnessed the exchange they would not be convinced of the fact (as Peggy and Victor could have coordinated their answers).
 We seek to formalize this next.
 
 \subsection{Parties in play}
@@ -347,7 +347,7 @@ Conversely, the condition of completeness states that an honest prover will be a
 This is the exact subject of hypothesis testing, in particular it reduces to the exact problem of finding whether a coin is biased. This can be modeled by a binomial distribution with mean $\mu = n/2$ and standard deviation $\sigma = \frac{\sqrt{n}}{2}$. In particular, if we apply the central limit theorem (and as such have $n > 30$) we can model it as a normal distribution, then using the $3\sigma$ rule\footnote{i.e. that three standard deviations include 99.7\% of the data} we can see that if $|c - \frac{n}{2}| \geq 3\frac{\sqrt{n}}{2}$ then we can affirm that with a more than 99\% chance Peggy can distinguish the two. For example, if we set $n = 100$ and Peggy guesses right more than $c = 65 = \frac{100}{2} + 3 \frac{\sqrt{100}}{2}$ times (or less than 35 times) then we can be certain that Peggy is truthful (and in the other case that she can distinguish it but for some reasons she is convinced the espresso machine coffee is brewed in cup and viceversa).
 
 \subsection{Zero Knowledge}
-Formalizing the notion of zero knowledge requires a bit more work. We would like to be able to say that in any interaction with the prover the verifier does not gain any knowledge that it did not posses already. That shifts the conversation to what it means to gain knowledge. Let us consider for example the interaction of a prover and a verifier with a common input of a suitably large graph. If the prover reveals to the verifier whether the graph is connected or Eulerian or the average degree of its vertexes then in a sense the verifier does not gain any knowledge, as these are all easily (polynomial time) computable without any additional information. Instead if the prover reveals whether the graph is Hamiltonian, or the chromatic number of the graph, or a $k$-coloring of it\footnote{And of course assuming $\pol \neq \npol$ and that the corresponding problems cannot be solved in polynomial time} then the verifier gains knowledge, as it would have not been able to answer that question itself using an efficient procedure. This gives us an hint of what gaining knowledge can entail. In particular, we say that the verifier gains knowledge from an interaction with the prover if, after the interaction, it can efficiently compute something which it would have not been able to before. How to rigorously express this is non trivial, and we defer the discussion to the following sections.
+Formalizing the notion of zero knowledge requires a bit more work. We would like to be able to say that in any interaction with the prover the verifier does not gain any knowledge that it did not posses already. That shifts the conversation to what it means to gain knowledge. Let us consider for example the interaction of a prover and a verifier with a common input of a suitably large graph. If the prover reveals to the verifier whether the graph is connected or Eulerian or the average degree of its vertexes then in a sense the verifier does not gain any knowledge, as these are all easily (polynomial time) computable without any additional information. Instead if the prover reveals whether the graph is Hamiltonian, or the chromatic number of the graph, or a $k$-coloring of it\footnote{And of course assuming $\pol \neq \npol$ and that the corresponding problems cannot be solved in polynomial time} then the verifier gains knowledge, as it would have not been able to answer that question itself using an efficient procedure. This gives us a hint of what gaining knowledge can entail. In particular, we say that the verifier gains knowledge from an interaction with the prover if, after the interaction, it can efficiently compute something which it would have not been able to before. How to rigorously express this is non trivial, and we defer the discussion to the following sections.
 
 \section{Proof Systems}
 \label{interactiveproofs}
@@ -364,7 +364,7 @@ To fulfill those goals, we define a pair of interactive machines as follows:
 \begin{definition}
     A pair of interactive Turing Machines $A, B$ have the following characteristics:
     \begin{itemize}
-        \item Each machine is a randomized Turing machine in its own right i.e. it has a input tape, an output tape, and a random tape\footnote{This is an alternate equivalent definition of randomized Turing Machines, it just makes the explanation easier}.
+        \item Each machine is a randomized Turing machine in its own right i.e. it has an input tape, an output tape, and a random tape\footnote{This is an alternate equivalent definition of randomized Turing Machines, it just makes the explanation easier}.
         \item Neither machine can access the other's aforementioned tapes.
         \item The system has two additional tapes, called communications tapes. For the sake of the argument, call them $T_1, T_2$. $A$ can read from $T_1$ and write to $T_2$, while $B$ can write to $T_1$ and read from $T_2$.
         \item Each machine has an access to a number of additional switch states, $\delta_S$, where $S$ is a state of the machine in question. If a transition sets the state to one of these $\delta$-states, then the current machine becomes idle, and execution is resumed on the other machine. When execution is resumed on a machine, the state it is in depends on the last suspension. If it was suspended in state $\delta_S$, then it will resume execution in state $S$. Of course, if no suspension occurred, the machine will start from the initial state.
@@ -374,7 +374,7 @@ To fulfill those goals, we define a pair of interactive machines as follows:
     \end{itemize}
 \end{definition}
 
-It is to be noted that there is an alternative an ultimately equivalent model that allows each machine to have an additional private input tape, which allows for both machine to be polynomial time. For simplicity here we work with the definition with less tapes, but it is good to be aware of it.
+It is to be noted that there is an alternative and ultimately equivalent model that allows each machine to have an additional private input tape, which allows for both machines to be polynomial time. For simplicity here we work with the definition with less tapes, but it is good to be aware of it.
 
 Using the above definition, we can go and define notation for the output of an execution of a pair of ITMs.
 
@@ -412,10 +412,10 @@ There are some things to note in the above definition. First of all, note that o
     First of all, the prover finds such $y$. This can be done by searching for any string $s$ in $ \bigcup_{i = 0}^{p(|x|)} \bin^i$ that satisfies $(x, s) \in R_L$. Since the prover has no computational bound this can be done without issues. The prover then sends this $s$ to the verifier. On a message $s$ the verifier accepts if $(x, s) \in R_L$, rejects otherwise. Since $R_L$ is recognizable in polynomial time, the verifier runs in polynomial time as required.  \\
     Completeness is easily verified, as in fact the verifier will accept with probability 1. Soundness requires a little more thought, but essentially since $x \notin L \implies \forall y : (x, y) \notin R_L $ then the verifier will never accept. This combined implies that the above is an interactive proof system for $L$. Since $L$ was an arbitrary element of $\npol$, then $\npol \subseteq \mathsf{IP}$ .
 \end{proof}
-In fact, as we will see next, $\mathsf{IP}$ actually contains languages that are not believed to be in $\npol$. We will not prove this, but it turns out $\mathsf{IP} = \mathsf{PSPACE}$, i.e. the set of all languages that use polynomial space\footnote{And this class is considered to be much bigger than $\npol$}. Also note that in the case of $\npol$ problems we can even make the prover machine polynomial time, if we use the additional input model and give the prover the certificate.
+In fact, as we will see next, $\mathsf{IP}$ actually contains languages that are not believed to be in $\npol$. We will not prove this, but it turns out that $\mathsf{IP} = \mathsf{PSPACE}$, i.e. the set of all languages that use polynomial space\footnote{And this class is considered to be much bigger than $\npol$}. Also note that in the case of $\npol$ problems we can even make the prover machine polynomial time, if we use the additional input model and give the prover the certificate.
 \subsection{An Example: GNI}
 Let us consider the Graph Non Isomorphism problem, a decision problem which is not known to be in $\bpp \cup \npol$. This quite aptly named problem concerns deciding whether two graphs are not isomorphic.
-Before, presenting the system, let us try to give some intuition onto how we will be approaching the problem. As in the coffee problem that we examined in the completeness section, we will have the verifier issuing challenges to the prover, which will use its superior computational abilities to solve. In particular, we rely on the fact if the two graphs are not isomorphic then it will always be possible to distinguish the two.
+Before presenting the system, let us try to give some intuition onto how we will be approaching the problem. As in the coffee problem that we examined in the completeness section, we will have the verifier issuing challenges to the prover, which will use its superior computational abilities to solve. In particular, we rely on the fact if the two graphs are not isomorphic then it will always be possible to distinguish the two.
 Here is a interactive proof system that decides this problem.
 
 \begin{figure}[H]
@@ -441,18 +441,18 @@ Here is a interactive proof system that decides this problem.
     Let the common input be a pair of graphs, $G_1, G_2$ such that $G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$.
     \begin{itemize}
         \item The verifier starts the interaction, uniformly selecting at random $i \in \set{1, 2}$ and then randomly selects a permutation $\pi \in S_{V_i}$.
-              It then sends the the graph $F = \pi(G_i)$ to the prover.
+              It then sends the graph $F = \pi(G_i)$ to the prover.
         \item The prover finds which of the two input graphs $F$ is isomorphic to, and sends the answer $j$ to the verifier
         \item If $i = j$ the verifier accepts (concludes that the two graphs are not isomorphic), else it rejects (is not convinced that the graphs are not isomorphic).
     \end{itemize}
 \end{example}
 
-We now set to prove that the above is a interactive system proof. First of all note that the verifier program can be implemented in probabilistic polynomial time. We do not know of any algorithm allowing the prover to be implemented in probabilistic polynomial time, but luckily that is not needed\footnote{The prover can do this by alternatively trying each of the $n!$ possible permutations on $V_1$ (if $n = |V_1|$) and checking for isomorphism, outputting 1 if one found and 2 if none (of course this relies on the verifier being honest which for completeness and soundness is always the case). }. Now let us check the two conditions of soundness and completeness.
+We now set to prove that the above is an interactive system proof. First of all note that the verifier program can be implemented in probabilistic polynomial time. We do not know of any algorithm allowing the prover to be implemented in probabilistic polynomial time, but luckily that is not needed\footnote{The prover can do this by alternatively trying each of the $n!$ possible permutations on $V_1$ (if $n = |V_1|$) and checking for isomorphism, outputting 1 if one found and 2 if none (of course this relies on the verifier being honest which for completeness and soundness is always the case). }. Now let us check the two conditions of soundness and completeness.
 \begin{theorem}
     If $G_1$ and $G_2$ are not isomorphic, the above procedure always accept.
 \end{theorem}
 \begin{proof}
-    If $(G_1, G_2) \in \texttt{GNI}$ then there does not exists a graph $F$ s.t. $G_1 \cong F \cong G_2$, (since otherwise $G_1 \cong G_2$ by transitivity). By construction then the graph $F$ constructed by the verifier will always be isomorphic to only one of the two input graphs, and as such the prover always has an unique choice of $j$, which must equal the $i$ that the verifier chose. As such the verifier always accept and the completeness bound is 1.
+    If $(G_1, G_2) \in \texttt{GNI}$ then there does not exist a graph $F$ s.t. $G_1 \cong F \cong G_2$, (since otherwise $G_1 \cong G_2$ by transitivity). By construction then the graph $F$ constructed by the verifier will always be isomorphic to only one of the two input graphs, and as such the prover always has an unique choice of $j$, which must equal the $i$ that the verifier chose. As such the verifier always accept and the completeness bound is 1.
 \end{proof}
 
 Intuitively, for the soundness bound, we claim that a possibly malicious prover cannot convince the verifier that the graphs are isomorphic while indeed they are not. In particular, we claim that in case they are isomorphic, the best the prover can do is guess what the verifier chose, with probability $\frac{1}{2}$.
@@ -492,7 +492,7 @@ Using this, proving the soundness property is not too hard.
         \condprob{E(G') = I}{\Pi(G_I) = G'} & = \sum_i \condprob{E(G') = i \; \land \; I = i}{\Pi(G_I) = G'} \\
                                             & = \sum_i \prob{E(G') = i } \condprob{ I = i}{\Pi(G_I) = G'}
     \end{align*}
-    Here we can use the fact proved before, and for $i \in \set{1, 2}$ we have that the rigth expression is equal to $\frac{1}{2}$ and as such
+    Here we can use the fact proved before, and for $i \in \set{1, 2}$ we have that the expression on the right is equal to $\frac{1}{2}$ and as such
     \begin{align*}
          & \sum_i \prob{E(G') = i } \prob{ I = i}{\Pi(G_I) = G' } \\
          & = \frac{\prob{E(G') = 1 } + \prob{E(G') = 2}}{2}       \\
@@ -510,10 +510,10 @@ This shows that the soundness bound of the protocol is $\frac{1}{2}$, and repeat
 \section{Zero Knowledge Proof}
 \label{zkp}
 Now that we have introduced interactive proofs, we can naturally extend them to encompass the idea of zero knowledge. In the previous sections we have given some intuition on what gaining knowledge does mean, and now we aim to formalize this. As before, we consider an interactive proof system, composed of a prover and a verifier, respectively $P, V$. The first observation is that in an interactive proof system the prover usually (either by being more powerful computationally or by having some additional information) has a "knowledge advantage" over the verifier. With zero knowledge we aim to make so that this advantage does not transfer to the verifier, no matter what clever things it may do. From this we can conclude that being zero knowledge is strictly a property of the prover in the interaction, in the same way that soundness is a property of verifier. Secondly, in a sense, we can express the zero knowledge requirement as the fact that any verifier $V'$, when interacting with prover on input $x$, will not be able to compute anything that it wouldn't have been able to compute on input $x$ alone. In order to formalize this, we turn to the idea of a simulation of the interaction of $P, V'$. \\
-In particular, the idea is that a language $L$ is zero knowledge if it has an interactive proof system $P, V$ such that, for every possible verifier $V'$, there exists a probabilistic polynomial time Turing machine $M_{V'}$ that for any $x \in L$ satisfies that $\left<P, V\right>(x)$ and $M_{V'}(x)$ are similary distributed\footnote{More on this later, essentially the level of similarity of the two distributions yields the definition of \textit{perfect}, \textit{statistical} and \textit{computational} zero knowledge.}
+In particular, the idea is that a language $L$ is zero knowledge if it has an interactive proof system $P, V$ such that, for every possible verifier $V'$, there exists a probabilistic polynomial time Turing machine $M_{V'}$ that for any $x \in L$ satisfies that $\left<P, V\right>(x)$ and $M_{V'}(x)$ are similary distributed\footnote{More on this later, essentially the level of similarity of the two distributions yields the definition of \textit{perfect}, \textit{statistical} and \textit{computational} zero knowledge}.
 Using this intuition and playing around with the loose parts of it, we can start defining the interesting classes of zero knowledge proofs.
 \subsection{Perfect Zero Knowledge}
-The first and stricter class of zero knowledge proofs are the so called perfect zero knowledge proofs. Ideally, according to the above definition we would like the definition of zero knowledge proof to simply require that the ensembles $\left<P, V\right>(x)$ and $M_{V'}(x)$ are identically distributed. However, as far as we know, no non trivial\footnote{Here, trivial means in $\bpp$, as every language in that class trivially satisfies the definition} languages satisfy that requirement. The underlying problem is that often the simulator is not able to answer the queries of the verifier and needs to be able to give up. Using this we can give to following definition of Perfect Zero Knowledge Proof.
+The first and stricter class of zero knowledge proofs are the so called perfect zero knowledge proofs. Ideally, according to the above definition we would like the definition of zero knowledge proof to simply require that the ensembles $\left<P, V\right>(x)$ and $M_{V'}(x)$ are identically distributed. However, as far as we know, no non trivial\footnote{Here, trivial means in $\bpp$, as every language in that class trivially satisfies the definition} languages satisfy that requirement. The underlying problem is that often the simulator is not able to answer the queries of the verifier and needs to be able to give up. Using this we can give the following definition of Perfect Zero Knowledge Proof.
 \begin{definition}
     Let $L$ be a language. Then $L$ has a \textbf{perfect zero knowledge proof system} if there exist $P, V$ such that:
     \begin{itemize}
@@ -529,7 +529,7 @@ The first and stricter class of zero knowledge proofs are the so called perfect 
 As always, the bound on how often the simulator is allowed to fail can be made negligible.
 Furthermore, we can make the observation that, for any verifier $V'$, its execution is completely determined by the contents of its random tape and the messages that
 are sent on the communication tape by $P$. Knowing this we can define a random variable $\text{view}^{P}_{V'}(x)$ to describe the transcript of the interaction between $P$ and $V'$, including the contents of $V'$ random tape and all the messages sent from $P$ to $V'$.
-Using this, we can replace the $\left<P, V\right>(x)$ by $\text{view}^{P}_{V'}(x)$ and obtain an equivalent definition that is slightly easier to work with, as it allows to account for verifiers that arbitrarly deviate from the protocol (e.g. some that terminate between steps).
+Using this, we can replace the $\left<P, V\right>(x)$ by $\text{view}^{P}_{V'}(x)$ and obtain an equivalent definition that is slightly easier to work with, as it allows to account for verifiers that arbitrarily deviate from the protocol (e.g. some that terminate between steps).
 With this definition, let us give now an example of a Perfect Zero Knowledge Proof for the language of Graph Isomorphism.
 \begin{example}
     First of all, let us define the language \texttt{GI}.
@@ -558,14 +558,14 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
                 \> \> \pcreturn \pi(G_i) =_? G'
             }
         }
-        \caption{An perfect zero knowledge proof for Graph Isomorphism}
+        \caption{A perfect zero knowledge proof for Graph Isomorphism}
         \label{graphisomorphismzkp}
     \end{figure}
 
     \begin{enumerate}
         \item Let the common inputs of $P, V$ be two graphs $G_1, G_2$ s.t. $G_i = (V_i, E_i)$.
               Also if $(G_1, G_2) \in \texttt{GI}$ it must be that $G_1 \cong G_2$ and as such there exists an
-              isomorphism $\phi : V_1 \to V_2$. We stress that this $\phi$ is not publicly know\footnote{By this we mean that the prover either uses its superior computational ability to find $\phi$, or that it is only known to the prover. Strictly speaking the second formulation requires a slightly different formulation of ZKP, but the proof follows similarly }.
+              isomorphism $\phi : V_1 \to V_2$. We stress that this $\phi$ is not publicly known\footnote{By this we mean that the prover either uses its superior computational ability to find $\phi$, or that it is only known to the prover. Strictly speaking the second formulation requires a slightly different formulation of ZKP, but the proof follows similarly }.
         \item On the first step, $P$ uniformly randomly selects a permutation $\sigma \in S_{V_2}$, and computes the graph $G' = \sigma(G_2)$.
               Then $P$ sends such graph to $V$.
         \item Once $V$ receives the graph $G'$ from $P$, it randomly selects an $i \in \set{1, 2}$, and sends it to $P$.
@@ -576,7 +576,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
     Of course, if the two graphs are non isomorphic no graph can satisfy this claim. On receiving this graph, the verifier issues a challenge, asking to receive an isomorphism between the received graph and one of the two inputs.
     If the graphs are isomorphic, then the prover can always easily (if the isomorphism $\phi$ is know) answer the query. Else, it must fail with some probability.
     \begin{theorem}
-        The above is an Perfect Zero Knowledge Proof for \texttt{GI}.
+        The above is a Perfect Zero Knowledge Proof for \texttt{GI}.
     \end{theorem}
     \begin{proof}
         First of all, note that the verifier can easily be implemented in polynomial time. We do not know of a way to similarly implement the prover,
@@ -709,7 +709,7 @@ Using this we can define the idea of a Computational Zero Knowledge proof.
 
     \end{itemize}
 \end{definition}
-As you can see, other then the different level of "closeness" of the two distributions, the main other difference is that we do not require bounded failure of the simulation by the $\bot$ symbol. The rationale between this is quite simple. First of all, remember that in perfect zero knowledge we can repeat the interaction multiple times \footnote{In order for this to be formal we would actually need to prove that sequential composition of zero knowledge proofs does not yield any knowledge, but for the sake of this discussion just know that the above holds} to reduce the probability of outputting $\bot$ to a negligible one (in the size of the input). In particular this implies that the simulator only differs from the interaction a negligible percentage of times, and the above example shows how two ensembles that only differ with negligible probability are computationally indistinguishable. Computational Zero Knowledge Proofs are in a sense more efficient then Perfect Zero Knowledge proofs, as in practical applications there is not need to perfectly simulate the interaction to guarantee zero knowledge. From an historical standpoint as well, the first proposed kinds of Zero Knowledge Proofs were computational, in particular regarding the quadratic residue problem \cite{goldwasserKnowledgeComplexityInteractive1989}.
+As you can see, other than the different level of "closeness" of the two distributions, the main other difference is that we do not require bounded failure of the simulation by the $\bot$ symbol. The rationale between this is quite simple. First of all, remember that in perfect zero knowledge we can repeat the interaction multiple times \footnote{In order for this to be formal we would actually need to prove that sequential composition of zero knowledge proofs does not yield any knowledge, but for the sake of this discussion just know that the above holds} to reduce the probability of outputting $\bot$ to a negligible one (in the size of the input). In particular this implies that the simulator only differs from the interaction a negligible percentage of times, and the above example shows how two ensembles that only differ with negligible probability are computationally indistinguishable. Computational Zero Knowledge Proofs are in a sense more efficient then Perfect Zero Knowledge proofs, as in practical applications there is no need to perfectly simulate the interaction to guarantee zero knowledge. From an historical standpoint as well, the first proposed kinds of Zero Knowledge Proofs were computational, in particular regarding the quadratic residue problem \cite{goldwasserKnowledgeComplexityInteractive1989}.
 
 
 
@@ -722,7 +722,7 @@ The machinery that we introduce is that of Bit Commitment. In a nutshell, the in
 is to digitally simulate the action of receiving a sealed letter from someone, and knowing that its content will not have changed since it was written (while of course being unable to learn its contents until the seal is broken).
 Loosely speaking, a bit commitment algorithm works between two parties that do not trust each other.
 The first commits itself to a value, and sends to the second some sort of transcript.
-Once the second requests the opening of the seal, the first party sends a certificate that, together with the certificate, reveals the commited value and proves that it was indeed commited.
+Once the second requests the opening of the seal, the first party sends a certificate that, together with the transcript, reveals the commited value and proves that it was indeed commited.
 Formally, we define a bit commitment scheme as follows:
 \begin{definition}
     A \textbf{bit commitment scheme} is a pair of probabilistic polynomial time interactive machines $(S, R)$ that,
@@ -732,27 +732,27 @@ Formally, we define a bit commitment scheme as follows:
               the ensembles $\set{ \left<S(0), E\right>(1^n) }_{n \in \NN}$ and $\set{ \left<S(1), E\right>(1^n) }_{n \in \NN}$ are computationally indistinguishable.
         \item \textbf{Unambiguity} We let $(r, \bar{m})$ be, respectively, the random bits used by the receiver and the messages received by the sender.
               Then we say that $(r, \bar{m})$ is a $i$-commitment if for some random string $s$ the machine\footnote{Here we use the notation $M_r(x)$ to denote the machine $M$ running with local coins $r$ on input $x$} $S_s(i, 1^n)$ produces the sequence of messages $\bar{m}$ when interacting with $R$ with local coins $r$.
-              If $(r, \bar{m})$ is both a 0-commitment and a 1-commitment, then it is ambiguos.
-              We require that for all but a negligible fraction of $r \in \bin^{\text{poly(n)}}$ there exists no $\bar{m}$ such that $(r, \bar{m})$ is ambiguos.
+              If $(r, \bar{m})$ is both a 0-commitment and a 1-commitment, then it is ambiguous.
+              We require that for all but a negligible fraction of $r \in \bin^{\text{poly(n)}}$ there exists no $\bar{m}$ such that $(r, \bar{m})$ is ambiguous.
     \end{itemize}
 \end{definition}
-As you can see, the unambiguity requirement is much more involved then the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
-In particular, note that once $S$ has commited a value, in order to verify it it can send its private input and the random coin it used to $R$, which can then
+As you can see, the unambiguity requirement is much more involved than the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
+In particular, note that once $S$ has commited a value, in order to provide verification, it can send its private input and the random coin it used to $R$, which can then
 run $S$'s algorithm to verify the certificate in polynomial time. \par
-As far as we know, the existance of bit commitment schemes requires some assumptions, namely the existance of one way functions, functions that are easy to compute but hard to invert.
-For a more trough description, look no further than the appendix.
+As far as we know, the existence of bit commitment schemes requires some assumptions, namely the existence of one way functions, functions that are easy to compute but hard to invert.
+For a more through description, look no further than the appendix.
 While a proof that uses solely those kind of function exists, it requires some discussion of pseudorandom generators, which are not particularly insightful nor too related.
-Instead, we can use the stronger assumption of the existance of one way permutations (i.e. one way functions that are also bijections), to result in a simpler proof.\par
+Instead, we can use the stronger assumption of the existence of one way permutations (i.e. one way functions that are also bijections), to result in a simpler proof.\par
 Let us first discuss the intuition that makes the following construction useful. Let us assume that we have access to a one way permutation $f$.
 We want to commit to a bit $b$. What we can do is select a random string. We can make use of a property of one way functions, that is the
 property that they have hard cores. This is some property of the input of a one way function that cannot be guessed from the output.
 Let us denote $h(\cdot)$ as one of those hard core. Then let us select some random string $s$ that we will call the certificate. We will be sending to
 the other party the pair $(f(s), h(s) \oplus b)$. This has a double effect. First of all, since the function is one way, we won't be able to
 efficiently find a $s'$ such that $f(s) = f(s')$, and so effectively we won't be able to find another certificate with which to trick the other party.
-On the other hand, since $h$ is an hard core, the other party will not be able to guess it effectively from $f(s)$, and such $h(s) \oplus b$ and consequently $b$ cannot
-be recovered by it. Of course, revealing $s, b$ will make the other party efficiently be able to verify that we did not cheat.
+On the other hand, since $h$ is a hard core, the other party will not be able to guess it effectively from $f(s)$, and such $h(s) \oplus b$ and consequently $b$ cannot
+be recovered by it. Of course, revealing $s, b$ will make the other party be able to efficiently verify that we did not cheat.
 \begin{theorem}
-    Let $f: \bin^* \to \bin^*$ be a one-way permutation. Let $b: \bin^* \to \bin$ be an hard-core of $f$. Then the following is a bit commitment scheme.
+    Let $f: \bin^* \to \bin^*$ be a one-way permutation. Let $b: \bin^* \to \bin$ be a hard-core of $f$. Then the following is a bit commitment scheme.
     \begin{itemize}
         \item \textbf{Commitment}. To commit the value $i$, uniformly select $s \in \bin^n$. Send $(f(s), b(s) \oplus i)$ to the receiver.
         \item \textbf{Reveal}. To reveal, the sender reveals $s, i$. The receiver, which had received commit $(\alpha, j)$, accepts if $f(s) = \alpha$ and $b(s) \oplus i = j$.
@@ -760,7 +760,7 @@ be recovered by it. Of course, revealing $s, b$ will make the other party effici
 \end{theorem}
 \begin{proof}
     The secrecy requirement is a direct consequence of $f$ being one way, and $b$ being one of its hard cores.
-    The unambiguity requirement is a consequence of $f$ being injective, as no ambiguos view exists.
+    The unambiguity requirement is a consequence of $f$ being injective, as no ambiguous view exists.
 \end{proof}
 
 Furthermore, the above scheme has one additional desirable feature: the fact that it only requires to interact one way (from the prover to the verifier).
@@ -769,7 +769,7 @@ As such we define:
     A \textbf{one-way-interaction bit commitment scheme} is a polynomial time algorithm $F$ such that.
     \begin{itemize}
         \item For $s$ uniformly drawn from $\bin^n$, the ensembles $\set{ F_s(0, 1^n) }_{n \in \NN}$ and $\set{ F_s(1, 1^n) }_{n \in \NN}$ are computationally indistinguishable.
-        \item There does not exists $s$ such that $F_s(0, 1^n) = F_s(1, 1^n)$.
+        \item There does not exist $s$ such that $F_s(0, 1^n) = F_s(1, 1^n)$.
         \item For such a scheme, the (canonical) reveal of $F_s(i, 1^n)$ is $(i, s)$.
     \end{itemize}
 \end{definition}
@@ -779,7 +779,7 @@ With this we can see that the one-way permutation construction yields a one-way-
 \label{np}
 Now that we have defined our machinery, we can make use of the structure of problems in the $\npol$ space.
 In particular, as detailed in the appendix, there is a class of problems in $\npol$ known as the $\npol$-complete problems.
-These are problems that are efficiently reducible to any other problem in $\npol$, i.e. such that the existance of an efficient solution for any of them will imply efficient solutions to each problem in $\npol$.
+These are problems that are efficiently reducible to any other problem in $\npol$, i.e. such that the existence of an efficient solution for any of them will imply efficient solutions to each problem in $\npol$.
 It follows that by finding a ZKP for a single one of these problems, we can show that any problem in the class has a Zero Knowledge Proof.
 In particular, the language that we will tackle is that of Graph Three Coloring.
 \begin{definition}
@@ -824,22 +824,23 @@ from one scheme to the other is trivial and only requires using the bit commitme
 
 
     Let the common input be $G = (V, E)$, where $V = \set{1, \dots, n }$.
-    This graph is 3-colorable, with coloring $\pi$, which is unknown to the verifier\footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}.
+    This graph is 3-colorable, with coloring $\pi$, which is unknown to the verifier.
+    \footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}
     \begin{enumerate}
         \item The prover randomly uniformly selects $\sigma \in S_3$. It sets $\phi \equiv \sigma \circ \pi$.
               For each $i \in V$, it generates a random string $s_i \in \bin^n$ and computes $c_i \equiv C_{s_i}(\phi(i))$.
-              The prover the sends $c_1, \dots, c_n$ to the verifier.
-        \item The verifier uniformly selects a edge $(u, v) \in E$, and sends it to the prover
+              The prover then sends $c_1, \dots, c_n$ to the verifier.
+        \item The verifier uniformly selects an edge $(u, v) \in E$, and sends it to the prover
         \item The prover sends $(s_u, \phi(u))$ and $(s_v, \phi(v))$ to the verifier
         \item On the messages $(\alpha, i)$, $(\beta, j)$, with $\alpha, \beta \in \bin^n$ and $i, j \in  \set{1, 2, 3}$, the verifier checks that $c_u = C_\alpha(i)$ and that
               $c_v = C_\beta(j)$. If not it rejects. Finally, it accepts if $i \neq j$, and if as such the edges are differently coloured.
     \end{enumerate}
-    A small discussion is, of course, in order. The fundamental idea is that the prover creates $n$ boxes, each with a inside a color.
+    A small discussion is, of course, in order. The fundamental idea is that the prover creates $n$ boxes, each containing a color.
     It locks these boxes and sends them to the verifier. The verifier then chooses two of these boxes, such that they are connected by an edge in the original graph.
     It asks the prover to open the boxes, and after having verified that they haven't been tampered with, the verifier concludes that the coloring is valid if the two boxes it chose have different colors.
     Intuitively, the verifier only ever learns that two vertexes have different colours, that of course is a requirement for any coloring.
     In particular, note the role of the permutation $\sigma$. The idea is that, on every run, the prover will select a different sigma, and as such
-    repeating the prove will possibly yield different colorings for two vertexes. This way, a cheating verifier cannot alternatively ask for the coloring
+    repeating the protocol will possibly yield different colorings for two vertexes. This way, a cheating verifier cannot alternatively ask for the coloring
     of each vertex in the graph, and so it cannot piece back the original coloring.
     \begin{theorem}
         The above protocol is a computational zero knowledge proof for \texttt{3COL}.
@@ -866,11 +867,11 @@ from one scheme to the other is trivial and only requires using the bit commitme
             \item Simulate $V'$ with $G$ as input, and $r$ as the random bits. Also, put the sequence of commitments $d_1, \dots d_n$ in $V'$ incoming messages tapes.
             \item After $V'$ has been simulated, we can assume that it will have some message $m$ on its out message tape. We can also
                   assume that $m \in E$, as if it is not we can adapt $M_{V'}$ so that is selected some edge in $E$ to be used.
-            \item Let $(u, v) = m$. Then if $e_u \neq e_v$ the simulator halts with output \[(G, r, (d_1, \dots, d_n), (s_u, e_u, s_v, e_v))\].
+            \item Let $(u, v) = m$. Then if $e_u \neq e_v$ the simulator halts with output \[(G, r, (d_1, \dots, d_n), (s_u, e_u, s_v, e_v))\]
             \item Else we output $\bot$
         \end{itemize}
         First of all, you might be puzzled by the presence of the $\bot$ symbol in this simulator.
-        However, we noted before that computational proof do not need such help, as repeating the simulation often
+        However, we noted before that computational proofs do not need such help, as repeating the simulation often
         will result it in it failing negligibly often, and as such the interaction will still be computationally indistinguishable.
         So, adding the capability of outputting $\bot$ does not "add" any extra power to the definition, and as such we
         can use it here to simplify our life (requiring as always that it is not output too often).
@@ -896,7 +897,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
         random string used for committing it. First of all note that $r$ is in both cases uniformly distributed over $\bin^q(n)$ where again we
         use $q$ as a polynomial bound on the runtime of $V'$. It suffices now to show that if the two distributions are
         not computationally indistinguishable, then we will reach a contradiction with the properties of the commitment scheme.
-        While the actual proof is quite technical, the main idea is that any verifier for any verifier $V'$ we can
+        While the actual proof is quite technical, the main idea is that for any verifier $V'$ we can
         define $p_{u, v}(G), q_{u,v}(G)$ as the probability of the verifier choosing edge $(u,v)$ on step 2 of the protocol.
         Since the verifier gets computationally indistinguishable ensembles, the two probability cannot differ by a non negligible factor
         (as then $V'$ could yield an algorithm that contradicts the secrecy requirement of the scheme). One can refer to \cite{goldreichFoundationsCryptographyVol2007}
@@ -948,12 +949,12 @@ discrete logarithm, due to \cite{chaumImprovedProtocolDemonstrating1988}.
 \end{figure}
 
 \begin{itemize}
-    \item The prover wants to show that it possesses a $x$ such that $\alpha^x \equiv \beta \pmod N$, where $\alpha, \beta, N$
+    \item The prover wants to show that it possesses an $x$ such that $\alpha^x \equiv \beta \pmod N$, where $\alpha, \beta, N$
           are chosen in advance and known to both parties\footnote{In particular $N$ is chosen so that the discrete log is hard in the group $\ZZ_N^\times$}.
-    \item The prover choses a $r$ uniformly randomly from the set $1, \dots, \phi(N)$, where $\phi(\cdot)$ is Euler's
+    \item The prover chooses an $r$ uniformly and randomly from the set $1, \dots, \phi(N)$, where $\phi(\cdot)$ is Euler's
           totient function. It then computes the value of $\gamma \equiv \alpha^r$, and sends it to the prover.
-    \item The verifier selects a bit $b \in \bin$ uniformly and randomly, and sends it over to the prover
-    \item The prover computes the exponent $y \equiv r + bx \pmod{\phi(N)}$ and send it to the verifier
+    \item The verifier selects a bit $b \in \bin$ uniformly and randomly, and sends it to the prover
+    \item The prover computes the exponent $y \equiv r + bx \pmod{\phi(N)}$ and sends it to the verifier
     \item The verifier accepts if $\alpha^y =_? \gamma \beta^b $
 \end{itemize}
 One can easily verify that, if both parties follow the protocol, then the equation
@@ -962,10 +963,10 @@ The main idea is that the prover commits itself to a value $r$, that is kept hid
 the hardness of the discrete log. Then the verifier issues a challenge, in this case the bit $b$. If a cheating prover
 did not know $x$, then he would not be able to find a $y$ that satisfies the above equation. Furthermore, the random
 parameter $r$ ensures that the verifier does not learn anything from $y$ about $x$, ensuring the scheme is zero knowledge.
-Now, the idea is that, using something called the Fiat Shamir Heuristic \cite{fiatHowProveYourself1987}, we can turn a
+Now, the idea is that, using something called the Fiat Shamir Heuristic \cite{fiatHowProveYourself1987}, we can turn an
 interactive proof into a non interactive one. In summary, since the only contribution of the verifier to the interaction
 is to provide a challenge, we can replace this interaction with the use of a cryptographic hash function.
-We make the verifier compute an hash of the parameters, and use the hash as the challenge. By the fact that
+We make the verifier compute a hash of the parameters, and use the hash as the challenge. By the fact that
 the hash is determined from public parameters the verifier can make sure that the prover is not cheating selecting one
 that would advantage it. Also, by the fact that the hash function is indistinguishable from a random function, the prover
 will have to solve a problem of the same difficulty as the one in the interactive proof. A transformation of the above protocol
@@ -976,7 +977,7 @@ to a non interactive one is as follows:
     \fbox{%
         \procedure{Non Interactive Proof of knowledge of a discrete log $\beta$ in base $\alpha$}{%
             \textbf{Prover} \> \> \textbf{Verifier} \pclb
-            \pcintertext[center]{$\alpha, \beta, N$. An Hash function $H(\cdot)$} \\
+            \pcintertext[center]{$\alpha, \beta, N$. A Hash function $H(\cdot)$} \\
             \text{Find } x \text{ s.t. } \alpha^x \equiv \beta \pmod N \> \> \\
             r \sample \set{1, \dots, \phi(N)} \> \> \\
             \gamma \equiv \alpha^r \pmod N \> \> \\
@@ -992,9 +993,9 @@ to a non interactive one is as follows:
 \end{figure}
 
 \begin{itemize}
-    \item The prover has a $x$ such that $\alpha^x \equiv \beta \pmod N$. The conditions are as above.
-          Furthermore, both the prover and the verifier have access to an hash function $H(\cdot)$
-    \item The prover choses a $r$ uniformly randomly as before, and computes $\gamma \equiv \alpha^r$
+    \item The prover has an $x$ such that $\alpha^x \equiv \beta \pmod N$. The conditions are as above.
+          Furthermore, both the prover and the verifier have access to a hash function $H(\cdot)$
+    \item The prover chooses an $r$ uniformly randomly as before, and computes $\gamma \equiv \alpha^r$
     \item The prover now computes $b \coloneqq H(\alpha, \beta, \gamma)$, which will be his challenge
     \item Finally, the prover computes $y \equiv r + bx \pmod{\phi(N)}$, and sends the pair $(\gamma, y)$ to the verifier
     \item The verifier, or anyone can ensure that $ \alpha^y =_? \gamma \beta^b$. Also note how the verifier can compute
@@ -1002,7 +1003,7 @@ to a non interactive one is as follows:
 \end{itemize}
 
 The reasoning for why this would work are exactly the same as the interactive version, but the hash function
-$H(\cdot)$ allows us to fairly select a challenge without possibility of cheating. In particular, a further
+$H(\cdot)$ allows us to fairly select a challenge without the possibility of cheating. In particular, a further
 modification of the protocol allows us to get Schnorr signatures, a way to sign a message using $4t$-bit signatures,
 where $t$ is a security parameter. In fact, it was later shown \cite{nevenHashFunctionRequirements2009} that only $3t$-bits
 are required. The scheme works as follows:
@@ -1046,13 +1047,13 @@ and as such $H(\gamma, M) = H(\gamma', M)$.
 \subsection{Secure Remote Password}
 The Secure Remote Password protocol \cite{wuSecureRemotePassword1997}, or SRP for short, is the most common
 example of zero knowledge proofs used for authentication. Common schemes usually use a plaintext approach,
-in which the user communicates an username and a password to a server, which is considered trusted and that
+in which the user communicates a username and a password to a server, which is considered trusted and that
 which then has burden of securely maintaining said information. On the other end, SRP only requires that
 the user itself maintains a secret key, is resistant to dictionary attacks, and crucially requires no trusted party.
 In particular, one of its most attractive features is that it can work as a drop in replacement that does require users
 to change their workflows.
 SRP is based on Diffie Hellman, and as such it has some of the same cryptography requirement, namely the intractability
-of the discrete logarithm and the existance of one way functions.
+of the discrete logarithm and the existence of one way functions.
 The protocol consists of two steps: the registration step and the authentication step.
 
 \begin{figure}[H]
@@ -1102,13 +1103,13 @@ Next, the registration step:
 Once this is done, the user can authenticate using the following protocol:
 \begin{itemize}
     \item The user selects a random $a$, and computes $A \coloneqq g^a$, it then sends $(I, A)$ to the host.
-    \item The host lookups $(s,v)$ using $I$, selects a random $b$ and computes $B \coloneqq kv + g^b$. It then sends $(s, B)$ to the user.
+    \item The host looks up $(s,v)$ using $I$, selects a random $b$ and computes $B \coloneqq kv + g^b$. It then sends $(s, B)$ to the user.
     \item Both parties set $u \coloneqq H(A, B)$
     \item The user computes $x \coloneqq H(s, p)$, and from it the session key $S \coloneqq (B - kg^x)^{a + ux}$. Finally it computes the key
           $K \coloneqq H(S)$.
     \item On its end the host computes the session key $S \coloneqq (Av^u)^b$. The final key is then $K \coloneqq H(S)$.
 \end{itemize}
-Finally, proof that the authentication succeeded is shown by the two parties comparing the final key.
+Finally, the proof that the authentication succeeded is shown by the two parties comparing the final key.
 Technically speaking, SRP is a Zero Knowledge Password Proof, which is a more narrow class of Zero Knowledge proof,
 however you can see how the ideas that were developed in the previous sections are still easily transferrable.
 In particular, the prover is the user, that shows that it has knowledge of a value $x$ such that the equation
@@ -1121,10 +1122,10 @@ $x$ from $g^x$ should be unfeasible.
 Let us consider an interesting class of problems. Imagine that a user has some sort of information associated
 with it say $x$. The other party in play would like to verify that the value $x \in_? [a, b]$, for some
 interval $[a, b]$. How would the user be able to verify this, without leaking the value of $x$ to the
-other party? Solving this kind of problem has many practical application. For example, if $x$ is to
+other party? Solving this kind of problem has many practical applications. For example, if $x$ is to be
 understood as some sort of balance, a transaction can be executed without the receiving party knowing the
 actual balance of the sender\footnote{In particular, this has many implications for crypto currency systems,
-    as it allows system such as BitCoin to be truly anonymous and confidential. This is not the case currently
+    as it allows systems such as BitCoin to be truly anonymous and confidential. This is not the case currently
     as in every transaction the addresses of the parties in play are known, and the amount transferred as well}.
 An other idea is that, if $x$ is the date of birth of the user, he/she could
 prove to some sort of service that he/she is over 18, without revealing any private information. The kind
@@ -1136,7 +1137,7 @@ as possible. These kind of proofs are particularly helpful in a network setting,
 be expensive. Let us look at a simple example. First of all we need to introduce the idea of Petersen Commitment \cite{pedersenNonInteractiveInformationTheoreticSecure1992}.
 \begin{definition}
     Let $\mathbb{G}$ be a group in which the discrete log is hard, $g, h$ be two generators.
-    For a secret $m$, and random bits $r$ we have the Pedersen Commitment of $m$ be:
+    For a secret $m$, and random bits $r$ we have the Pedersen Commitment of $m$ :
     \[ C_r(m) = g^m h^r \]
 \end{definition}
 Pedersen Commitments have the desirable property that they are homomorphic i.e. $C_{r_1 + r_2}(m_1 + m_2) = C_{r_1}(m_1) C_{r_2}(m_2)$.
@@ -1146,14 +1147,14 @@ that we can encode $x =\sum^N_{i=1} b_i 2^i$ where each $b_i \in [0, 1]$. A non 
     \item Select a random value $r$, and let $r_i$ be such that the bit decomposition of $r = \sum_{i = 1}^N r_i 2^i$.
     \item Compute the commitment $c_i = C_{r_i}(b_i)$, and let $c = C_r(x)$.
     \item Send to the verifier the commitments $c_i$ together with a proof $\pi$ that each $c_i$ is a commitment of a value which is either 0 or 1. This can
-          be done by combining discrete log knowledge proofs such as \cite{schnorrEfficientSignatureGeneration1991} and together with a proof of partial knowledge such as those
+          be done by combining discrete log knowledge proofs such as \cite{schnorrEfficientSignatureGeneration1991} together with a proof of partial knowledge such as those
           described in \cite{cramerProofsPartialKnowledge1994}. Essentially, by the property of the commitment, the value
           of $c_i$ is either $h^{r_i}$ or $g h^{r_i}$. We prove that we either know the discrete log of $c_i$ base $h$ or that we know
           the discrete log of $g^{-1} c_i$ in base $h$.
     \item Finally, the verifier checks the proof $\pi$ and that $c = \prod_{i=1}^N c_i^{2^i}$
 \end{itemize}
 
-Just to fill in the gap, the proof of partial knowledge in this case can be extracted and simplified, and it works as following.
+Just to fill in the gap, the proof of partial knowledge in this case can be extracted and simplified, and it works as follows.
 Recall that in that step of the proof the prover has committed $c_i = g^{b_i} h^{r_i}$. We know that $b_i \in \bin$. And $c_i = h^{r_i}$ or $c_i = g h^{r_i}$.
 Note that in the first case we know a discrete log of $c_i$, while in the second we know the discrete log of $g^{-1} c_i$ (in both cases in base $h$ and in both cases the log is $r_i$).
 If we manage to prove either one of the facts, without letting the verifier know which actually holds, then we will be set.
@@ -1162,8 +1163,8 @@ A protocol for this works as following (due to \cite{maoGuaranteedCorrectSharing
     \item Let $E, f, g \in \mathbb{G}$ be common inputs. $E$ is equal to either $f^z$ or $g f^z$, where $z$ is known by the prover only.
     \item The prover actions are conditional on what case holds
           \begin{itemize}
-              \item If $E = f^z$, the prover uniformly and indipendently selects integers $w, r_1, c_1$. Computes $a \equiv f^w$, and $b \equiv f^{r_1}(E/g)^{-c_i}$
-              \item If $E = g f^z$, the prover uniformly and indepently selects integers $w, r_2, c_2$. Computes $a \equiv f^{r_2} E^{-c_2}$, $b \equiv f^w$
+              \item If $E = f^z$, the prover uniformly and independently selects integers $w, r_1, c_1$. Computes $a \equiv f^w$, and $b \equiv f^{r_1}(E/g)^{-c_i}$
+              \item If $E = g f^z$, the prover uniformly and independently selects integers $w, r_2, c_2$. Computes $a \equiv f^{r_2} E^{-c_2}$, $b \equiv f^w$
           \end{itemize}
           The prover then sends $a, b$ to the verifier
     \item The verifier sends a random integer $c$ to the prover.
@@ -1181,7 +1182,7 @@ A protocol for this works as following (due to \cite{maoGuaranteedCorrectSharing
           \end{align*}
 \end{itemize}
 
-While this particular proof is quite simple, unfortunately it is not particularly efficient, in fact according to \cite{boudotEfficientProofsThat2000}
+While this particular proof is quite simple, unfortunately it is not particularly efficient. In fact according to \cite{boudotEfficientProofsThat2000}
 proving that a particular $x$ belongs in the interval $[0, 511] = [0, 2^9 -1]$ while using an underlying group of size $2^{10}$ requires a proof
 transcript of size $\approx 196.9$ kB. However, many examples in the literature improves this bound, and this paper gives
 an excellent overview of what is the state of the art \cite{moraisSurveyZeroKnowledge2019}.
@@ -1201,7 +1202,7 @@ with most of the Zero Knowledge Proofs presented in the text. In particular, the
     \item Secure Remote Password protocol (Figure \ref{srp})
 \end{enumerate}
 
-We considered providing a worksheet for the the Zero Knowledge Range Proof described in \ref{zkrp}, but the branching that
+We considered providing a worksheet for the Zero Knowledge Range Proof described in \ref{zkrp}, but the branching that
 is needed for the implementation translated very poorly to worksheets, and as such it would have not been insightful.
 In the first four worksheets we also provided "experiments", that is we set the worksheet up so that the corresponding
 protocol is executed multiple times serially, in order to show that the probabilities that we derived correspond to
@@ -1213,7 +1214,7 @@ the experimental results.
 \section{Appendix: One Way Functions}
 One way functions are, arguably, the basis of a great deal of cryptography.
 Conceptually, a function is one way if it is easy to compute (i.e. computable in polynomial time), yet hard to invert.
-Formally, we have two definition of one way functions:
+Formally, we have two definitions of one way functions:
 \begin{definition}
     A function $f: \bin^* \to \bin^*$ is \textbf{strongly one way} if:
     \begin{enumerate}
@@ -1232,7 +1233,7 @@ Formally, we have two definition of one way functions:
 \end{definition}
 In a nutshell, an algorithm that tries to invert a strongly one way function will succeed only with negligible probability.
 Conversely, an algorithm that tries to invert a weakly one way function will fail with noticeable probability.
-Surprisingly, at the moment we do not know of functions that are definitely one way, even tough we have some candidates such as:
+Surprisingly, at the moment we do not know of any functions that are definitely one way, even though we have some candidates such as:
 \begin{align*}
     f_{mult}(x,y)                & =  x \cdot y                            \\
     f_{discrete}(x)              & = g^x                                   \\
@@ -1242,12 +1243,12 @@ Where $f_{mult}$ is simply multiplying two integers together, and, assuming intr
 The second problem, $f_{discrete}$ is the discrete logarithm problem, where $g^x$ is taken to be in some group in which the discrete log is assumed
 to be hard, and $g$ is a generator for the group (more in the discrete log appendix).
 Instead, $f_{ssum}$ is very closely linked to the $\npol$-complete problem known as subset sum\footnote{In fact, we
-    report here $f_{ssum}$ only as for historical relevance, as it originally it was tought to be a good candidate, while nowadays
+    report here $f_{ssum}$ only for historical relevance, as originally it was thought to be a good candidate, while nowadays
     it is known that the \texttt{SSUM} problem is actually efficiently solved in many commonly arising cases \cite{lagariasSolvingLowdensitySubset1985}, and a such
     not a good candidate}.
 While it is true that if $\pol = \npol$ then $f_{ssum}$ is not one way, the converse does not hold. To see this, note that subset sum could have \textit{worst case} exponentially running time, yet be polynomially solvable in the average case, and as such making $f_{ssum}$ not one way.
 In fact, $\pol \neq \npol$ is necessary but not sufficient condition for one way functions to exist.
-It turns out \cite{goldreichFoundationsCryptographyVol2007} that the strongly one way functions exist if and only if weakly one way functions do. This justifies our assuming only the existance of vague one way functions, without specifying the type.
+It turns out \cite{goldreichFoundationsCryptographyVol2007} that the strongly one way functions exist if and only if weakly one way functions do. This justifies our assuming only the existence of vague one way functions, without specifying the type.
 While for one way functions it is hard to recover the complete input in general, there is nothing stopping a possible attacker from computing some partial information about the input.
 For example, if $f$ is one way we can define the function\footnote{We use $||$ to denote concatenation} $g(x, r) = f(x) || r$ which will be one way, yet always leak half of its input to the attacker.
 On the other hand, there is some information that such $g$ does not leak, for example (if $f$ is strongly one way): $x \circ r$.
@@ -1262,7 +1263,7 @@ Using this we can define the following:
     \end{itemize}
 \end{definition}
 In other words, any algorithm that aims to compute $b(x)$ by only having access to $f(x)$ will succeed with probability
-only negligibly better than guessing. As you have seen in the bit commitment section, hard cores are really useful, and it turns out \cite{goldreichFoundationsCryptographyVol2007} the the existance of one way functions implies the existance of such hard cores.
+only negligibly better than guessing. As you have seen in the bit commitment section, hard cores are really useful, and it turns out \cite{goldreichFoundationsCryptographyVol2007} that the existence of one way functions implies the existence of such hard cores.
 
 \section{Appendix: Discrete Logarithm}
 The discrete logarithm problem is a generalization of the real valued logarithm to arbitrary groups. Recall that:
@@ -1276,7 +1277,7 @@ The discrete logarithm generalizes this to arbitrary groups. In particular:
     by $\log_g a$, it is an integer and has the property that:
     \[ \log_g a = x \iff g^x = a \]
 \end{definition}
-A couple of things to note. First of all, it is important to note that some times the discrete logarithm does not exists.
+A couple of things to note. First of all, it is important to note that at times the discrete logarithm does not exist.
 For example, since the equation $2^k \equiv 3 \mod 15$ has no solution\footnote{As $2^2 \equiv 4, 2^3 \equiv 8, 2^4 \equiv 1 \mod 15$, and the cycle repeats}
 then there is no $\log_2 3$ in $(\ZZ_{15})^\times$. In case $\mathbb{G}$ is a cyclic group, and $g$ is a generator then
 every element $h \in \mathbb{G}$ has a $\log_g h$. While the real valued logarithm is generally easy to compute (for integers there
@@ -1284,8 +1285,8 @@ are strategies using a method similary to binary search, for real values Newton 
 general techniques that, for every group $\mathbb{G}$, efficiently solve the problem. In fact, it is generally believed (and one
 of the core assumptions of a number of protocols such as Diffie Hellman), that there exists groups where the discrete log problem
 is not only hard to solve in the worst case, but actually seems to be extremely complicated to solve in the average\footnote{It can be shown
-    using random self reducibility, that if an hard instance exists than on the average the problem will also be hard} (CITE).
-In particular, cyclic groups such as $\ZZ_p^\times$ are often good candidates, even tough if $p - 1$ has many factors
+    using random self reducibility, that if a hard instance exists than on the average the problem will also be hard} (CITE).
+In particular, cyclic groups such as $\ZZ_p^\times$ are often good candidates, even though if $p - 1$ has many factors
 then there are efficient algorithms such as the Pohlig–Hellman \cite{pohligImprovedAlgorithmComputing1978}. In practice,
 if modular arithmetic is used, the prime $p$ is chosen so that $p = 2q + 1$ for some other prime $q$. Using this and using
 suitably large primes the discrete logarithm problem is considered intractable. The other alternative to
@@ -1308,9 +1309,9 @@ it intersects the curve, and then reflecting it in the $x$-axis. In particular, 
 \end{itemize}
 This definition is important, especially since the addition laws are easy to implement and optimize, yielding performance
 often superior to that of modular exponentiation. As an example we have $E(\FF_{29})$, with $\alpha=4, \beta=20$.
-This group in particular has 37 points (including of course $\infty$), such as $(2,6), (20, 26)$. In particular we can
+This group in particular has 37 points (including of course $\infty$), such as $(2,6), (20, 26)$. We can also
 verify that $(5, 22) + (16, 27) = (13, 6)$, and that $2(5, 22) = (14, 6)$ (and of course that closure holds).
-Using this kind of construction, and well tested\footnote{And please please do not use use the ones that I have used here unless you have a particular desire to design insecure system}
+Using this kind of construction, and well tested\footnote{And please do not use the ones that I have used here unless you have a particular desire to design an insecure system!}
 parameters such as the ones that NIST recommend \cite{barkerRecommendationPairWiseKeyEstablishment2018}
 we can yield cryptosystems that are resistant to any non quantum attacker that we know of, and in particular we can get some pretty good performance as well.
 
@@ -1318,7 +1319,7 @@ we can yield cryptosystems that are resistant to any non quantum attacker that w
 
 \section{Appendix: Complexity Classes}
 \begin{definition}
-    We say that a language $L \in \pol$ if there exist a deterministic TM $M$ and a polynomial $\poly[\cdot]$ such that both the following hold true:
+    We say that a language $L \in \pol$ if there exists a deterministic TM $M$ and a polynomial $\poly[\cdot]$ such that both the following hold true:
     \begin{enumerate}
         \item On input $x \in \bin^*$, $M$ halts within $\poly[|x|]$ steps.
         \item $x \in L \iff M(x) = 1$
@@ -1329,7 +1330,7 @@ we can yield cryptosystems that are resistant to any non quantum attacker that w
 We can now prove the equivalence of our two definition of $\pol$, let us call the probabilistic definition as $\pol_{prob}$ and the classical as simply $\pol$.
 
 \begin{proof}
-    Let $L \in \pol$, then there exist a Turing Machine $M$ such that the machine outputs one for each $x \in L$ and always halts in polynomially many steps.
+    Let $L \in \pol$, then there exists a Turing Machine $M$ such that the machine outputs one for each $x \in L$ and always halts in polynomially many steps.
     Construct a probabilistic TM $M_1$ as follows: copy everything from $M$, except the transition function, replacing each transition of the form $\phi(s, i) = x$ with $\phi_1(s, i) = (x, x)$. Recall from the definition that on each step the machine $M_1$ will randomly choose between left and right transition. Since for each transition left and right are always equal, the choice is meaningless and for each transition it will take the same action as $M$ (taking of course the same exact number of steps). Since $M$ recognized $L$, then $M_1$ will also, and as such $L \in \pol_{prob}$, which implies $\pol \subseteq \pol_{prob}$.  \par
 
     Conversely, let $L \in \pol_{prob}$. Then there exists a Turing Machine $M$ s.t. $M$ halts in polynomial time, and that $ x \in L \iff \prob{M(x) = 1} = 1$. Let $l$ be bound on the running time of $M$. This implies that, for any $x \in L$, we have that $\forall r \in \bin^l : M_r(x) = 1$. Construct a machine $M_1$ as follows, keep everything equal except from the transition function. Replace each transition of the form $\phi(s, i) = (x_0, x_1)$ to one $\phi(s, i) = x_0$. This is equivalent to picking $r$ to be $0^l$, and as such $M_1$ will also output 1 for each element in $L$. Of course the running time will still be bound by $l$, and as such $L \in \pol$, which in turn implies $\pol_{prob} \subseteq \pol$  \par
@@ -1339,7 +1340,7 @@ We can now prove the equivalence of our two definition of $\pol$, let us call th
 
 
 \begin{definition}
-    We say that a language $L \in \npol$ if there exist a relation $R_L \subseteq \bin^* \times \bin^*$ and a polynomial $p(\cdot)$ such that the following hold:
+    We say that a language $L \in \npol$ if there exists a relation $R_L \subseteq \bin^* \times \bin^*$ and a polynomial $p(\cdot)$ such that the following hold:
     \begin{enumerate}
         \item $R_L$ is recognizable in polynomial time
         \item $x \in L \iff$ there exists $y$ s.t. $|y| \leq p(|x|)$ and $(x, y) \in R_L$
@@ -1352,7 +1353,7 @@ i.e. the language of all boolean formulas that return true for every input. If t
 We can similarly prove that our antecedent definition of $\npol$ (call it $\npol_{prob}$) is the same as the classical one.
 
 \begin{proof}
-    Let $L \in \npol$, then there exist a relation $R_L$ s.t. that $R_L$ is recognizable in polynomial time, $x \in L \iff \exists (x, y) \in R_L$ and that $y$ is at most polynomial in the size of $x$. Consider a probabilistic time machine $M$ as follows:
+    Let $L \in \npol$, then there exists a relation $R_L$ s.t. that $R_L$ is recognizable in polynomial time, $x \in L \iff \exists (x, y) \in R_L$ and that $y$ is at most polynomial in the size of $x$. Consider a probabilistic time machine $M$ as follows:
     \begin{enumerate}
         \item On each step randomly guess a bit of the certificate $y$
         \item Randomly decide whether to generate another bit or to run a polynomial time algorithm to decide whether $(x, y) \in R_L$
@@ -1361,7 +1362,7 @@ We can similarly prove that our antecedent definition of $\npol$ (call it $\npol
 
     Since the certificate exists, and it is polynomial in the size of $x$, there will always be at least one extremely lucky machine that will guess it, and as such $\prob{M(x) = 1} > 0$ for $x \in L$. So $L \in \npol_{prob}$, which implies $\npol \subseteq \npol_{prob}$.
 
-    Conversely, let $L \in \npol_{prob}$. Then there exist a probabilistic time machine $M$ s.t. $x \in L \iff \prob{M(x) = y} > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \set{ (x, r) | x \in L \text { and } M_r(x) = 1 }$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existance is met by our above reasoning. Finally, since $r$ is bound by the bound on the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \npol$, which in turn implies $\npol_{prob} \subseteq \npol$. \par
+    Conversely, let $L \in \npol_{prob}$. Then there exists a probabilistic time machine $M$ s.t. $x \in L \iff \prob{M(x) = y} > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \set{ (x, r) | x \in L \text { and } M_r(x) = 1 }$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existence is met by our above reasoning. Finally, since $r$ is bound by the bound on the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \npol$, which in turn implies $\npol_{prob} \subseteq \npol$. \par
 
     So, since $\npol \subseteq \npol_{prob}$ and $\npol_{prob} \subseteq \npol$, it must be that $\npol = \npol_{prob}$
 
