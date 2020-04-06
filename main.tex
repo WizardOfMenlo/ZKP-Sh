@@ -101,10 +101,10 @@ not have the ability to peer into $A$ account or its balance. Instead, to solve 
 when $A$ initiates the transaction, it produces a \enquote{proof} that its balance is greater than $X$.
 This proof has to have three properties. First of all, it must be convincing, so that if $A$ does indeed have
 enough funds, then $B$ will be confident that the proof provided is correct. Secondly, it must be
-unforgeable, so if $A$ does not have enough funds $B$ will never be convinced that it does. Thirdly, it must
-be zero knowledge, as it will not leak to $B$ any information about $A$ (like balance, account number ecc.) other
+sound, so that if $A$ does not have enough funds $B$ will never be convinced that it does. Thirdly, it must
+be zero knowledge, ensuring it will not leak to $B$ any information about $A$ (like balance, account number ecc.) other
 than the fact that $A$ has more than $X$ in its balance. This can be done via what is called a Zero Knowledge Range Proof,
-and in this paper we will be building to a very simple ZKRP based on the discrete logarithm problem.
+of which we will see a very simple example in Section \ref{applications}.
 
 
 \section{Preliminaries}
