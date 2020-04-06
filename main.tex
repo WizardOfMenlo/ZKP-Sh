@@ -750,9 +750,9 @@ Formally, we define a bit commitment scheme as follows:
     \end{itemize}
 \end{definition}
 As you can see, the unambiguity requirement is much more involved than the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
-In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoric flavour\footnote{There is also a corresponding \enquote{dual}-like notion of perfectly hiding commitment schemes, in which the secrecy
-    requirement is information theoric and the unambiguity is computational. This can be used to provide perfect ZKP for
-    languages in $\npol$, but they are relatively more advanced and as such will not be discussed here}.
+In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoric flavour\footnote{This commitment scheme is referred to as perfectly binding. There is also a corresponding, mutually exclusive, \enquote{dual}-like notion of perfectly hiding  schemes \cite{brassardMinimumDisclosureProofs1988}, in which the secrecy
+    requirement is information theoric and the unambiguity is computational. This can be used to provide Perfect ZK Arguments for
+    languages in $\npol$ \cite{naorPerfectZeroKnowledgeArguments1998}, but they are relatively more advanced and as such will not be discussed here}.
 In particular, note that once $S$ has committed a value, in order to provide verification, it can send its private input and the random coin it used to $R$, which can then
 run $S$'s algorithm to verify the certificate in polynomial time. \par
 As far as we know, the existence of bit commitment schemes requires some assumptions, namely the existence of one way functions, functions that are easy to compute but hard to invert.
