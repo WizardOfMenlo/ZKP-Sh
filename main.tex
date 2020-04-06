@@ -759,7 +759,7 @@ In particular, note that once $S$ has committed a value, in order to provide ver
 run $S$'s algorithm to verify the certificate in polynomial time. \par
 As far as we know, the existence of bit commitment schemes requires some assumptions, namely the existence of one way functions, functions that are easy to compute but hard to invert.
 For a more through description, look no further than Appendix \ref{oneway}.
-While a proof that uses solely those kind of function exists, it requires some discussion of pseudorandom generators, which are not particularly insightful nor too related.
+While a proof that uses solely those kind of function exists \cite{naorBitCommitmentUsing}, it requires some discussion of pseudorandom generators, which are not particularly insightful nor too related.
 Instead, we can use the stronger assumption of the existence of one way permutations (i.e. one way functions that are also bijections), which results in a simpler proof \cite{blummanuelCoinFlippingTelephone1983}.\par
 Let us first discuss the intuition that makes the following construction useful. Let us assume that we have access to a one way permutation $f$.
 We want to commit to a bit $b$. What we can do is select a random string. We can make use of a property of one way functions, that is the
