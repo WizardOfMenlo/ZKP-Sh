@@ -44,8 +44,8 @@ The concept of proof is one that resonates quite strongly in all of society. Hav
 an untrusted party is actually making an affirmative claim opens up to a variety of avenues for collaboration and
 enquiry. This paper will be a survey of the theory of a particular variety of proofs, namely Zero Knowledge Proofs.
 We will build an understanding of Interactive Proofs, which are processes in which a verifier is successively convinced
-by a prover. The fundamental idea is that the kind of proofs that we will consider are not fixed proofs as in Mathematics,
-\footnote{They resemble mathematical proofs more closely when we consider Non Interactive Zero Knowledge Proofs}
+by a prover. The fundamental idea is that the kind of proofs that we will consider are not fixed proofs as in Mathematics
+\footnote{They resemble mathematical proofs more closely when we consider Non Interactive Zero Knowledge Proofs},
 but instead they are interactive processes, in which a verifier asks questions (or challenges) to the prover, and is progressively
 convinced by correct answers. Of course, in general this is not too interesting, as, for example, to prove knowledge of a
 secret we can just reveal it. However, once a secret is revealed it loses its distinctive properties, and this might not be
@@ -112,7 +112,7 @@ and in this paper we will be building to a very simple ZKRP based on the discret
 \section{Preliminaries}
 \label{preliminaries}
 \subsection{Mathematical Notation}
-We start by defining some crucial sets of string \footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set. We don not make too much use of it in this text though}.
+We start by defining some crucial sets of strings\footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set. We don not make too much use of it in this text though}.
 \begin{definition}
     $\bin^n = \set{ a_1 a_2 \dots a_n \mid a_i \in \bin}$
 \end{definition}
@@ -167,9 +167,12 @@ to  estimate the probability of some algorithm succeeding multiple times when it
 Note in particular that if a algorithm spuriosly succeeds with probability $\theta \in [0, 1)$ then $\prob{X = n}$ is a
 negligible function of $n$. \par
 
-We define the following set (group) of permutations over a certain set.
+The following definition will be used for having a compact notation for selecting permutations.
 
-\[ S_G = \{ f: G \to G | \text{ s.t. } f \text{ is a bijection} \} \]
+\begin{definition}
+    We define the following set (group) of permutations over a certain set.
+    \[ S_X = \{ f: X \to X | \text{ s.t. } f \text{ is a bijection} \} \]
+\end{definition}
 
 Finally, a lot of our examples will deal with graphs and isomorphisms on graphs.
 
@@ -240,7 +243,7 @@ In particular, the last three languages are instances of $\npol$-complete proble
     In this case we say that $L$ is \textbf{recognizable in probabilistic polynomial time}
 \end{definition}
 
-Note in particular that we can replace the $\frac{2}{3}$ constant with $\frac{1}{2} + \epsilon$ for any $0 < \epsilon < \frac{1}{2}.$\footnote{This can be done by running the machine multiples times and taking majority vote}
+Note in particular that we can replace\footnote{By running the machine multiples times and taking majority vote} the $\frac{2}{3}$ constant with $\frac{1}{2} + \epsilon$ for any $0 < \epsilon < \frac{1}{2}$.
 
 $\bpp$ is referred to as the class of bounded polynomial time languages. It is evident that $\pol \subseteq \bpp$ but, while it is believed that the classes are equal, no proof was yet found. This class is significant, as it is intrinsically associated with efficient computation. This is because of a few factors, first of all because the probabilistic computation closely mimics the capabilities of general purpose computer, which can use the external environment as a source of randomness. Secondly, polynomial time computation is feasible, and, as long as Moore's law holds, modern computer can every year improve faster than one can increase the problem size
 \footnote{What I mean is, if an algorithm takes $\poly[|x|]$ steps, and on year $n$ a computer can perform $\bigO{2^n}$ steps, then by waiting a suitable and polynomial number of years the time needed
@@ -271,7 +274,7 @@ Let us have an example to clarify how a probabilistic algorithm works:
         \item Compute $Ax$ and $BCx$.
         \item Compare the two resulting vectors (in $\FF^n$). If they are the same return true, else return false.
     \end{enumerate}
-    Computationally wise, this might require less calculations. Let's assume you can select a random $k$-vector in $\bigO{k}$ steps, then the first step is $\bigO{m}$, the two computations take respectively $\bigO{nm}$ and $\bigO{k (n + m)}$\footnote{This is optimized computing $B(Cx)$} and the comparison will be $\bigO{n}$. So in total the algorithm is $\bigO{nm + kn + mk + n}$. We claim that, trivially, if $A = BC$ then the algorithm always answer correctly. Furthermore if $A \neq BC$ then the algorithm answers correctly in the majority of cases. Let $D = BC$ Note that if the algorithm is to output incorrectly, it must be that $Ax = Dx$. Then it must be that $(A - D) x = 0$, and as such $x \in \ker(A - D)$. Note that $A - D \in \FF^{n \times m}$ and as such $A - D$ can be seen as a linear transformation from $\FF^m \to \FF^n$. The whole problem reduces to finding the probability that a vector picked at random belongs to the kernel of a linear transformation. Let $|\FF| = q$, the size of the underlying field.\footnote{Note that in this case we assume the underlying field to be finite, the infinite case can also be handled but requires more thought} First of all note that since $A \neq D$ at least one of the of the row of the matrix is non zero, and as such $\dim \ker (A - D) < m$. Since the size of any vector space $V$ over $\FF$ is $|V| = q^{\dim V}$, then the size of the kernel is at most $q^{m - 1}$. As such the probability of a random vector belonging to the kernel is at most $\frac{q^{m-1}}{q^m}=\frac{1}{q}$. We can then calculate that, repeating the algorithm $l$ times the probability of getting at least one vector not in the kernel is $1 - \left(\frac{1}{q}\right)^l$ and if we want to ensure that this probability is greater than $\frac{2}{3}$ we can then set:
+    Computationally wise, this might require less calculations. Let's assume you can select a random $k$-vector in $\bigO{k}$ steps, then the first step is $\bigO{m}$, the two computations take respectively $\bigO{nm}$ and $\bigO{k (n + m)}$\footnote{This is optimized computing $B(Cx)$} and the comparison will be $\bigO{n}$. So in total the algorithm is $\bigO{nm + kn + mk + n}$. We claim that, trivially, if $A = BC$ then the algorithm always answer correctly. Furthermore if $A \neq BC$ then the algorithm answers correctly in the majority of cases. Let $D = BC$ Note that if the algorithm is to output incorrectly, it must be that $Ax = Dx$. Then it must be that $(A - D) x = 0$, and as such $x \in \ker(A - D)$. Note that $A - D \in \FF^{n \times m}$ and as such $A - D$ can be seen as a linear transformation from $\FF^m \to \FF^n$. The whole problem reduces to finding the probability that a vector picked at random belongs to the kernel of a linear transformation. Let $|\FF| = q$, the size of the underlying field\footnote{Note that in this case we assume the underlying field to be finite, the infinite case can also be handled but requires more thought}. First of all note that since $A \neq D$ at least one of the of the row of the matrix is non zero, and as such $\dim \ker (A - D) < m$. Since the size of any vector space $V$ over $\FF$ is $|V| = q^{\dim V}$, then the size of the kernel is at most $q^{m - 1}$. As such the probability of a random vector belonging to the kernel is at most $\frac{q^{m-1}}{q^m}=\frac{1}{q}$. We can then calculate that, repeating the algorithm $l$ times the probability of getting at least one vector not in the kernel is $1 - \left(\frac{1}{q}\right)^l$ and if we want to ensure that this probability is greater than $\frac{2}{3}$ we can then set:
     \[l > \frac{\log \frac{1}{3}}{\log \frac{1}{q}} = \frac{\log{3}}{\log{q}}\]
 
     Finally, we can see that repeating the procedure $l$ times\footnote{In fact, since $l < 1$ for $q > 3$, repetition is only really needed for the trivial field $\ZZ_2$} (call this algorithm $M$) will have the following result:
@@ -313,7 +316,7 @@ The notion of a proof has extremely overloaded meaning, as it used in many dispa
 \label{proofreq}
 In order to start visualizing the concept of ZKP, we can start with a couple of toy examples that are helpful. Here and in the rest of text we will refer to the prover as Peggy and to the verifier as Victor.
 \begin{example}
-    Assume that Victor is completely colorblind.\footnote{i.e. that he cannot distinguish object based on color alone}
+    Assume that Victor is completely colorblind\footnote{i.e. that he cannot distinguish object based on color alone}.
     Peggy wants to prove to Victor that she is not colorblind, so she devises an experiment.
     Peggy takes two balls completely identical, save for their colour, and gives them to Victor, one in his left and one in his right hand.
     Peggy asks Victor to put the balls behind his back, and to decide whether to swap them or not, without telling her.
@@ -534,7 +537,7 @@ The first and stricter class of zero knowledge proofs are the so called perfect 
         \item For any probabilistic polynomial time ITM $V'$, there exists a probabilistic polynomial time TM $M_{V'}$ such that, for any $x \in L$ the following two hold:
               \begin{enumerate}
                   \item The machine $M_{V'}$ outputs the special symbol $\bot$ with probability: \[\prob{M_{V'}(x) = \bot} \leq \frac{1}{2}\]
-                  \item Letting $m_{V'}$ be a variable describing the output of $M_{V'}$ conditioned on the output of $M_{V'} \neq \bot$ \footnote{$\prob{m_{V'}(x) = \alpha} = \condprob{M_{V'}(x) = \alpha}{M_{V'}(x) \neq \bot}$} we must have that $\left<P, V\right>(x)$ and $m_{V'}(x)$ are identically distributed
+                  \item Letting $m_{V'}$ be a variable describing the output of $M_{V'}$ conditioned\footnote{$\prob{m_{V'}(x) = \alpha} = \condprob{M_{V'}(x) = \alpha}{M_{V'}(x) \neq \bot}$} on the output of $M_{V'} \neq \bot$  we must have that $\left<P, V\right>(x)$ and $m_{V'}(x)$ are identically distributed
               \end{enumerate}
     \end{itemize}
 \end{definition}
@@ -725,7 +728,7 @@ Using this we can define the idea of a Computational Zero Knowledge proof.
 
     \end{itemize}
 \end{definition}
-As you can see, other than the different level of \enquote{closeness} of the two distributions, the main other difference is that we do not require bounded failure of the simulation by the $\bot$ symbol. The rationale between this is quite simple. First of all, remember that in perfect zero knowledge we can repeat the interaction multiple times \footnote{In order for this to be formal we would actually need to prove that sequential composition of zero knowledge proofs does not yield any knowledge, but for the sake of this discussion just know this holds} to reduce the probability of outputting $\bot$ to a negligible one (in the size of the input). In particular this implies that the simulator only differs from the interaction a negligible percentage of times, and the above example shows how two ensembles that only differ with negligible probability are computationally indistinguishable. Computational Zero Knowledge Proofs are in a sense more efficient then Perfect Zero Knowledge proofs, as in practical applications there is no need to perfectly simulate the interaction to guarantee zero knowledge.
+As you can see, other than the different level of \enquote{closeness} of the two distributions, the main other difference is that we do not require bounded failure of the simulation by the $\bot$ symbol. The rationale between this is quite simple. First of all, remember that in perfect zero knowledge we can repeat the interaction multiple times\footnote{In order for this to be formal we would actually need to prove that sequential composition of zero knowledge proofs does not yield any knowledge, but for the sake of this discussion just know this holds} to reduce the probability of outputting $\bot$ to a negligible one (in the size of the input). In particular this implies that the simulator only differs from the interaction a negligible percentage of times, and the above example shows how two ensembles that only differ with negligible probability are computationally indistinguishable. Computational Zero Knowledge Proofs are in a sense more efficient then Perfect Zero Knowledge proofs, as in practical applications there is no need to perfectly simulate the interaction to guarantee zero knowledge.
 From a practical standpoint as well, computational Zero Knowledge Proofs are those that are generally referred to as simply ZKP, and those around which applications mostly focus.
 
 
@@ -754,10 +757,10 @@ Formally, we define a bit commitment scheme as follows:
     \end{itemize}
 \end{definition}
 As you can see, the unambiguity requirement is much more involved than the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
-In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoric flavour.
+In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoric flavour
 \footnote{There is also a corresponding \enquote{dual}-like notion of perfectly hiding commitment schemes, in which the secrecy
     requirement is information theoric and the unambiguity is computational. This can be used to provide perfect ZKP for
-    languages in $\npol$, but they are relatively more advanced and as such will not be discussed here}
+    languages in $\npol$, but they are relatively more advanced and as such will not be discussed here}.
 In particular, note that once $S$ has committed a value, in order to provide verification, it can send its private input and the random coin it used to $R$, which can then
 run $S$'s algorithm to verify the certificate in polynomial time. \par
 As far as we know, the existence of bit commitment schemes requires some assumptions, namely the existence of one way functions, functions that are easy to compute but hard to invert.
@@ -845,8 +848,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
 
 
     Let the common input be $G = (V, E)$, where $V = \set{1, \dots, n }$.
-    This graph is 3-colorable, with coloring $\pi$, which is unknown to the verifier.
-    \footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}
+    This graph is 3-colorable, with coloring $\pi$, which is unknown to the verifier\footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}.
     \begin{enumerate}
         \item The prover randomly uniformly selects $\sigma \in S_3$. It sets $\phi \equiv \sigma \circ \pi$.
               For each $i \in V$, it generates a random string $s_i \in \bin^n$ and computes $c_i \equiv C_{s_i}(\phi(i))$.
@@ -1257,15 +1259,12 @@ Mathematics to Sage was not a frictionless effort. For example, as you can see i
 the label set of a graph needed some relabeling in order to correctly behave with randomly selected permutations.
 In every example that uses a Hash Function (Non Interactive Discrete Log, Schnorr Signature, Secure Remote Password)
 I needed to essentially hack my way around in converting an hash back to an integer,
-\footnote{The solution I found is to use the hexdigest of an hash function, prepend it with the \texttt{0x} prefix
-    and then let python parse it into an integer, which is less than ideal}
 which does not make me particularly proud.
 
 \par Now, from a security standpoint there are a few things that could go wrong.
 First of all, the parameters that I used are chosen absolutely arbitrarily. They are very much too small for any kind
-of serious application.
-\footnote{In fact I use this in the Graph Non Isomorphism protocol, as finding isomorphisms for a
-    graph which is too big is quite hard, but feasible for small ones}
+of serious application\footnote{In fact I use this in the Graph Non Isomorphism protocol, as finding isomorphisms for a
+    graph which is too big is quite hard, but feasible for small ones}.
 Furthermore, in cryptography you should always use parameters that are battle-tested, such as the NIST \cite{barkerRecommendationPairWiseKeyEstablishment2018}
 endorsed one. This is because, even if in general we believe that a problem is intractable, this does not guarantee that
 all of its instances are, and there might\footnote{There almost always is} be some particular configuration of parameters
@@ -1318,10 +1317,10 @@ Where $f_{mult}$ is simply multiplying two integers together, and, assuming intr
 The second problem, $f_{discrete}$ is the discrete logarithm problem, where $g^x$ is taken to be in some group in which the discrete log is assumed
 to be hard, and $g$ is a generator for the group (more in the discrete log appendix).
 Instead, $f_{ssum}$ is very closely linked to the $\npol$-complete problem known as subset sum.
-While it is true that if $\pol = \npol$ then $f_{ssum}$ is not one way, the converse does not hold. To see this, note that subset sum could have \textit{worst case} exponentially running time, yet be polynomially solvable in the average case, and as such making $f_{ssum}$ not one way.
+While it is true that if $\pol = \npol$ then $f_{ssum}$ is not one way, the converse does not hold. To see this, note that subset sum could have \textit{worst case} exponentially running time, yet be polynomially solvable in the average case, and as such making $f_{ssum}$ not one way
 \footnote{In fact, we
     report here $f_{ssum}$ only for historical relevance, as originally it was thought to be a good candidate, while nowadays
-    it is known that the \texttt{SSUM} problem is actually efficiently solved in many commonly arising cases \cite{lagariasSolvingLowdensitySubset1985}, and a such we know that it is not}
+    it is known that the \texttt{SSUM} problem is actually efficiently solved in many commonly arising cases \cite{lagariasSolvingLowdensitySubset1985}, and a such we know that it is not}.
 In fact, $\pol \neq \npol$ is necessary but not sufficient condition for one way functions to exist.
 It turns out \cite{goldreichFoundationsCryptographyVol2007} that strongly one way functions exist if and only if weakly one way functions do. This justifies our assuming only the existence of vague one way functions, without specifying the type.
 While for one way functions it is hard to recover the complete input in general, there is nothing stopping a possible attacker from computing some partial information about the input.
