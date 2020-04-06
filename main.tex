@@ -33,7 +33,7 @@
     Finally, we will detail some applications of the theory, showing various \enquote{flavours} of ZKP for the Discrete Logarithm problem that will culminate in
     Schnorr Signatures. We will compound this with the Secure Remote Protocol, a protocol that uses a similar ZKP in order
     to authenticate without communicating your password to the server. Finally, we show a very simple Zero Knowledge
-    Range Proof, an instance of a very general class that has a wide range of applications and is currently one of the hottest avenues of research.
+    Range Proof, an instance of a very general class that has a wide range of applications and is currently one of the most active avenues of research.
     The paper will also introduce Sagemath worksheets that demonstrate nearly all of the protocols here detailed.
 \end{abstract}
 
@@ -46,11 +46,13 @@ enquiry. This paper will be a survey of the theory of a particular variety of pr
 We will build an understanding of Interactive Proofs, which are processes in which a verifier is successively convinced
 by a prover. The fundamental idea is that the kind of proofs that we will consider are not fixed proofs as in Mathematics\footnote{They resemble mathematical proofs more closely when we consider Non Interactive Zero Knowledge Proofs},
 but instead they are interactive processes, in which a verifier asks questions (or challenges) to the prover, and is progressively
-convinced by correct answers. Of course, in general this is not too interesting, as, for example, to prove knowledge of a
-secret we can just reveal it. However, once a secret is revealed it loses its distinctive properties, and this might not be
-desirable. In particular we can ask ourself the following question:
-what is the minimal amount of knowledge that needs to communicated to convince someone else of some statement?
-We will formalize such query, investigate the structure of the resulting class, and show many examples of elements of said class.
+convinced by correct answers.
+The general problem that we look at is the following. Suppose that we have some object $x$ such that the proposition
+$P(x)$ holds. How do we convince a skeptic of this fact? One way would be to just send $x$ over, but of course this
+might not be desirable for a variety of reasons. For example, it might be that $x$ is a password, or contains other sensitive
+information.  However, if $P(\cdot)$ has enough structure, we are able to devise a protocol in which the verifier can ask questions,
+that the prover can only consistently answer if it indeed has $x$, and from which the verifier learns nothing about $x$,
+except the fact that it exists. We will formalize such process, investigate the structure of the resulting class, and show some examples of protocols that satisfy said properties.
 Finally, we will survey some applications of Zero Knowledge Proofs, in the fields of digital signatures and authentication.
 
 \section{Structure}
@@ -421,11 +423,11 @@ There are some things to note in the above definition. First of all, note that o
     First of all, the prover finds such $y$. This can be done by searching for any string $s$ in $ \bigcup_{i = 0}^{p(|x|)} \bin^i$ that satisfies $(x, s) \in R_L$. Since the prover has no computational bound this can be done without issues. The prover then sends this $s$ to the verifier. On a message $s$ the verifier accepts if $(x, s) \in R_L$, rejects otherwise. Since $R_L$ is recognizable in polynomial time, the verifier runs in polynomial time as required.  \\
     Completeness is easily verified, as in fact the verifier will accept with probability 1. Soundness requires a little more thought, but essentially since $x \notin L \implies \forall y : (x, y) \notin R_L $ then the verifier will never accept (i.e. accept with probability 0). This combined implies that the above is an interactive proof system for $L$. Since $L$ was an arbitrary element of $\npol$, then $\npol \subseteq \mathsf{IP}$ .
 \end{proof}
-In fact, as we will see next, $\mathsf{IP}$ actually contains languages that are not believed to be in $\npol$. We will not prove this, but it turns out that $\mathsf{IP} = \mathsf{PSPACE}$, i.e. the set of all languages that use polynomial space\footnote{And this class is considered to be much bigger than $\npol$}. Also note that in the case of $\npol$ problems we can even make the prover machine polynomial time, if we use the additional input model and give the prover the certificate.
+In fact, as we will see next, $\mathsf{IP}$ actually contains languages that are not believed to be in $\npol$. We will not prove this, but it turns out that $\mathsf{IP} = \mathsf{PSPACE}$\cite{shamirIPPSPACE1992}, i.e. the set of all languages that use polynomial space\footnote{And this class is considered to be much bigger than $\npol$}. Also note that in the case of $\npol$ problems we can even make the prover machine polynomial time, if we use the additional input model and give the prover the certificate.
 \subsection{An Example: GNI}
 Let us consider the Graph Non Isomorphism problem, a decision problem which is not known to be in $\bpp \cup \npol$. This quite aptly named problem concerns deciding whether two graphs are not isomorphic.
 Before presenting the system, let us try to give some intuition onto how we will be approaching the problem. As in the coffee problem that we examined in the completeness section, we will have the verifier issuing challenges to the prover, which will use its superior computational abilities to solve. In particular, we rely on the fact if the two graphs are not isomorphic then it will always be possible to distinguish the two.
-Here is a interactive proof system that decides this problem.
+Here is a interactive proof system that decides this problem \cite{goldreichProofsThatYield1991}.
 
 \begin{figure}[H]
     \centering
@@ -548,7 +550,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
     \[ \texttt{GI} = \set{ (G, H) | \; G,H \text{ graphs and } G \cong H }\]
     Note that \texttt{GI} is\footnote{In the most general case, as we actually do know polynomial time algorithm for special cases such as trees}, as far as we know, not $\npol$-complete nor in $\bpp$.
     This is important since every language in $\bpp$ has a trivial proof, while known ZKP languages that are $\npol$-complete require further assumptions.
-    The following protocol \cite{goldreichFoundationsCryptographyVol2007} is a Perfect Zero Knowledge Proof System for \texttt{GI}.
+    The following protocol \cite{goldreichProofsThatYield1991} \cite{goldreichFoundationsCryptographyVol2007} is a Perfect Zero Knowledge Proof System for \texttt{GI}.
 
     \begin{figure}[H]
         \centering
@@ -758,7 +760,7 @@ run $S$'s algorithm to verify the certificate in polynomial time. \par
 As far as we know, the existence of bit commitment schemes requires some assumptions, namely the existence of one way functions, functions that are easy to compute but hard to invert.
 For a more through description, look no further than Appendix \ref{oneway}.
 While a proof that uses solely those kind of function exists, it requires some discussion of pseudorandom generators, which are not particularly insightful nor too related.
-Instead, we can use the stronger assumption of the existence of one way permutations (i.e. one way functions that are also bijections), which results in a simpler proof.\par
+Instead, we can use the stronger assumption of the existence of one way permutations (i.e. one way functions that are also bijections), which results in a simpler proof \cite{blummanuelCoinFlippingTelephone1983}.\par
 Let us first discuss the intuition that makes the following construction useful. Let us assume that we have access to a one way permutation $f$.
 We want to commit to a bit $b$. What we can do is select a random string. We can make use of a property of one way functions, that is the
 property that they have hard cores. This is some property of the input of a one way function that cannot be guessed from the output (discussed extensively in Appendix \ref{oneway}).
@@ -805,7 +807,7 @@ In particular, the language that we will tackle is that of Graph Three Coloring.
 \begin{definition}
     \[ \texttt{3COL} = \set{ G \; | \; G \text{ has a valid 3-coloring} } \]
 \end{definition}
-The language \texttt{3COL} as defined is $\npol$-complete.
+The language \texttt{3COL} as defined is $\npol$-complete \cite{karpReducibilityCombinatorialProblems1972}.
 Let us now present a computational ZKP \cite{goldreichProofsThatYield1991} \cite{goldreichMethodologyCryptographicProtocol} for this language. We use a one-way-interaction bit commitment scheme which denotes by
 $C_s(i)$ the commitment of value $i \in \set{1, 2, 3}$ using random coins $s$ (That is $C_s(i) = F_s(i, 1^n)$). Note how the commitment schemes
 presented before only allow us to commit a single bit, while this one is able to commit a ternary bit of sorts. Of course, the transformation
@@ -1256,7 +1258,7 @@ First of all, the parameters that I used are chosen absolutely arbitrarily. They
 of serious application\footnote{In fact I use this in the Graph Non Isomorphism protocol, as finding isomorphisms for a
     graph which is too big is quite hard, but feasible for small ones}.
 Furthermore, in cryptography you should always use parameters that are battle-tested, such as the NIST \cite{barkerRecommendationPairWiseKeyEstablishment2018}
-endorsed one. This is because, even if in general we believe that a problem is intractable, this does not guarantee that
+endorsed ones. This is because, even if in general we believe that a problem is intractable, this does not guarantee that
 all of its instances are, and there might\footnote{There almost always is} be some particular configuration of parameters
 that yield very easy to solve problems. Following up, sources of randomness. In these worksheets, I have used the standard
 random number generator that comes with Sage, which, as far as I know, is not cryptographically secure. This could have
