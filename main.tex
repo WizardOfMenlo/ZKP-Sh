@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[nottoc]{tocbibind}
+\usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{float}
@@ -24,13 +25,15 @@
 
 \begin{abstract}
     In this paper we will provide a survey of the theory underlying Zero Knowledge Proofs,
-    building up from Interactive Proofs to a fuller vision of the theory. In the process, we will have shown interactive
-    proofs for Graph Non Isomorphism (a co-$\npol$ problem), and zero knowledge proofs for both Graph Isomorphism and Graph 3-Colorability.
-    Finally, we will have detailed some applications of the theory, showing various "flavours" of ZKP for the Discrete Logarithm problem that will culminate in
-    Schnorr Signature. We will compound this with the Secure Remote Protocol, a protocol that uses a similar ZKP in order
+    building up intuition for interactive proving protocol, which will then be formalized first in Interactive Proofs
+    and then in more complex knowledge witholding schemes, such as Perfect and Computational Zero Knowledge Proofs.
+    In the process, we will have shown interactive proofs for Graph Non Isomorphism (a co-$\npol$ problem),
+    and zero knowledge proofs for both Graph Isomorphism and Graph 3-Colorability.
+    Finally, we will detail some applications of the theory, showing various "flavours" of ZKP for the Discrete Logarithm problem that will culminate in
+    Schnorr Signatures. We will compound this with the Secure Remote Protocol, a protocol that uses a similar ZKP in order
     to authenticate without communicating your password to the server. Finally, we show a very simple Zero Knowledge
     Range Proof, an instance of a very general class that has a wide range of applications and is currently one of the hottest avenues of research.
-
+    The paper will also introduce Sagemath worksheets that demonstrate nearly all of the protocols here detailed.
 \end{abstract}
 
 \tableofcontents
@@ -40,9 +43,13 @@ The concept of proof is one that resonates quite strongly in all of society. Hav
 an untrusted party is actually making an affirmative claim opens up to a variety of avenues for collaboration and
 enquiry. This paper will be a survey of the theory of a particular variety of proofs, namely Zero Knowledge Proofs.
 We will build an understanding of Interactive Proofs, which are processes in which a verifier is successively convinced
-by a prover. From there, we aim to mirror the process in Mathematics that finds the mininum set of assumptions needed
-to prove a statement. This will lead us to formulate the following central query:
-Given a true proposition, what is the minimal amount of knowledge that I need to transpire to convince someone else of it?
+by a prover. The fundamental idea is that the kind of proofs that we will consider are not fixed proofs as in Mathematics,
+\footnote{They resemble mathematical proofs more closely when we consider Non Interactive Zero Knowledge Proofs}
+but instead they are interactive processes, in which a verifier asks questions (or challenges) to the prover, and is progressively
+convinced by correct answers. Of course, in general this is not too interesting, as, for example, to prove knowledge of a
+secret we can just reveal it. However, once a secret is revealed it loses its distinctive properties, and this might not be
+desirable. In particular we can ask ourself the following question:
+what is the minimal amount of knowledge that needs to communicated to convince someone else of some statement?
 We will formalize such query, investigate the structure of the resulting class, and show many examples of elements of said class.
 Finally, we will survey some applications of Zero Knowledge Proofs, in the fields of digital signatures and authentication.
 
@@ -722,7 +729,7 @@ From a practical standpoint as well, computational Zero Knowledge Proofs are tho
 
 
 
-\subsection{Zero Knowledge Proofs for $\npol$}
+\subsection{Zero Knowledge Proofs for \texorpdfstring{$\npol$}{NP}}
 After having defined Zero Knowledge Proofs, it is just natural to consider what types of languages have
 a ZKP. In this section we show a potentially surprising result, that, under some reasonable assumptions, every language in $\npol$ has
 a Zero Knowledge Proof.
@@ -788,7 +795,7 @@ As such we define:
 \end{definition}
 With this we can see that the one-way permutation construction yields a one-way-interaction bit commitment scheme where $F_s(i, 1^n) = (f(s), h(s) \oplus i)$.
 
-\subsection{ZKP for $\npol$-complete problems}
+\subsection{ZKP for \texorpdfstring{$\npol$}{NP}-complete problems}
 \label{np}
 Now that we have defined our machinery, we can make use of the structure of problems in the $\npol$ space.
 In particular, as detailed in Appendix \ref{complex}, there is a class of problems in $\npol$ known as the $\npol$-complete problems.
@@ -1222,6 +1229,57 @@ is needed for the implementation translated very poorly to worksheets, and as su
 In the first four worksheets we also provided "experiments", that is we set the worksheet up in such a way so that the corresponding
 protocol is executed multiple times serially, in order to show that the probabilities that we derived correspond to
 the experimental results.
+
+\subsection{How to run it}
+First of all, ensure to have Sagemath installed on your machine.
+Sagemath can be installed from \url{www.sagemath.org}, and make sure that the installed version is 9.0.
+The code written was tested using that version, and if works on any previous (and possibly later) version it is entirely
+by accident. The notebooks where designed to be used in a the context of a Jupyter Notebook with Sage kernel. All of this
+will be installed automatically in most Sage distributions. Once the notebook environment is running, navigate to the
+folder where the notebooks are stored, and select the one that you are interested in. The code can be run by either
+selecting "Run all Cells" or by individually stepping on each Cell and pressing Shift+Enter. Each notebook is complete
+with code generated figures\footnote{That might be OS-dependent} and a concise Markdown description of the protocol at hand.
+Note that the experimental section at the end of some of the notebooks might take a considerable time to run.
+The user should feel free to experiment with different parameters (that I conveniently grouped together) in order to
+get a more intuitive feel of the protocol's behaviour.
+
+\subsection{Implementation Details}
+There are a couple of notes that I wanted to get out, in regards to implementation details, possible security holes
+\footnote{i.e. why you should not use the example worksheets of a dissertation as a base for any serious cryptographic
+    work}, and general development experience. First of all, I would like to say that I was very much impressed with
+the capabilities of Sage. Not having used it before, and coming from a Python background, I found that the learning
+curve was quite flat, and it was very easy to get something up and running. The libraries are very well organized,
+the documentation is usually very helpful and it simplified the examples massively. However, as always in software
+engineering, there were some hurdles. First of all, whenever I was programming I found an impedance mismatch of
+sorts between the mathematics and the software. Often it is very small things, but translating the abstractions of
+Mathematics to Sage was not a frictionless effort. For example, as you can see in the Graph Isomorphism worksheet,
+the label set of a graph needed some relabeling in order to correctly behave with randomly selected permutations.
+In every example that uses a Hash Function (Non Interactive Discrete Log, Schnorr Signature, Secure Remote Password)
+I needed to essentially hack my way around in converting an hash back to an integer,
+\footnote{The solution I found is to use the hexdigest of an hash function, prepend it with the \texttt{0x} prefix
+    and then let python parse it into an integer, which is less than ideal}
+which does not make me particularly proud.
+
+\par Now, from a security standpoint there are a few things that could go wrong.
+First of all, the parameters that I used are chosen absolutely arbitrarily. They are very much too small for any kind
+of serious application.
+\footnote{In fact I use this in the Graph Non Isomorphism protocol, as finding isomorphisms for a
+    graph which is too big is quite hard, but feasible for small ones}
+Furthermore, in cryptography you should always use parameters that are battle-tested, such as the NIST \cite{barkerRecommendationPairWiseKeyEstablishment2018}
+endorsed one. This is because, even if in general we believe that a problem is intractable, this does not guarantee that
+all of its instances are, and there might\footnote{There almost always is} be some particular configuration of parameters
+that yield very easy to solve problems. Following up, sources of randomness. In these worksheets, I have used the standard
+random number generator that comes with Sage, which, as far as I know, is not cryptographically secure. This could have
+many implications. First of all, suitable attacks could fix the seed, and thus render the prover deterministic, which could
+then be used to break the Zero Knowledge Property. This can be done since, if the verifier knows the random bits of the
+prover, then it can simulate its following actions perfectly, and as such gain knowledge by predicting every branch and
+then comparing it with the prover's actual message. Secondly, let us consider the Graph 3 Coloring
+protocol. In this protocol we have to use bit commitments, and I emulated the construction based on one way permutations
+that we detailed before. In order to model a one way function, I simply used a standard RNG to generate a string of bits.
+There are two implications of this. Since I have used a one way function instead of a one way permutation,
+it might be the case that there are collisions, and as such the unambiguity requirement might be violated (which makes
+the proof system weaker). Also, there probably are attacks on such a generator, which would allow a verifier to peek
+the bit committed value before the reveal phase.
 
 
 
