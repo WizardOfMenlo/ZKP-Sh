@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[nottoc]{tocbibind}
+\usepackage{csquotes}
 \usepackage{hyperref}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -29,7 +30,7 @@
     and then in more complex knowledge witholding schemes, such as Perfect and Computational Zero Knowledge Proofs.
     In the process, we will have shown interactive proofs for Graph Non Isomorphism (a co-$\npol$ problem),
     and zero knowledge proofs for both Graph Isomorphism and Graph 3-Colorability.
-    Finally, we will detail some applications of the theory, showing various "flavours" of ZKP for the Discrete Logarithm problem that will culminate in
+    Finally, we will detail some applications of the theory, showing various \enquote{flavours} of ZKP for the Discrete Logarithm problem that will culminate in
     Schnorr Signatures. We will compound this with the Secure Remote Protocol, a protocol that uses a similar ZKP in order
     to authenticate without communicating your password to the server. Finally, we show a very simple Zero Knowledge
     Range Proof, an instance of a very general class that has a wide range of applications and is currently one of the hottest avenues of research.
@@ -85,7 +86,7 @@ in the paper.
 Zero Knowledge Proofs have applications in a number of fields outside of theory.
 Examples space from classical cryptography settings such as message signature and authentication to more
 practical ones such as online age verification and electronic voting. The development
-\footnote{And the "hype" associated with it}
+\footnote{And the \enquote{hype} associated with it}
 of online blockchain based transaction systems has given indications of another direction that ZKP applications could
 emerge. In this section we will be focusing on this application, has it gives a good indication of a complex problem that
 ZKP can solve. Consider a blockchain system, such as BitCoin
@@ -99,7 +100,7 @@ anonimity. Of course, many technical problems arise when trying to do so, but le
 Suppose account $A$ wants to transfer an amount $X$ to an account $B$. What party $B$ would like to verify is that
 $A$ actually has enough balance to transfer such amount. However, since the system that we design is private, $B$ does
 not have the ability to peer into $A$ account or its balance. Instead, to solve this problem, we make it so that
-when $A$ initiates the transaction, it produces a "proof" that its balance is greater than $X$.
+when $A$ initiates the transaction, it produces a \enquote{proof} that its balance is greater than $X$.
 This proof has to have three properties. First of all, it must be convincing, so that if $A$ does indeed have
 enough funds, then $B$ will be confident that the proof provided is correct. Secondly, it must be
 unforgeable, so if $A$ does not have enough funds $B$ will never be convinced that it does. Thirdly, it must
@@ -207,7 +208,7 @@ Using this definition, we can then define our complexity classes.
     \[x \in L \iff \prob{M(x) = 1} = 1\]
 \end{definition}
 
-The complexity class $\pol$ is the one we most closely associate with "efficient" computation. Notable examples of languages which belong in $\pol$ are finite languages, regular languages, context free languages, and more. For example, the following are all in $\pol$ :
+The complexity class $\pol$ is the one we most closely associate with \enquote{efficient} computation. Notable examples of languages which belong in $\pol$ are finite languages, regular languages, context free languages, and more. For example, the following are all in $\pol$ :
 \[ \set{(a_1, ... a_n) \, | \, n \in \NN \text{ and } a_i \leq a_{i+1} }\]
 \[ \set{ p \,|\, p \in \NN \text{ and } p \text{ prime } }\]
 \[ \set{ (a, b, c) \, | \, a^2 + b^2 = c^2 } \]
@@ -343,7 +344,7 @@ In order to start visualizing the concept of ZKP, we can start with a couple of 
     \end{enumerate}
 \end{example}
 
-This illustrates the general idea of Zero Knowledge Proofs. The proof part is devised as an experiment or challenge from the verifier to the prover, that the prover can only answer by having the necessary piece of information or "power". The prover cannot fool the verifier consistently and an honest prover and honest verifier will agree on the fact. Furthermore no new information is learned by the verifier. Also, if external observers were to have witnessed the exchange they would not be convinced of the fact (as Peggy and Victor could have coordinated their answers).
+This illustrates the general idea of Zero Knowledge Proofs. The proof part is devised as an experiment or challenge from the verifier to the prover, that the prover can only answer by having the necessary piece of information or \enquote{power}. The prover cannot fool the verifier consistently and an honest prover and honest verifier will agree on the fact. Furthermore no new information is learned by the verifier. Also, if external observers were to have witnessed the exchange they would not be convinced of the fact (as Peggy and Victor could have coordinated their answers).
 We seek to formalize this next.
 
 \subsection{Parties in play}
@@ -521,7 +522,7 @@ This shows that the soundness bound of the protocol is $\frac{1}{2}$, and repeat
 
 \section{Zero Knowledge Proof}
 \label{zkp}
-Now that we have introduced interactive proofs, we can naturally extend them to encompass the idea of zero knowledge. In the previous sections we have given some intuition on what gaining knowledge does mean, and now we aim to formalize this. As before, we consider an interactive proof system, composed of a prover and a verifier, respectively $P, V$. The first observation is that in an interactive proof system the prover usually (either by being more powerful computationally or by having some additional information) has a "knowledge advantage" over the verifier. With zero knowledge we aim to make so that this advantage does not transfer to the verifier, no matter what clever things it may do. From this we can conclude that being zero knowledge is strictly a property of the prover in the interaction, in the same way that soundness is a property of verifier. Secondly, in a sense, we can express the zero knowledge requirement as the fact that any verifier $V'$, when interacting with prover on input $x$, will not be able to compute anything that it wouldn't have been able to compute on input $x$ alone. In order to formalize this, we turn to the idea of a simulation of the interaction of $P, V'$. \\
+Now that we have introduced interactive proofs, we can naturally extend them to encompass the idea of zero knowledge. In the previous sections we have given some intuition on what gaining knowledge does mean, and now we aim to formalize this. As before, we consider an interactive proof system, composed of a prover and a verifier, respectively $P, V$. The first observation is that in an interactive proof system the prover usually (either by being more powerful computationally or by having some additional information) has a \enquote{knowledge advantage} over the verifier. With zero knowledge we aim to make so that this advantage does not transfer to the verifier, no matter what clever things it may do. From this we can conclude that being zero knowledge is strictly a property of the prover in the interaction, in the same way that soundness is a property of verifier. Secondly, in a sense, we can express the zero knowledge requirement as the fact that any verifier $V'$, when interacting with prover on input $x$, will not be able to compute anything that it wouldn't have been able to compute on input $x$ alone. In order to formalize this, we turn to the idea of a simulation of the interaction of $P, V'$. \\
 In particular, the idea is that a language $L$ is zero knowledge if it has an interactive proof system $P, V$ such that, for every possible verifier $V'$, there exists a probabilistic polynomial time Turing machine $M_{V'}$ that for any $x \in L$ satisfies that $\left<P, V\right>(x)$ and $M_{V'}(x)$ are similary distributed\footnote{More on this later, essentially the level of similarity of the two distributions yields the definition of \textit{perfect}, \textit{statistical} and \textit{computational} zero knowledge}.
 Using this intuition and playing around with the loose parts of it, we can start defining the interesting classes of zero knowledge proofs.
 \subsection{Perfect Zero Knowledge}
@@ -724,7 +725,7 @@ Using this we can define the idea of a Computational Zero Knowledge proof.
 
     \end{itemize}
 \end{definition}
-As you can see, other than the different level of "closeness" of the two distributions, the main other difference is that we do not require bounded failure of the simulation by the $\bot$ symbol. The rationale between this is quite simple. First of all, remember that in perfect zero knowledge we can repeat the interaction multiple times \footnote{In order for this to be formal we would actually need to prove that sequential composition of zero knowledge proofs does not yield any knowledge, but for the sake of this discussion just know this holds} to reduce the probability of outputting $\bot$ to a negligible one (in the size of the input). In particular this implies that the simulator only differs from the interaction a negligible percentage of times, and the above example shows how two ensembles that only differ with negligible probability are computationally indistinguishable. Computational Zero Knowledge Proofs are in a sense more efficient then Perfect Zero Knowledge proofs, as in practical applications there is no need to perfectly simulate the interaction to guarantee zero knowledge.
+As you can see, other than the different level of \enquote{closeness} of the two distributions, the main other difference is that we do not require bounded failure of the simulation by the $\bot$ symbol. The rationale between this is quite simple. First of all, remember that in perfect zero knowledge we can repeat the interaction multiple times \footnote{In order for this to be formal we would actually need to prove that sequential composition of zero knowledge proofs does not yield any knowledge, but for the sake of this discussion just know this holds} to reduce the probability of outputting $\bot$ to a negligible one (in the size of the input). In particular this implies that the simulator only differs from the interaction a negligible percentage of times, and the above example shows how two ensembles that only differ with negligible probability are computationally indistinguishable. Computational Zero Knowledge Proofs are in a sense more efficient then Perfect Zero Knowledge proofs, as in practical applications there is no need to perfectly simulate the interaction to guarantee zero knowledge.
 From a practical standpoint as well, computational Zero Knowledge Proofs are those that are generally referred to as simply ZKP, and those around which applications mostly focus.
 
 
@@ -754,7 +755,7 @@ Formally, we define a bit commitment scheme as follows:
 \end{definition}
 As you can see, the unambiguity requirement is much more involved than the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
 In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoric flavour.
-\footnote{There is also a corresponding "dual"-like notion of perfectly hiding commitment schemes, in which the secrecy
+\footnote{There is also a corresponding \enquote{dual}-like notion of perfectly hiding commitment schemes, in which the secrecy
     requirement is information theoric and the unambiguity is computational. This can be used to provide perfect ZKP for
     languages in $\npol$, but they are relatively more advanced and as such will not be discussed here}
 In particular, note that once $S$ has committed a value, in order to provide verification, it can send its private input and the random coin it used to $R$, which can then
@@ -893,7 +894,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
         First of all, you might be puzzled by the presence of the $\bot$ symbol in this simulator.
         However, we noted before that computational proofs do not need such help, as repeating the simulation often
         will result it in it failing negligibly often, and as such the interaction will still be computationally indistinguishable.
-        So, adding the capability of outputting $\bot$ does not "add" any extra power to the definition, and as such we
+        So, adding the capability of outputting $\bot$ does not \enquote{add} any extra power to the definition, and as such we
         can use it here to simplify our life (requiring as always that it is not output too often).
         So, we first show that. We note that the $\bot$ symbol is only output when
         the two edges that were selected by the verifier $V'$ have been assigned the same color.
@@ -1154,7 +1155,7 @@ prove to some sort of service that he/she is over 18, without revealing any priv
 of proofs that are used to solve this problem are referred to as Zero Knowledge Range Proofs. In particular,
 the proofs that we are most interested in this case are those referred to as Non Interactive. In this kind
 of proof, the challenge and answer method that we presented before is lost, as Peggy tends to
-compile a "transcript" of a proof, that Victor can check on its own, of course while not leaking any information
+compile a \enquote{transcript} of a proof, that Victor can check on its own, of course while not leaking any information
 as possible. These kind of proofs are particularly helpful in a network setting, in which communication is
 be expensive. Let us look at a simple example. First of all we need to introduce the idea of Petersen Commitment \cite{pedersenNonInteractiveInformationTheoreticSecure1992}.
 \begin{definition}
@@ -1226,7 +1227,7 @@ with most of the Zero Knowledge Proofs presented in the text. In particular, the
 
 We considered providing a worksheet for the Zero Knowledge Range Proof described in \ref{zkrp}, but the branching that
 is needed for the implementation translated very poorly to worksheets, and as such it would have not been insightful.
-In the first four worksheets we also provided "experiments", that is we set the worksheet up in such a way so that the corresponding
+In the first four worksheets we also provided \enquote{experiments}, that is we set the worksheet up in such a way so that the corresponding
 protocol is executed multiple times serially, in order to show that the probabilities that we derived correspond to
 the experimental results.
 
@@ -1237,7 +1238,7 @@ The code written was tested using that version, and if works on any previous (an
 by accident. The notebooks where designed to be used in a the context of a Jupyter Notebook with Sage kernel. All of this
 will be installed automatically in most Sage distributions. Once the notebook environment is running, navigate to the
 folder where the notebooks are stored, and select the one that you are interested in. The code can be run by either
-selecting "Run all Cells" or by individually stepping on each Cell and pressing Shift+Enter. Each notebook is complete
+selecting \enquote{Run all Cells} or by individually stepping on each Cell and pressing Shift+Enter. Each notebook is complete
 with code generated figures\footnote{That might be OS-dependent} and a concise Markdown description of the protocol at hand.
 Note that the experimental section at the end of some of the notebooks might take a considerable time to run.
 The user should feel free to experiment with different parameters (that I conveniently grouped together) in order to
@@ -1279,7 +1280,7 @@ that we detailed before. In order to model a one way function, I simply used a s
 There are two implications of this. Since I have used a one way function instead of a one way permutation,
 it might be the case that there are collisions, and as such the unambiguity requirement might be violated (which makes
 the proof system weaker). Also, there probably are attacks on such a generator, which would allow a verifier to peek
-the bit committed value before the reveal phase, allowing him to at least partially gather the three coloring.
+the bit committed value before the reveal phase, allowing him to at least partially gather the three coloring .
 
 
 
