@@ -44,8 +44,7 @@ The concept of proof is one that resonates quite strongly in all of society. Hav
 an untrusted party is actually making an affirmative claim opens up to a variety of avenues for collaboration and
 enquiry. This paper will be a survey of the theory of a particular variety of proofs, namely Zero Knowledge Proofs.
 We will build an understanding of Interactive Proofs, which are processes in which a verifier is successively convinced
-by a prover. The fundamental idea is that the kind of proofs that we will consider are not fixed proofs as in Mathematics
-\footnote{They resemble mathematical proofs more closely when we consider Non Interactive Zero Knowledge Proofs},
+by a prover. The fundamental idea is that the kind of proofs that we will consider are not fixed proofs as in Mathematics\footnote{They resemble mathematical proofs more closely when we consider Non Interactive Zero Knowledge Proofs},
 but instead they are interactive processes, in which a verifier asks questions (or challenges) to the prover, and is progressively
 convinced by correct answers. Of course, in general this is not too interesting, as, for example, to prove knowledge of a
 secret we can just reveal it. However, once a secret is revealed it loses its distinctive properties, and this might not be
@@ -67,8 +66,7 @@ introduce the wide class of interactive proofs, of which Zero Knowledge Proofs a
 example of an interactive proof for the Graph Non Isomorphism problem, complete with a proof of the fact.
 In the following Section \ref{zkp} we will finally introduce Zero Knowledge Proofs, in both the perfect and computational
 formulation. We will continue by providing an example of a Perfect Zero Knowledge Proof for deciding the Graph Isomorphism
-language, and conclude the section by introducing bit commitments, and showing that if one way permutations
-\footnote{In fact this holds for one way functions as well, but the permutation proof is simpler} exist
+language, and conclude the section by introducing bit commitments, and showing that if one way permutations\footnote{In fact this holds for one way functions as well, but the permutation proof is simpler} exist
 then every language in $\npol$ has a Zero Knowledge Proof. This is done in Subsection \ref{np} by providing a
 computational Zero Knowledge Proof for the $\npol$-complete problem of Graph 3-coloring.
 In Section \ref{applications} we will then look at some applications, in three different context. First we will
@@ -85,12 +83,10 @@ in the paper.
 \label{motivation}
 Zero Knowledge Proofs have applications in a number of fields outside of theory.
 Examples space from classical cryptography settings such as message signature and authentication to more
-practical ones such as online age verification and electronic voting. The development
-\footnote{And the \enquote{hype} associated with it}
+practical ones such as online age verification and electronic voting. The development\footnote{And the \enquote{hype} associated with it}
 of online blockchain based transaction systems has given indications of another direction that ZKP applications could
 emerge. In this section we will be focusing on this application, has it gives a good indication of a complex problem that
-ZKP can solve. Consider a blockchain system, such as BitCoin
-\footnote{But not limited to, in fact, as far as I know, every major blockchain system works majorly in the same way}.
+ZKP can solve. Consider a blockchain system, such as BitCoin\footnote{But not limited to, in fact, as far as I know, every major blockchain system works majorly in the same way}.
 As you probably are aware, BitCoin accounts are uniquely identified
 by an address, and this address is visible in every transaction that the account is involved in. In fact, knowing the ownership
 of an account allows anyone to reconstruct from the public ledger the entire transaction history, complete with transaction
@@ -153,8 +149,7 @@ As before, we will allow a slight relaxation and use $\poly[\cdot]$ to specify s
 As an example, functions such as $2^{-n}$ or $n^{-n}$ are negligible. In particular the set of negligible functions is closed under multiplication by elements of $\poly$. This is significant, as we usually aim to have the attacker's success probability to be negligible, and this means that even repeating the attack polynomially many time will not create a non negligible threat. \par
 
 There a couple of notions of probability that we will most likely need.
-First of all, we will use the notation $x \sample A$ to say that $x$ is uniformly selected from the set $A$
-\footnote{Equivalently, when $A$ finite, we have defined a random variable $X$ such that for every $a \in A$ we have  $\prob{X = a} = \frac{1}{|A|} $}
+First of all, we will use the notation $x \sample A$ to say that $x$ is uniformly selected from the set $A$\footnote{Equivalently, when $A$ finite, we have defined a random variable $X$ such that for every $a \in A$ we have  $\prob{X = a} = \frac{1}{|A|} $}
 
 \begin{definition}
     Suppose we have a series of $n$ independent event $X_i$, each one of them
@@ -198,7 +193,7 @@ The computational model used in this paper is that of Turing Machines (TMs) \cit
 
 In particular, we will be providing an uniform probability based definition for the complexity classes. The traditional (and equivalent) definitions are in the appendix.
 
-The Turing machine that we will be using have a slightly relaxed transition function, which allows for two different actions to be taken on the same step (as in a non deterministic machine). Also, for a polynomial time Turing Machine $M$ we will write $M_r(x)$ for the output of $M$ on $x$, where $r$ is a binary string, where the $i$-th character specifies which action the machine should take on step $i$\footnote{Note the polynomial bound, this is needed since in theory decisions taken early in the string can effect the running time and such the length of the string. If the machine $M$ is always polynomial time we can then find a bound $p$ s.t. $\forall r, T(M_r(x))) \leq p(|x|) $, and as such having $r \in \bin^{p(|x|)}$ will be enough}. We can then let $l$ be the maximum length that $r$ can take and define the probability of $M$ outputting $y$ on input $x$ to be:
+The Turing machine that we will be using have a slightly relaxed transition function, which allows for two different actions to be taken on the same step (as in a non deterministic machine). Also, for a polynomial time Turing Machine\footnote{The polynomial bound is required since in theory decisions taken early in the execution can effect the running time and such the length of the string. If the machine $M$ is always polynomial time we can then find a bound $p$ s.t. $\forall r, T(M_r(x))) \leq p(|x|) $, and as such having $r \in \bin^{p(|x|)}$ will be enough} $M$ we will write $M_r(x)$ for the output of $M$ on $x$, where $r$ is a binary string, where the $i$-th character specifies which action the machine should take on step $i$. We can then let $l$ be the maximum length that $r$ can take and define the probability of $M$ outputting $y$ on input $x$ to be:
 
 \begin{definition} The probability of machine $M$ outputting $y$ on input $x$
     \[ \prob{M(x) = y} = \frac{|\set{r \in \bin^{l} \mid M_r(x) = y }|}{2^{l}}\]
@@ -245,8 +240,7 @@ In particular, the last three languages are instances of $\npol$-complete proble
 
 Note in particular that we can replace\footnote{By running the machine multiples times and taking majority vote} the $\frac{2}{3}$ constant with $\frac{1}{2} + \epsilon$ for any $0 < \epsilon < \frac{1}{2}$.
 
-$\bpp$ is referred to as the class of bounded polynomial time languages. It is evident that $\pol \subseteq \bpp$ but, while it is believed that the classes are equal, no proof was yet found. This class is significant, as it is intrinsically associated with efficient computation. This is because of a few factors, first of all because the probabilistic computation closely mimics the capabilities of general purpose computer, which can use the external environment as a source of randomness. Secondly, polynomial time computation is feasible, and, as long as Moore's law holds, modern computer can every year improve faster than one can increase the problem size
-\footnote{What I mean is, if an algorithm takes $\poly[|x|]$ steps, and on year $n$ a computer can perform $\bigO{2^n}$ steps, then by waiting a suitable and polynomial number of years the time needed
+$\bpp$ is referred to as the class of bounded polynomial time languages. It is evident that $\pol \subseteq \bpp$ but, while it is believed that the classes are equal, no proof was yet found. This class is significant, as it is intrinsically associated with efficient computation. This is because of a few factors, first of all because the probabilistic computation closely mimics the capabilities of general purpose computer, which can use the external environment as a source of randomness. Secondly, polynomial time computation is feasible, and, as long as Moore's law holds, modern computer can every year improve faster than one can increase the problem size\footnote{What I mean is, if an algorithm takes $\poly[|x|]$ steps, and on year $n$ a computer can perform $\bigO{2^n}$ steps, then by waiting a suitable and polynomial number of years the time needed
     decreases exponentially. E.g., suppose that a given problem takes $|x|^3$ steps to be solved, and on year 0 a computer can
     perform 1000 steps per year. Then in year 0 we can solve instances of size at most $|x| = 10$. However, suppose in year $n$ the
     power of the computer is given by $1000 \cdot 2^n$. This implies that in year $n$ we can handle instances of size $|x| = 10 \cdot 2^{n/3} $, which is exponential in $n$}.
@@ -297,8 +291,7 @@ As an instance, if a construction relies on (hard) instances of an $\npol$-compl
 
 In general, the most strict level of security that we might require is that of information theoric security, which holds even in the case that
 an attacker has infinite computational power. We will see that Perfect Zero Knowledge Proofs have an information theoretic flavour, even
-though saying that they are secure against an infinitely powerful attacker might be a stretch
-\footnote{What I mean is that, in perfect ZKP the output of the interaction can be perfectly simulated by polynomial time prover, which is
+though saying that they are secure against an infinitely powerful attacker might be a stretch\footnote{What I mean is that, in perfect ZKP the output of the interaction can be perfectly simulated by polynomial time prover, which is
     an information theoric level of accuracy. However, any ZKP usually deals with an underlying language that is only interesting when it is not
     decidable in polynomial time. For example, Graph Isomorphism is one of such problems. While we can devise a perfect ZKP for this problem, this
     does not mean that an unbounded computational attacker cannot decided the problem. It merely means that even a perfect attacker cannot
@@ -610,7 +603,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
                   at least $\frac{1}{2}$ of the times, and that is the soundness bound.
         \end{itemize}
         Now, for the arguably more challenging section of the proof let us prove that the above protocol is indeed zero knowledge.
-        We show a simulator \footnote{In fact, a family of simulators dependant on verifiers} that satisfies the zero knowledge condition.
+        We show a simulator\footnote{In fact, a family of simulators dependant on verifiers} that satisfies the zero knowledge condition.
         Let $V'$ be an arbitrary polynomial time randomized ITM. We define the following simulator $M_V'$, that runs on input $x \equiv (G_1, G_2)$:
         \begin{enumerate}
             \item First of all, let $q(|x|)$ be a polynomial bound on the running time of $V'$. We will be simulating $V'$ on $M_V'$, and to do so we will first allocate a string of $q(|x|)$ random bits to be used\footnote{An alternative would be interactively answering $V'$ queries for random bits, but this is conceptually easier}. We call such bits $r$.
@@ -627,7 +620,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
         Let $x \equiv (G_1, G_2) \in \texttt{GI}$.
         We first show that:
         \[ \prob{M_{V'}(x) = \bot} \leq \frac{1}{2} \]
-        Recall that \footnote{In proving the soundness bound for the interactive proof of \texttt{GNI}} we showed that, for any randomized algorithm $E$, any two isomorphic graph $G_1, G_2$, and with the variables $\Pi \in_R S_{V_1}, I \in_R \set{1, 2}$ we have that:
+        Recall that\footnote{In proving the soundness bound for the interactive proof of \texttt{GNI}} we showed that, for any randomized algorithm $E$, any two isomorphic graph $G_1, G_2$, and with the variables $\Pi \in_R S_{V_1}, I \in_R \set{1, 2}$ we have that:
         \[ \prob{E(\Pi(G_I)) = I} \leq \frac{1}{2} \]
         Since we see that $\prob{M_{V'}(x) = \bot} \leq \prob{E(\Pi(G_I)) = I}$ (as the simulation only fails when $V'$ is able to find out $i$ from $H = \pi(G_i)$), the claim is proved. \\
         Using now the alternative characterization of zero knowledge, we aim to show that $\text{view}^{P}_{V'}(x)$ and $m_{V'}(x)$ are identically distributed.
@@ -757,8 +750,7 @@ Formally, we define a bit commitment scheme as follows:
     \end{itemize}
 \end{definition}
 As you can see, the unambiguity requirement is much more involved than the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
-In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoric flavour
-\footnote{There is also a corresponding \enquote{dual}-like notion of perfectly hiding commitment schemes, in which the secrecy
+In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoric flavour\footnote{There is also a corresponding \enquote{dual}-like notion of perfectly hiding commitment schemes, in which the secrecy
     requirement is information theoric and the unambiguity is computational. This can be used to provide perfect ZKP for
     languages in $\npol$, but they are relatively more advanced and as such will not be discussed here}.
 In particular, note that once $S$ has committed a value, in order to provide verification, it can send its private input and the random coin it used to $R$, which can then
@@ -879,8 +871,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
                   the number of edges with $|E| \leq \binom{n}{2}$, we have a polynomial bound of $\frac{2}{n(n+1)}$.
         \end{itemize}
         And so the protocol is an interactive proof system for \texttt{3COL}, with completeness bound $1$ and
-        with a weak soundness bound $1/|E|$. Repeating the protocol yields an interactive proof as required
-        \footnote{The situation is a bit subtle as we would want to ensure that repeating the protocol does not yield any knowledge.
+        with a weak soundness bound $1/|E|$. Repeating the protocol yields an interactive proof as required\footnote{The situation is a bit subtle as we would want to ensure that repeating the protocol does not yield any knowledge.
             Luckily, the sequential composition lemma that we assumed earlier and here ensures that this is the case}.
         For any verifier $V'$, we show a simulator $M_{V'}$ that shows that the prover has the zero knowledge property.
         \begin{itemize}
@@ -1247,8 +1238,7 @@ The user should feel free to experiment with different parameters (that I conven
 get a more intuitive feel of the protocol's behaviour.
 
 \subsection{Implementation Details}
-There are a couple of notes that I wanted to get out, in regards to implementation details, possible security holes
-\footnote{i.e. why you should not use the example worksheets of a dissertation as a base for any serious cryptographic
+There are a couple of notes that I wanted to get out, in regards to implementation details, possible security holes\footnote{i.e. why you should not use the example worksheets of a dissertation as a base for any serious cryptographic
     work}, and general development experience. First of all, I would like to say that I was very much impressed with
 the capabilities of Sage. Not having used it before, and coming from a Python background, I found that the learning
 curve was quite flat, and it was very easy to get something up and running. The libraries are very well organized,
@@ -1317,8 +1307,7 @@ Where $f_{mult}$ is simply multiplying two integers together, and, assuming intr
 The second problem, $f_{discrete}$ is the discrete logarithm problem, where $g^x$ is taken to be in some group in which the discrete log is assumed
 to be hard, and $g$ is a generator for the group (more in the discrete log appendix).
 Instead, $f_{ssum}$ is very closely linked to the $\npol$-complete problem known as subset sum.
-While it is true that if $\pol = \npol$ then $f_{ssum}$ is not one way, the converse does not hold. To see this, note that subset sum could have \textit{worst case} exponentially running time, yet be polynomially solvable in the average case, and as such making $f_{ssum}$ not one way
-\footnote{In fact, we
+While it is true that if $\pol = \npol$ then $f_{ssum}$ is not one way, the converse does not hold. To see this, note that subset sum could have \textit{worst case} exponentially running time, yet be polynomially solvable in the average case, and as such making $f_{ssum}$ not one way\footnote{In fact, we
     report here $f_{ssum}$ only for historical relevance, as originally it was thought to be a good candidate, while nowadays
     it is known that the \texttt{SSUM} problem is actually efficiently solved in many commonly arising cases \cite{lagariasSolvingLowdensitySubset1985}, and a such we know that it is not}.
 In fact, $\pol \neq \npol$ is necessary but not sufficient condition for one way functions to exist.
