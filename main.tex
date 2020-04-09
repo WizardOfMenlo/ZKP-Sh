@@ -12,9 +12,20 @@
 
 
 
-\title{Zero Knowledge Proofs: Theory and Applications}
+\title{Zero Knowledge Proofs \\ Theory and Applications}
 \author{Giacomo Fenzi \\ University of St. Andrews\thanks{Thanks in particular to Prof. Stephen Linton and Dr. Louis Theran}}
 \date{September 2019}
+
+% Definition of \maketitle
+\makeatletter         
+\def\@maketitle{
+\begin{center}
+{\Huge \@title }\\[4ex] 
+{\Large  \@author}\\[4ex] 
+\@date\\[8ex]
+\includegraphics[width = 80mm]{uni_logo.png}
+\end{center}}
+\makeatother
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
@@ -23,6 +34,7 @@
 \begin{document}
 
 \maketitle
+\newpage
 
 \begin{abstract}
     In this paper we will provide a survey of the theory underlying Zero Knowledge Proofs,
