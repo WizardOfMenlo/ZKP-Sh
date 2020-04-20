@@ -84,9 +84,9 @@ the effort of developing Zero Knowledge Proofs is justified. Section \ref{prelim
 that includes both the mathematical machinery needed and the definition of the computational settings that we will
 be extensively using, namely that of Turing Machines. This Section will also introduce complexity classes that are
 relevant to our analysis, such a $\pol, \npol, \bpp$, and introduce the concept of a proof in a computational sense.
-Section \ref{proofreq} will explore this concept in more depths, exploring via examples the characterization of
+Section \ref{proofreq} will explore this concept in more depth, exploring via examples the characterization of
 Zero Knowledge Proofs, such as the general setup, soundness, completeness and the zero knowledge property.
-Section \ref{interactiveproofs} will formalize the notion of proofs by introducting Interactive Turing Machine, and
+Section \ref{interactiveproofs} will formalize the notion of proofs by introducing Interactive Turing Machine, and
 introduce the wide class of interactive proofs, of which Zero Knowledge Proofs are a subset. We will then give an
 example of an interactive proof for the Graph Non Isomorphism problem, complete with a proof of the fact.
 In the following Section \ref{zkp} we will finally introduce Zero Knowledge Proofs, in both the perfect and computational
@@ -94,9 +94,9 @@ formulation. We will continue by providing an example of a Perfect Zero Knowledg
 language, and conclude the section by introducing bit commitments, and showing that if one way permutations\footnote{In fact this holds for one way functions as well, but the permutation proof is simpler} exist
 then every language in $\npol$ has a Zero Knowledge Proof. This is done in Subsection \ref{np} by providing a
 computational Zero Knowledge Proof for the $\npol$-complete problem of Graph 3-coloring.
-In Section \ref{applications} we will then look at some applications, in three different context. First we will
+In Section \ref{applications} we will then look at some applications, in three different contexts. First we will
 show how we can use a ZKP for the Discrete Logarithm in order to digitally sign a message (Schnorr signatures). Secondly,
-we will show how fundamentally similar proof can be used in order to implement an authentication scheme in which the
+we will show how fundamentally similar proofs can be used in order to implement an authentication scheme in which the
 server never receives the user's password. Finally, we will show an extremely simple example of a Zero Knowledge Range
 proof, which is a strategy by which a party can prove that a certain value that it knows is within a suitable range, while
 maintaining anonimity to what that value actually is. This family of proofs have a far-reaching implication, as they allow
@@ -107,12 +107,12 @@ in the paper.
 \section{Motivation}
 \label{motivation}
 Zero Knowledge Proofs have applications in a number of fields outside of theory.
-Examples space from classical cryptography settings such as message signature and authentication to more
+Examples vary from classical cryptography settings such as message signature and authentication to more
 practical ones such as online age verification and electronic voting. The development\footnote{And the \enquote{hype} associated with it}
 of online blockchain based transaction systems has given indications of another direction that ZKP applications could
-emerge. In this section we will be focusing on this application, has it gives a good indication of a complex problem that
-ZKP can solve. Consider a blockchain system, such as BitCoin\footnote{But not limited to, in fact, as far as I know, every major blockchain system works majorly in the same way}.
-As you probably are aware, BitCoin accounts are uniquely identified
+emerge. In this section we will be focusing on this application, as it gives a good indication of a complex problem that
+ZKP can solve. Consider a blockchain system, such as Bitcoin\footnote{But not limited to, in fact, as far as I know, every major blockchain system works majorly in the same way}.
+As you probably are aware, Bitcoin accounts are uniquely identified
 by an address, and this address is visible in every transaction that the account is involved in. In fact, knowing the ownership
 of an account allows anyone to reconstruct from the public ledger the entire transaction history, complete with transaction
 amounts. Furthermore, the balance of any address is publicly available. What some efforts are working on is to allow
@@ -177,7 +177,7 @@ There a couple of notions of probability that we will most likely need.
 First of all, we will use the notation $x \sample A$ to say that $x$ is uniformly selected from the set $A$\footnote{Equivalently, when $A$ finite, we have defined a random variable $X$ such that for every $a \in A$ we have  $\prob{X = a} = \frac{1}{|A|} $}
 
 \begin{definition}
-    Suppose we have a series of $n$ independent event $X_i$, each one of them
+    Suppose we have a series of $n$ independent events $X_i$, each one of them
     occurring with probability $\theta$. Then the probability of the total number of success $X$ being exactly equal to $k$ follows a binomial distribution and:
     \[ \prob{X = k} = \binom{n}{k} \theta^k (1 - \theta)^{n - k} \]
 \end{definition}
@@ -216,7 +216,7 @@ Finally, we introduce the following useful notation, for the graph obtained by p
 \subsection{Computational Setting}
 The computational model used in this paper is that of Turing Machines (TMs) \cite{turingComputableNumbersApplication1937}. We will not discuss the inner definition of deterministic and non deterministic TMs, as, within the category, changes in definition do not create more than polynomial slowdowns, and as such for all intents and purposes can be considered the same \cite{aroraComputationalComplexityModern2009}.
 
-In particular, we will be providing an uniform probability based definition for the complexity classes. The traditional (and equivalent) definitions are in the appendix.
+In particular, we will be providing a uniform probability based definition for the complexity classes. The traditional (and equivalent) definitions are in the appendix.
 
 The Turing machine that we will be using have a slightly relaxed transition function, which allows for two different actions to be taken on the same step (as in a non deterministic machine). Also, for a polynomial time Turing Machine\footnote{The polynomial bound is required since in theory decisions taken early in the execution can effect the running time and such the length of the string. If the machine $M$ is always polynomial time we can then find a bound $p$ s.t. $\forall r, T(M_r(x))) \leq p(|x|) $, and as such having $r \in \bin^{p(|x|)}$ will be enough} $M$ we will write $M_r(x)$ for the output of $M$ on $x$, where $r$ is a binary string, where the $i$-th character specifies which action the machine should take on step $i$. We can then let $l$ be the maximum length that $r$ can take and define the probability of $M$ outputting $y$ on input $x$ to be:
 
@@ -309,7 +309,7 @@ Let us have an example to clarify how a probabilistic algorithm works:
 
 \subsection{Adversarial Settings}
 In cryptography, in order to achieve sound schemes, it is common to work in what is commonly referred to as an adversarial setting.
-Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently well endowed attacker might take. \par
+Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently capable attacker might take. \par
 
 The capability of the attacker will vary depending on the level of security that the protocol needs to be hold to. For example, the computational power that the adversary has will affect the class of problems that it can solve.
 As an instance, if a construction relies on (hard) instances of an $\npol$-complete problem (and if $\pol \neq \npol$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \npol$ there exists a deterministically recognizable $R_L \subseteq \bin^* \times \bin^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \poly[|x|]$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
@@ -332,7 +332,7 @@ The notion of a proof has extremely overloaded meaning, as it used in many dispa
 
 \section{Proof Requirements}
 \label{proofreq}
-In order to start visualizing the concept of ZKP, we can start with a couple of toy examples that are helpful. Here and in the rest of text we will refer to the prover as Peggy and to the verifier as Victor.
+In order to start visualizing the concept of ZKP, we can start with a couple of toy examples that are helpful. Here and in the rest of the text we will refer to the prover as Peggy and to the verifier as Victor.
 \begin{example}
     Assume that Victor is completely colorblind\footnote{i.e. that he cannot distinguish object based on color alone}.
     Peggy wants to prove to Victor that she is not colorblind, so she devises an experiment.
@@ -378,7 +378,7 @@ Conversely, the condition of completeness states that an honest prover will be a
     Peggy claims that coffee tastes differently when brewed by an espresso machine compared to one made in a cup. Victor wants to verify that claim, so he brews a coffee choosing randomly between the two options (in way that Peggy does not see which is which). Peggy then tastes the coffee, and gives her opinion on how it was brewed. The experiment is repeated $n$ times\footnote{According to \cite{chambersChemIDplus0000302272XFSBVAOIAHNAPCNPVHKAFCSAN}, and assuming Peggy weighs around 70kg, we would not recommend for $n$ to be greater than 75-100}, and Victor is convinced if Peggy is right more than $c$ times, where $c$ depends on how certain we want to be of Peggy's ability.
 \end{example}
 
-This is the exact subject of hypothesis testing, in particular it reduces to the exact problem of finding whether a coin is biased. This can be modeled by a binomial distribution with mean $\mu = n/2$ and standard deviation $\sigma = \frac{\sqrt{n}}{2}$. In particular, if we apply the central limit theorem (and as such have $n > 30$) we can model it as a normal distribution, then using the $3\sigma$ rule\footnote{i.e. that three standard deviations include 99.7\% of the data} we can see that if $|c - \frac{n}{2}| \geq 3\frac{\sqrt{n}}{2}$ then we can affirm that with a more than 99\% chance Peggy can distinguish the two. For example, if we set $n = 100$ and Peggy guesses right more than $c = 65 = \frac{100}{2} + 3 \frac{\sqrt{100}}{2}$ times (or less than 35 times) then we can be certain that Peggy is truthful (and in the other case that she can distinguish it but for some reasons she is convinced the espresso machine coffee is brewed in cup and viceversa).
+This is the exact subject of hypothesis testing, in particular it reduces to the exact problem of finding whether a coin is biased. This can be modeled by a binomial distribution with mean $\mu = n/2$ and standard deviation $\sigma = \frac{\sqrt{n}}{2}$. In particular, if we apply the central limit theorem (and as such have $n > 30$) we can model it as a normal distribution, then using the $3\sigma$ rule\footnote{i.e. that three standard deviations include 99.7\% of the data} we can see that if $|c - \frac{n}{2}| \geq 3\frac{\sqrt{n}}{2}$ then we can affirm that with a more than 99\% chance Peggy can distinguish the two. For example, if we set $n = 100$ and Peggy guesses right more than $c = 65 = \frac{100}{2} + 3 \frac{\sqrt{100}}{2}$ times (or less than 35 times) then we can be certain that Peggy is truthful (and in the other case that she can distinguish it but for some reasons she is convinced the espresso machine coffee is brewed in cup, and vice versa).
 
 \subsection{Zero Knowledge}
 Formalizing the notion of zero knowledge requires a bit more work. We would like to be able to say that in any interaction with the prover the verifier does not gain any knowledge that it did not posses already. That shifts the conversation to what it means to gain knowledge. Let us consider for example the interaction of a prover and a verifier with a common input of a suitably large graph. If the prover reveals to the verifier whether the graph is connected or Eulerian or the average degree of its vertexes then in a sense the verifier does not gain any knowledge, as these are all easily (polynomial time) computable without any additional information. Instead if the prover reveals whether the graph is Hamiltonian, or the chromatic number of the graph, or a $k$-coloring of it\footnote{And of course assuming $\pol \neq \npol$ and that the corresponding problems cannot be solved in polynomial time} then the verifier gains knowledge, as it would have not been able to answer that question itself using an efficient procedure. This gives us a hint of what gaining knowledge can entail. In particular, we say that the verifier gains knowledge from an interaction with the prover if, after the interaction, it can efficiently compute something which it would have not been able to do before. How to rigorously express this is non trivial, and we defer the discussion to the following sections.
@@ -400,7 +400,7 @@ To fulfill those goals, we define a pair of interactive machines as follows:
     \begin{itemize}
         \item Each machine is a randomized Turing machine in its own right i.e. it has an input tape, an output tape, and a random tape\footnote{This is an alternate equivalent definition of randomized Turing Machines, it just makes the explanation easier}.
         \item Neither machine can access the other's aforementioned tapes.
-        \item The system has two additional tapes, called communications tapes. For the sake of the argument, call them $T_1, T_2$. $A$ can read from $T_1$ and write to $T_2$, while $B$ can write to $T_1$ and read from $T_2$.
+        \item The system has two additional tapes, called communications tapes. For the sake of argument, call them $T_1, T_2$. $A$ can read from $T_1$ and write to $T_2$, while $B$ can write to $T_1$ and read from $T_2$.
         \item Each machine has an access to a number of additional switch states, $\delta_S$, where $S$ is a state of the machine in question. If a transition sets the state to one of these $\delta$-states, then the current machine becomes idle, and execution is resumed on the other machine. When execution is resumed on a machine, the state it is in depends on the last suspension. If it was suspended in state $\delta_S$, then it will resume execution in state $S$. Of course, if no suspension occurred, the machine will start from the initial state.
         \item The interconnected randomized Turing machine pair terminates when either of the two machines terminates.
         \item An interactive proof system runs on some common input, which is initially written on both machines' input tape.
@@ -444,7 +444,7 @@ There are some things to note in the above definition. First of all, note that o
     If $L$ is in $\npol$ then\footnote{Here we are using the certificate definition of $\npol$, see Appendix \ref{complex} for details} there exists a polynomially recognizable relation $R_L$ such that $x \in L \iff \exists y : (x, y) \in R_L$. Also, such a $y$ satisfies $|y| < p(|x|)$ for some polynomial $p$. \\
     We design the following interactive system, which has as common input $x$.
     First of all, the prover finds such $y$. This can be done by searching for any string $s$ in $ \bigcup_{i = 0}^{p(|x|)} \bin^i$ that satisfies $(x, s) \in R_L$. Since the prover has no computational bound this can be done without issues. The prover then sends this $s$ to the verifier. On a message $s$ the verifier accepts if $(x, s) \in R_L$, rejects otherwise. Since $R_L$ is recognizable in polynomial time, the verifier runs in polynomial time as required.  \\
-    Completeness is easily verified, as in fact the verifier will accept with probability 1. Soundness requires a little more thought, but essentially since $x \notin L \implies \forall y : (x, y) \notin R_L $ then the verifier will never accept (i.e. accept with probability 0). This combined implies that the above is an interactive proof system for $L$. Since $L$ was an arbitrary element of $\npol$, then $\npol \subseteq \mathsf{IP}$ .
+    Completeness is easily verified, as in fact the verifier will accept with probability 1. Soundness requires a little more thought, but essentially since $x \notin L \implies \forall y : (x, y) \notin R_L $ then the verifier will never accept (i.e. accept with probability 0). This implies that the above is an interactive proof system for $L$. Since $L$ was an arbitrary element of $\npol$, then $\npol \subseteq \mathsf{IP}$ .
 \end{proof}
 In fact, as we will see next, $\mathsf{IP}$ actually contains languages that are not believed to be in $\npol$. We will not prove this, but it turns out that $\mathsf{IP} = \mathsf{PSPACE}$\cite{shamirIPPSPACE1992}, i.e. the set of all languages that use polynomial space\footnote{And this class is considered to be much bigger than $\npol$}. Also note that in the case of $\npol$ problems we can even make the prover machine polynomial time, if we use the additional input model and give the prover the certificate.
 \subsection{An Example: GNI}
@@ -787,7 +787,7 @@ Instead, we can use the stronger assumption of the existence of one way permutat
 Let us first discuss the intuition that makes the following construction useful. Let us assume that we have access to a one way permutation $f$.
 We want to commit to a bit $b$. What we can do is select a random string. We can make use of a property of one way functions, that is the
 property that they have hard cores. This is some property of the input of a one way function that cannot be guessed from the output (discussed extensively in Appendix \ref{oneway}).
-Let us denote $h(\cdot)$ as one of those hard core. Then let us select some random string $s$ that we will call the certificate. We will be sending to
+Let us denote $h(\cdot)$ as one of those hard cores. Then let us select some random string $s$ that we will call the certificate. We will be sending to
 the other party the pair $(f(s), h(s) \oplus b)$. This has a double effect. First of all, since the function is one way, we won't be able to
 efficiently find a $s'$ such that $f(s) = f(s')$, and so effectively we won't be able to find another certificate with which to trick the other party.
 On the other hand, since $h$ is a hard core, the other party will not be able to guess it effectively from $f(s)$, and such $h(s) \oplus b$ and consequently $b$ cannot
@@ -914,7 +914,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
         will result it in it failing negligibly often, and as such the interaction will still be computationally indistinguishable.
         So, adding the capability of outputting $\bot$ does not \enquote{add} any extra power to the definition, and as such we
         can use it here to simplify our life (requiring as always that it is not output too often).
-        So, we first show that. We note that the $\bot$ symbol is only output when
+        We first show that. We note that the $\bot$ symbol is only output when
         the two edges that were selected by the verifier $V'$ have been assigned the same color.
         Intuitively, we would like to use the fact that commitments are computationally indistinguishable
         in order to show that the verifier cannot do much better than to randomly pick two edges (in which
@@ -946,7 +946,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
 \end{example}
 
 A couple of things are worth noting. First of all, the proof above has a weak soundness bound, and as such
-a one round protocol has only a moderate change of convicing the verifier. However, as always repeating the
+a one round protocol has only a moderate chance of convicing the verifier. However, as always repeating the
 algorithm $k * |E|$ times yields a proof with error probability bounded by $e^{-k}$, and the sequential composition lemma will
 also guarantee that this is zero knowledge. Secondly, the main significance of this proof relies on the fact that
 \texttt{3COL} is a $\npol$-complete language, and as such it is polynomial time reducible from any other problem in $\npol$.
@@ -1043,7 +1043,7 @@ to a non interactive one is as follows:
           $b$ from the public parameters easily.
 \end{itemize}
 
-The reasoning for why this would work are exactly the same as the interactive version, but the hash function
+The reasoning for why this would work is exactly the same as the interactive version, but the hash function
 $H(\cdot)$ allows us to fairly select a challenge without the possibility of cheating. In particular, a further
 modification of the protocol allows us to get Schnorr signatures, a way to sign a message using $4t$-bit signatures,
 where $t$ is a security parameter. In fact, it was later shown \cite{nevenHashFunctionRequirements2009} that only $3t$-bits
@@ -1161,12 +1161,12 @@ $x$ from $g^x$ should be unfeasible.
 \subsection{Zero Knowledge Range Proofs}
 \label{zkrp}
 Let us consider an interesting class of problems. Imagine that a user has some sort of information associated
-with it say $x$. The other party in play would like to verify that the value $x \in_? [a, b]$, for some
+with it, say $x$. The other party in play would like to verify that the value $x \in_? [a, b]$, for some
 interval $[a, b]$. How would the user be able to verify this, without leaking the value of $x$ to the
 other party? Solving this kind of problem has many practical applications. For example, if $x$ is to be
 understood as some sort of balance, a transaction can be executed without the receiving party knowing the
 actual balance of the sender\footnote{In particular, this has many implications for crypto currency systems,
-    as it allows systems such as BitCoin to be truly anonymous and confidential. This is not the case currently
+    as it allows systems such as Bitcoin to be truly anonymous and confidential. This is not the case currently
     as in every transaction the addresses of the parties in play are known, and the amount transferred as well}.
 An other idea is that, if $x$ is the date of birth of the user, he/she could
 prove to some sort of service that he/she is over 18, without revealing any private information. The kind
@@ -1175,7 +1175,7 @@ the proofs that we are most interested in this case are those referred to as Non
 of proof, the challenge and answer method that we presented before is lost, as Peggy tends to
 compile a \enquote{transcript} of a proof, that Victor can check on its own, of course while not leaking any information
 as possible. These kind of proofs are particularly helpful in a network setting, in which communication is
-be expensive. Let us look at a simple example. First of all we need to introduce the idea of Petersen Commitment \cite{pedersenNonInteractiveInformationTheoreticSecure1992}.
+expensive. Let us look at a simple example. First of all we need to introduce the idea of Pedersen Commitment \cite{pedersenNonInteractiveInformationTheoreticSecure1992}.
 \begin{definition}
     Let $\mathbb{G}$ be a group in which the discrete log is hard, $g, h$ be two generators.
     For a secret $m$, and random bits $r$ we have the Pedersen Commitment of $m$ :
@@ -1451,7 +1451,7 @@ We can similarly prove that our previous definition of $\npol$ (call it $\npol_{
 
     Since the certificate exists, and it is polynomial in the size of $x$, there will always be at least one extremely lucky machine that will guess it, and as such $\prob{M(x) = 1} > 0$ for $x \in L$. So $L \in \npol_{prob}$, which implies $\npol \subseteq \npol_{prob}$.
 
-    Conversely, let $L \in \npol_{prob}$. Then there exists a probabilistic time machine $M$ s.t. $x \in L \iff \prob{M(x) = y} > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \set{ (x, r) | x \in L \text { and } M_r(x) = 1 }$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existence is met by our above reasoning. Finally, since $r$ is bound by the bound on the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \npol$, which in turn implies $\npol_{prob} \subseteq \npol$. \par
+    Conversely, let $L \in \npol_{prob}$. Then there exists a probabilistic time machine $M$ s.t. $x \in L \iff \prob{M(x) = y} > 0$. This implies that $\forall x \in L\exists r s.t. M_r(x) = y$. Construct $R_L = \set{ (x, r) | x \in L \text { and } M_r(x) = 1 }$. First of all note the $R_L$ is polynomial time recognizable, as one can run $M_r(x)$ and accept depending on the input (this only works since $M$ is guaranteed to be polynomial time). The condition for existence is met by our above reasoning. Finally, since $r$ is bound by the running time of the machine, which is polynomial, the condition for the size of the certificate is met. As such $L \in \npol$, which in turn implies $\npol_{prob} \subseteq \npol$. \par
 
     So, since $\npol \subseteq \npol_{prob}$ and $\npol_{prob} \subseteq \npol$, it must be that $\npol = \npol_{prob}$
 
