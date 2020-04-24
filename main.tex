@@ -589,8 +589,11 @@ The first and stricter class of zero knowledge proofs are the so called perfect 
 Ideally, according to the above definition we would like the definition of zero knowledge proof to simply require
 that the ensembles $\left<P, V\right>(x)$ and $M_{V'}(x)$ are identically distributed.
 However, as far as we know, no non trivial languages satisfy that requirement.
-The underlying problem is that often the simulator is not able to answer the queries of the verifier
-and needs to be able to give up. We can overcome this by giving the following definition of Perfect Zero Knowledge Proof.
+To show why this needs to be case, if a simulator can perfectly and infallibly simulate an interaction between prover and verifier,
+despite having less computational power (and or information available) than this effectively implies that the prover is not using its superior
+capabilities to their best or at all! This in turns will imply that language being decided is in fact of the trivial class.
+So, in order to allow us to decide any harder language, the simulator will have at some point have to give up.
+We can formulate this by giving the following definition of Perfect Zero Knowledge Proof.
 \begin{definition}
     Let $L$ be a language. Then $L$ has a \textbf{perfect zero knowledge proof system} if there exist $P, V$ such that:
     \begin{itemize}
