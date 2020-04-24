@@ -553,11 +553,44 @@ This shows that the soundness bound of the protocol is $\frac{1}{2}$, and repeat
 
 \section{Zero Knowledge Proof}
 \label{zkp}
-Now that we have introduced interactive proofs, we can naturally extend them to encompass the idea of zero knowledge. In the previous sections we have given some intuition into what gaining knowledge does mean, and now we aim to formalize this. As before, we consider an interactive proof system, composed of a prover and a verifier, respectively $P, V$. The first observation is that in an interactive proof system the prover usually (either by being more powerful computationally or by having some additional information) has a \enquote{knowledge advantage} over the verifier. With zero knowledge we aim to make so that this advantage does not transfer to the verifier, no matter what clever things it may do. From this we can conclude that being zero knowledge is strictly a property of the prover in the interaction, in the same way that soundness is a property of verifier. Secondly, in a sense, we can express the zero knowledge requirement as the fact that any verifier $V'$, when interacting with prover on input $x$, will not be able to compute anything that it wouldn't have been able to compute on input $x$ alone. In order to formalize this, we turn to the idea of a simulation of the interaction of $P, V'$. \\
-In particular, the idea is that a language $L$ is zero knowledge if it has an interactive proof system $P, V$ such that, for every possible verifier $V'$, there exists a probabilistic polynomial time Turing machine $M_{V'}$ that for any $x \in L$ satisfies that $\left<P, V\right>(x)$ and $M_{V'}(x)$ are similary distributed\footnote{More on this later, essentially the level of similarity of the two distributions yields the definition of \textit{perfect}, \textit{statistical} and \textit{computational} zero knowledge}.
+Now that we have introduced interactive proofs, we can naturally extend them to encompass the idea of zero knowledge.
+In the previous sections we have given some intuition into what gaining knowledge does mean, and now we aim to
+formalize this. As before, we consider an interactive proof system, composed of a prover and a verifier,
+respectively $P, V$. The first observation is that in an interactive proof system the prover usually
+(either by being more powerful computationally or by having some additional information) has
+a \enquote{knowledge advantage} over the verifier.
+With zero knowledge we aim to make so that this advantage does not transfer to the verifier,
+no matter what clever things it may do. From this we can conclude that being zero knowledge is strictly a
+property of the prover in the interaction, in the same way that soundness is a property of verifier.
+Secondly, in a sense, we can express the zero knowledge requirement as the fact that any verifier $V'$,
+when interacting with prover on input $x$, will not be able to compute anything that it wouldn't have been able
+to compute on input $x$ alone. In order to formalize this, we turn to the idea of a simulation of
+the interaction of $P, V'$. \\
+Let us consider why this might be an helpful notion. First of all, recall that we loosely defined knowledge as a
+way to gain a computational advantage, where by computational advantage we mean that knowing allows a computationally
+inferior verifier to compute something which it could have not done otherwise. That in effect means that any prover that
+is polynomial cannot yield any knowledge to a verifier, as the verifier already has all the knowledge to start with.
+Because of this reason, every problem in $\bpp$ has a Zero Knowledge Proof, and we refer to these problems as the trivial ones.
+Now consider a non trivial language, and a corresponding prover that is more powerful than a polynomial one. How can
+we use a simulation to show that such a prover does not leak information? The key idea is that we make the simulator
+just as powerful as the verifier. Then if a simulator with limited computational capabilities is able to replicate
+the interaction, the verifier cannot learn anything from it, as the simulator has no knowledge to start with. Then,
+since the simulator and the prover interact identically with the verifier, the verifier cannot learn anything from the
+prover as well. In essence, the existence of the simulator shows that all the verifier can learn is that which is given
+by a $\bpp$ machine, and since the verifier is $\bpp$ to start with, it gains Zero Knowledge.
+We formalize this by saying that a language $L$ is zero knowledge if it has an interactive proof system $P, V$ such
+that, for every possible verifier $V'$, there exists a probabilistic polynomial time Turing machine $M_{V'}$ that
+for any $x \in L$ satisfies that $\left<P, V\right>(x)$ and $M_{V'}(x)$ are similary
+distributed\footnote{More on this later, essentially the level of similarity of the two distributions yields
+    the definition of \textit{perfect}, \textit{statistical} and \textit{computational} zero knowledge}.
 Using this intuition and playing around with the loose parts of it, we can start defining the interesting classes of zero knowledge proofs.
 \subsection{Perfect Zero Knowledge}
-The first and stricter class of zero knowledge proofs are the so called perfect zero knowledge proofs. Ideally, according to the above definition we would like the definition of zero knowledge proof to simply require that the ensembles $\left<P, V\right>(x)$ and $M_{V'}(x)$ are identically distributed. However, as far as we know, no non trivial\footnote{Here, trivial means in $\bpp$, as every language in that class trivially satisfies the definition} languages satisfy that requirement. The underlying problem is that often the simulator is not able to answer the queries of the verifier and needs to be able to give up. We can overcome this by giving the following definition of Perfect Zero Knowledge Proof.
+The first and stricter class of zero knowledge proofs are the so called perfect zero knowledge proofs.
+Ideally, according to the above definition we would like the definition of zero knowledge proof to simply require
+that the ensembles $\left<P, V\right>(x)$ and $M_{V'}(x)$ are identically distributed.
+However, as far as we know, no non trivial languages satisfy that requirement.
+The underlying problem is that often the simulator is not able to answer the queries of the verifier
+and needs to be able to give up. We can overcome this by giving the following definition of Perfect Zero Knowledge Proof.
 \begin{definition}
     Let $L$ be a language. Then $L$ has a \textbf{perfect zero knowledge proof system} if there exist $P, V$ such that:
     \begin{itemize}
