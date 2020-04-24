@@ -37,13 +37,13 @@
 \newpage
 
 \begin{abstract}
-    In this paper we will provide a survey of the theory underlying Zero Knowledge Proofs,
-    building up intuition for interactive proving protocol, which will then be formalized first in Interactive Proofs
+    In this paper we will survey the theory underlying Zero Knowledge Proofs,
+    developing the idea of interactive proving protocols, which will then be formalized first in Interactive Proofs
     and then in more complex knowledge witholding schemes, such as Perfect and Computational Zero Knowledge Proofs.
     In the process, we will have shown interactive proofs for Graph Non Isomorphism (a co-$\npol$ problem),
     and zero knowledge proofs for both Graph Isomorphism and Graph 3-Colorability.
     Finally, we will detail some applications of the theory, showing various \enquote{flavours} of ZKP for the Discrete Logarithm problem that will culminate in
-    Schnorr Signatures. We will compound this with the Secure Remote Protocol, a protocol that uses a similar ZKP in order
+    Schnorr Signatures. We will build on this to obtain the Secure Remote Protocol, a protocol that uses a similar ZKP in order
     to authenticate without communicating your password to the server. Finally, we show a very simple Zero Knowledge
     Range Proof, an instance of a very general class that has a wide range of applications and is currently one of the most active avenues of research.
     The paper will also introduce Sagemath worksheets that demonstrate nearly all of the protocols here detailed.
@@ -74,12 +74,12 @@ The general problem that we look at is the following. Suppose that we have some 
 $P(x)$ holds. How do we convince a skeptic of this fact? One way would be to just reveal $x$, but of course this
 might not be desirable for a variety of reasons. For example, it might be that $x$ is a password, or contains other sensitive
 information.  However, if $P(\cdot)$ has enough structure, we are able to devise a protocol in which the verifier can ask questions,
-that the prover can only consistently answer if it indeed has $x$, and from which the verifier learns nothing about $x$,
+that the prover can only consistently answer if it indeed has $x$, and from which the verifier learns nothing about such an $x$,
 except the fact that it exists. We will formalize such process, investigate the structure of the resulting class, and show some examples of protocols that satisfy said properties.
 Finally, we will survey some applications of Zero Knowledge Proofs, in the fields of digital signatures and authentication.
 
 \section{Structure}
-The structure of the paper will be as following. Section \ref{motivation} will provide some motivation that show why
+The structure of the dissertation will be as following. Section \ref{motivation} will provide some motivation that show why
 the effort of developing Zero Knowledge Proofs is justified. Section \ref{preliminaries} will cover the preliminaries,
 that includes both the mathematical machinery needed and the definition of the computational settings that we will
 be extensively using, namely that of Turing Machines. This Section will also introduce complexity classes that are
@@ -88,10 +88,10 @@ Section \ref{proofreq} will explore this concept in more depth, exploring via ex
 Zero Knowledge Proofs, such as the general setup, soundness, completeness and the zero knowledge property.
 Section \ref{interactiveproofs} will formalize the notion of proofs by introducing Interactive Turing Machine, and
 introduce the wide class of interactive proofs, of which Zero Knowledge Proofs are a subset. We will then give an
-example of an interactive proof for the Graph Non Isomorphism problem, complete with a proof of the fact.
+example of an interactive proof for the Graph Non Isomorphism problem, complete with a proof of its correctness.
 In the following Section \ref{zkp} we will finally introduce Zero Knowledge Proofs, in both the perfect and computational
-formulation. We will continue by providing an example of a Perfect Zero Knowledge Proof for deciding the Graph Isomorphism
-language, and conclude the section by introducing bit commitments, and showing that if one way permutations\footnote{In fact this holds for one way functions as well, but the permutation proof is simpler} exist
+formulation. We will continue by providing an example of a Perfect Zero Knowledge Proof for deciding Graph Isomorphism,
+and conclude the section by introducing bit commitments, and showing that if one way permutations\footnote{In fact this holds for one way functions as well, but the permutation proof is simpler} exist
 then every language in $\npol$ has a Zero Knowledge Proof. This is done in Subsection \ref{np} by providing a
 computational Zero Knowledge Proof for the $\npol$-complete problem of Graph 3-coloring.
 In Section \ref{applications} we will then look at some applications, in three different contexts. First we will
@@ -99,8 +99,8 @@ show how we can use a ZKP for the Discrete Logarithm in order to digitally sign 
 we will show how fundamentally similar proofs can be used in order to implement an authentication scheme in which the
 server never receives the user's password. Finally, we will show an extremely simple example of a Zero Knowledge Range
 proof, which is a strategy by which a party can prove that a certain value that it knows is within a suitable range, while
-maintaining anonimity to what that value actually is. This family of proofs have a far-reaching implication, as they allow
-to implement complex systems upholding invariants while maintaining anonimity, such as payment systems or goverment sanctioned
+maintaining anonymity to what that value actually is. This family of proofs have a far-reaching implication, as they allow
+to implement complex systems upholding invariants while maintaining anonymity, such as payment systems or goverment sanctioned
 age verification. Finally, Section \ref{implementation} will refer the reader to the Sage implementation of the proofs described
 in the paper.
 
@@ -109,15 +109,15 @@ in the paper.
 Zero Knowledge Proofs have applications in a number of fields outside of theory.
 Examples vary from classical cryptography settings such as message signature and authentication to more
 practical ones such as online age verification and electronic voting. The development\footnote{And the \enquote{hype} associated with it}
-of online blockchain based transaction systems has given indications of another direction that ZKP applications could
-emerge. In this section we will be focusing on this application, as it gives a good indication of a complex problem that
-ZKP can solve. Consider a blockchain system, such as Bitcoin\footnote{But not limited to, in fact, as far as I know, every major blockchain system works majorly in the same way}.
-As you probably are aware, Bitcoin accounts are uniquely identified
+of online blockchain based transaction systems has given indications of another area in which ZKP applications could emerge.
+In this section we will be focusing on this application, as it gives a good indication of a complex problem that
+ZKP can solve. Consider a blockchain system, such as Bitcoin\footnote{But not limited to, in fact, as far as I know, every major blockchain system works in essentially the same way}.
+As is well known, Bitcoin accounts (also known as wallets) are uniquely identified
 by an address, and this address is visible in every transaction that the account is involved in. In fact, knowing the ownership
 of an account allows anyone to reconstruct from the public ledger the entire transaction history, complete with transaction
-amounts. Furthermore, the balance of any address is publicly available. What some efforts are working on is to allow
+amounts. Furthermore, the balance of any address is publicly available. One direction of development is to allow
 for a blockchain system to be completely private, so that transactions can be done between actors while maintaining
-anonimity. Of course, many technical problems arise when trying to do so, but let us focus on one in particular.
+anonymity. Of course, many technical problems arise when trying to do so, but let us focus on one in particular.
 Suppose account $A$ wants to transfer an amount $X$ to an account $B$. What party $B$ would like to verify is that
 $A$ actually has enough balance to transfer such amount. However, since the system that we design is private, $B$ does
 not have the ability to peer into $A$ account or its balance. Instead, to solve this problem, we make it so that
@@ -125,7 +125,7 @@ when $A$ initiates the transaction, it produces a \enquote{proof} that its balan
 This proof has to have three properties. First of all, it must be convincing, so that if $A$ does indeed have
 enough funds, then $B$ will be confident that the proof provided is correct. Secondly, it must be
 sound, so that if $A$ does not have enough funds $B$ will never be convinced that it does. Thirdly, it must
-be zero knowledge, ensuring it will not leak to $B$ any information about $A$ (like balance, account number ecc.) other
+be zero knowledge, ensuring it will not leak to $B$ any information about $A$ (like balance, account number et cetera) other
 than the fact that $A$ has more than $X$ in its balance. This can be done via what is called a Zero Knowledge Range Proof,
 of which we will see a very simple example in Section \ref{applications}.
 
@@ -133,7 +133,7 @@ of which we will see a very simple example in Section \ref{applications}.
 \section{Preliminaries}
 \label{preliminaries}
 \subsection{Mathematical Notation}
-We start by defining some crucial sets of strings\footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set. We don not make too much use of it in this text though}.
+We start by defining some crucial sets of strings\footnote{In general, the use of the $\cdot ^ *$ operator, also known as the \textit{Kleene Star} on a finite set of elements (also known as \textit{alphabet}) generates the set of all finite sequences of elements of the original set.}.
 \begin{definition}
     $\bin^n = \set{ a_1 a_2 \dots a_n \mid a_i \in \bin}$
 \end{definition}
@@ -141,7 +141,7 @@ We start by defining some crucial sets of strings\footnote{In general, the use o
     $\bin^* = \set{ a_1 a_2 \dots a_n \mid a_i \in \bin \text{ \normalfont{ and }} n \in \NN }$
 \end{definition}
 
-It is important to stress that $\bin^*$ is the set of all \textit{finite} strings, and also that the empty string, denoted $\epsilon \in \bin^*$.
+It is important to stress that $\bin^*$ is the set of all \textit{finite} strings, and also that the empty string, denoted $\epsilon$.
 
 \begin{definition}
     A \textbf{language} $L$ is a subset of $\bin^*$, i.e. $L \subseteq \bin^*$
@@ -152,7 +152,7 @@ Examples of languages include
 
 Note in particular the use of $\langle \cdot \rangle$ to denote the binary representation of the inner element. In general, as long as the element can be encoded in binary in polynomial space, we will not concern ourselves too much with said representation, and sometime even omit the brackets. In particular note that, unless specified otherwise, integers are encoded in binary and without brackets.  \par
 
-Now, a couple of utilities for talking about the asymptotic complexity of various functions.
+Now, we introduce a couple of utilities for talking about the asymptotic complexity of various functions.
 
 \begin{definition} We define the following sets:
     \begin{align*}
@@ -179,13 +179,13 @@ First of all, we will use the notation $x \sample A$ to say that $x$ is uniforml
 
 \begin{definition}
     Suppose we have a series of $n$ independent events $X_i$, each one of them
-    occurring with probability $\theta$. Then the probability of the total number of success $X$ being exactly equal to $k$ follows a binomial distribution and:
+    occurring with probability $\theta$. Then the total number of successes, which we denote as $X = \sum_i X_i$, follows a binomial distribution which means:
     \[ \prob{X = k} = \binom{n}{k} \theta^k (1 - \theta)^{n - k} \]
 \end{definition}
 In particular, we have that in those $n$ trials we expect $\expect{X} = n\theta$ events to occurr. This is useful, expecially since
-we have that the probability of an event always occurring is $\prob{X = n} = \theta^n$. This will be useful especially
+we have that the probability of an event occurring every time is $\prob{X = n} = \theta^n$. This will be useful especially
 to  estimate the probability of some algorithm succeeding multiple times when it is not supposed to.
-Note in particular that if a algorithm spuriosly succeeds with probability $\theta \in [0, 1)$ then $\prob{X = n}$ is a
+Note in particular that if an algorithm spuriosly succeeds with probability $\theta \in [0, 1)$ then $\prob{X = n}$ is a
 negligible function of $n$. \par
 
 The following definition will be used for having a compact notation for selecting permutations.
@@ -215,11 +215,11 @@ Finally, we introduce the following useful notation, for the graph obtained by p
 \end{definition}
 
 \subsection{Computational Setting}
-The computational model used in this paper is that of Turing Machines (TMs) \cite{turingComputableNumbersApplication1937}. We will not discuss the inner definition of deterministic and non deterministic TMs, as, within the category, changes in definition do not create more than polynomial slowdowns, and as such for all intents and purposes can be considered the same \cite{aroraComputationalComplexityModern2009}.
+The computational model used in this paper is that of Turing Machines (TMs)\cite{turingComputableNumbersApplication1937}. We will not discuss the inner definition of deterministic and non deterministic TMs, as, within the category, changes in definition do not create more than polynomial slowdowns, and as such for all intents and purposes can be considered the same \cite{aroraComputationalComplexityModern2009}.
 
 In particular, we will be providing a uniform probability based definition for the complexity classes. The traditional (and equivalent) definitions are in Appendix \ref{complex}.
 
-The Turing machine that we will be using have a slightly relaxed transition function, which allows for two different actions to be taken on the same step (as in a non deterministic machine). Also, for a polynomial time Turing Machine\footnote{The polynomial bound is required since in theory decisions taken early in the execution can effect the running time and such the length of the string. If the machine $M$ is always polynomial time we can then find a bound $p$ s.t. $\forall r, T(M_r(x))) \leq p(|x|) $, and as such having $r \in \bin^{p(|x|)}$ will be enough} $M$ we will write $M_r(x)$ for the output of $M$ on $x$, where $r$ is a binary string, where the $i$-th character specifies which action the machine should take on step $i$. We can then let $l$ be the maximum length that $r$ can take and define the probability of $M$ outputting $y$ on input $x$ to be:
+The Turing machine that we will be using have a slightly relaxed transition function, which allows for two different actions to be taken on the same step (as in a non deterministic machine). Also, for a polynomial time Turing Machine\footnote{The polynomial bound is required since in theory decisions taken early in the execution can effect the running time and such the length of the string. If the machine $M$ is always polynomial time we can then find a bound $p$ s.t. $\forall r, T(M_r(x))) \leq p(|x|) $, and as such having $r \in \bin^{p(|x|)}$ will be enough} $M$ we will write $M_r(x)$ for the output of $M$ on $x$, where $r$ is a binary string, whose $i$-th character specifies which action the machine should take on step $i$. We can then let $l$ be the maximum length that $r$ can take and define the probability of $M$ outputting $y$ on input $x$ to be:
 
 \begin{definition} The probability of machine $M$ outputting $y$ on input $x$
     \[ \prob{M(x) = y} = \frac{\left|\set{r \in \bin^{l} \mid M_r(x) = y }\right|}{2^{l}}\]
@@ -270,6 +270,8 @@ $\bpp$ is referred to as the class of bounded polynomial time languages. It is e
     decreases exponentially. E.g., suppose that a given problem takes $|x|^3$ steps to be solved, and on year 0 a computer can
     perform 1000 steps per year. Then in year 0 we can solve instances of size at most $|x| = 10$. However, suppose in year $n$ the
     power of the computer is given by $1000 \cdot 2^n$. This implies that in year $n$ we can handle instances of size $|x| = 10 \cdot 2^{n/3} $, which is exponential in $n$}.
+Furthermore, the error probability of a probabilistic algorithm can be made exponentially small by repeating the algorithm polynomially many times.
+This means that if an algorithm has a $\frac{1}{c}$ probability of failing, repeating it $n$ times will yield an algorithm that fails with probability $c^{-n}$.
 Let us have an example to clarify how a probabilistic algorithm works:
 \begin{example}
 
@@ -303,7 +305,7 @@ Let us have an example to clarify how a probabilistic algorithm works:
         \item $A \neq BC \implies \prob{M(A, B,C) = 0} > \frac{2}{3}$
     \end{itemize}
 
-    Note that that brings the final complexity to $\bigO{l(nm + kn + mk + n)}$ so for some values of $l$ this might actually be slower than the deterministic algorithm.
+    Note that that brings the final complexity to $\bigO{l(nm + kn + mk + n)}$.
 
 \end{example}
 
@@ -312,15 +314,15 @@ Let us have an example to clarify how a probabilistic algorithm works:
 In cryptography, in order to achieve sound schemes, it is common to work in what is commonly referred to as an adversarial setting.
 Intuitively, while aiming to prove the security of a cryptography protocol, it is not sufficient to prove the construction secure from a particular subset of attacks. Instead it is necessary for it to be secure in the wake of \textit{any} strategy that a sufficiently capable attacker might take. \par
 
-The capability of the attacker will vary depending on the level of security that the protocol needs to be hold to. For example, the computational power that the adversary has will affect the class of problems that it can solve.
+The capability of the attacker will vary depending on the level of security that the protocol needs to be held to. For example, the computational power that the adversary has will affect the class of problems that it can solve.
 As an instance, if a construction relies on (hard) instances of an $\npol$-complete problem (and if $\pol \neq \npol$) then a deterministic polynomial time attacker will not be able to break the scheme, while one with non-deterministic polynomial resources will be able to\footnote{For the sake of the argument, say this problem is a decision problem, say $L$. Then, since $L \in \npol$ there exists a deterministically recognizable $R_L \subseteq \bin^* \times \bin^* $ s.t. $x \in L \iff \exists y \text{ s.t. } (x, y) \in R_L$ and $|y| = \poly[|x|]$. So a NDTM can, to solve $x \in_? L$ guess $y$ in a polynomial number of non deterministic steps, and check if $(x, y)$ belongs in $R_L$ }.
 
-In general, the most strict level of security that we might require is that of information theoric security, which holds even in the case that
+In general, the most strict level of security that we might require is that of information theoretic security, which holds even in the case that
 an attacker has infinite computational power. We will see that Perfect Zero Knowledge Proofs have an information theoretic flavour, even
 though saying that they are secure against an infinitely powerful attacker might be a stretch\footnote{What I mean is that, in perfect ZKP the output of the interaction can be perfectly simulated by polynomial time prover, which is
-    an information theoric level of accuracy. However, any ZKP usually deals with an underlying language that is only interesting when it is not
+    an information theoretic level of accuracy. However, any ZKP usually deals with an underlying language that is only interesting when it is not
     decidable in polynomial time. For example, Graph Isomorphism is one of such problems. While we can devise a perfect ZKP for this problem, this
-    does not mean that an unbounded computational attacker cannot decided the problem. It merely means that even a perfect attacker cannot
+    does not mean that an unbounded computational attacker cannot decide the problem. It merely means that even a perfect attacker cannot
     understand whether it is in a simulation or a real interaction. On a less formal note though, we can see that the zero knowledge
     property still holds, as an unbounded attacker in a sense already has all of the knowledge, and as such it cannot gain any more!}.
 After that level, we usually require that the attacker has computational capabilities that are bounded by a polynomial.
@@ -373,7 +375,7 @@ We seek to formalize this next.
 In the sequel, we will have two parties interacting, the \textit{prover} and the \textit{verifier} that, as before, will be colloquially referred to as Peggy and Victor. In mathematical notation we will have $P, V$ always referring, respectively, to prover and verifier. As in math, we aim to have the verification procedure be as efficient as possible, while most of the computational burden will be placed on the prover. This in some way mirrors the alternative definition of $\npol$, as the class of all problems whose solution can be efficiently verified. Furthermore, it is crucial to understand that the verifier inherently does not trust the prover (otherwise there would not be need for the proof to be provided), and as such Victor will be skeptical of everything that Peggy says. The general situation will be Peggy and Victor having access to some common input, plus each one possibly having access to some additional private input, which will often be related from the shared input.
 
 \subsection{Soundness}
-The condition of soundness asserts that an honest verifier cannot be tricked into accepting a false statement by a possibly cheating prover. In the first example, this is equivalent to stating that, if Peggy is indeed colorblind, then she cannot convince Victor that she is not. In the second one, if Peggy were not to know the password to the gate, then she would not be able to convince Victor which will then not be fooled. It is important to note that in the above example we actually allow for a dishonest prover to be able to successfully fool Victor with a bounded above probability\footnote{And this probability can be made negligible thanks to repeating the experiment multiple times}.
+The condition of soundness asserts that an honest verifier cannot be tricked into accepting a false statement by a possibly cheating prover. In the first example, this is equivalent to stating that, if Peggy is indeed colorblind, then she cannot convince Victor that she is not. In the second one, if Peggy were not to know the password to the gate, then she would not be able to convince Victor who will then not be fooled. It is important to note that in the above example we actually allow for a dishonest prover to be able to successfully fool Victor with a bounded above probability\footnote{And this probability can be made negligible thanks to repeating the experiment multiple times}.
 \subsection{Completeness}
 Conversely, the condition of completeness states that an honest prover will be able to convince an honest verifier of the veracity of the claim, if the claim is indeed true. So, moving back to the first example, Peggy will be able to prove she is not colorblind if that is indeed true and Victor acts honestly satisfying the protocol. While in the examples Victor is always positively convinced at the end of the interaction, this is not a strict requirement, instead (similarly as in Soundness) we just require the interaction to succeed with a strictly bounded below probability\footnote{And again this probability can be increased by repeating the experiment and taking the majority answer}. As an example of when this might be the case, consider the following \begin{example}
     Peggy claims that coffee tastes differently when brewed by an espresso machine compared to one made in a cup. Victor wants to verify that claim, so he brews a coffee choosing randomly between the two options (in way that Peggy does not see which is which). Peggy then tastes the coffee, and gives her opinion on how it was brewed. The experiment is repeated $n$ times\footnote{According to \cite{chambersChemIDplus0000302272XFSBVAOIAHNAPCNPVHKAFCSAN}, and assuming Peggy weighs around 70kg, we would not recommend for $n$ to be greater than 75-100}, and Victor is convinced if Peggy is right more than $c$ times, where $c$ depends on how certain we want to be of Peggy's ability.
@@ -427,7 +429,7 @@ Furthermore, we need to accurately represent time complexity in this model, and 
 In a nutshell, the above implies that, regardless of the messages that machine $B$ sends, machine $A$ always terminates quickly enough.
 
 \subsection{Interactive Proof Systems}
-With the above machinery, we can now start introducing Interactive Proofs (\cite{goldwasserKnowledgeComplexityInteractive1989}).
+With the above machinery, we can now start introducing Interactive Proofs\cite{goldwasserKnowledgeComplexityInteractive1989}.
 \begin{definition}
     A pair of ITMs $(P, V)$ are an \textbf{interactive proof system} for a language $L$ if $V$ is polynomial time and the following hold:
     \begin{itemize}
@@ -449,8 +451,8 @@ There are some things to note in the above definition. First of all, note that o
 \end{proof}
 In fact, as we will see next, $\mathsf{IP}$ actually contains languages that are not believed to be in $\npol$. We will not prove this, but it turns out that $\mathsf{IP} = \mathsf{PSPACE}$\cite{shamirIPPSPACE1992}, i.e. the set of all languages that use polynomial space\footnote{And this class is considered to be much bigger than $\npol$}. Also note that in the case of $\npol$ problems we can even make the prover machine polynomial time, if we use the additional input model and give the prover the certificate.
 \subsection{An Example: GNI}
-Let us consider the Graph Non Isomorphism problem, a decision problem which is not known to be in $\bpp \cup \npol$. This quite aptly named problem concerns deciding whether two graphs are not isomorphic.
-Before presenting the system, let us try to give some intuition onto how we will be approaching the problem. As in the coffee problem that we examined in the completeness section, we will have the verifier issuing challenges to the prover, which will use its superior computational abilities to solve. In particular, we rely on the fact if the two graphs are not isomorphic then it will always be possible to distinguish the two.
+Let us consider the Graph Non Isomorphism problem, a decision problem which is not known to be in $\bpp$ or in $\npol$. This quite aptly named problem concerns deciding whether two graphs are not isomorphic.
+Before presenting the system, let us try to give some intuition onto how we will be approaching the problem. As in the coffee problem that we examined in the completeness section, we will have the verifier issuing challenges to the prover, which it will use its superior computational abilities to solve. In particular, we rely on the fact if the two graphs are not isomorphic then it will always be possible to distinguish the two.
 Here is a interactive proof system that decides this problem \cite{goldreichProofsThatYield1991}.
 
 \begin{figure}[H]
@@ -477,7 +479,7 @@ Here is a interactive proof system that decides this problem \cite{goldreichProo
     \begin{itemize}
         \item The verifier starts the interaction, uniformly selecting at random $i \in \set{1, 2}$ and then randomly selects a permutation $\pi \in S_{V_i}$.
               It then sends the graph $F = \pi(G_i)$ to the prover.
-        \item The prover finds which of the two input graphs $F$ is isomorphic to, and sends the answer $j$ to the verifier
+        \item The prover finds which of the two input graphs is isomorphic to $F$, and sends the answer $j$ to the verifier
         \item If $i = j$ the verifier accepts (concludes that the two graphs are not isomorphic), else it rejects (is not convinced that the graphs are not isomorphic).
     \end{itemize}
 \end{example}
@@ -544,7 +546,7 @@ This shows that the soundness bound of the protocol is $\frac{1}{2}$, and repeat
 
 \section{Zero Knowledge Proof}
 \label{zkp}
-Now that we have introduced interactive proofs, we can naturally extend them to encompass the idea of zero knowledge. In the previous sections we have given some intuition on what gaining knowledge does mean, and now we aim to formalize this. As before, we consider an interactive proof system, composed of a prover and a verifier, respectively $P, V$. The first observation is that in an interactive proof system the prover usually (either by being more powerful computationally or by having some additional information) has a \enquote{knowledge advantage} over the verifier. With zero knowledge we aim to make so that this advantage does not transfer to the verifier, no matter what clever things it may do. From this we can conclude that being zero knowledge is strictly a property of the prover in the interaction, in the same way that soundness is a property of verifier. Secondly, in a sense, we can express the zero knowledge requirement as the fact that any verifier $V'$, when interacting with prover on input $x$, will not be able to compute anything that it wouldn't have been able to compute on input $x$ alone. In order to formalize this, we turn to the idea of a simulation of the interaction of $P, V'$. \\
+Now that we have introduced interactive proofs, we can naturally extend them to encompass the idea of zero knowledge. In the previous sections we have given some intuition into what gaining knowledge does mean, and now we aim to formalize this. As before, we consider an interactive proof system, composed of a prover and a verifier, respectively $P, V$. The first observation is that in an interactive proof system the prover usually (either by being more powerful computationally or by having some additional information) has a \enquote{knowledge advantage} over the verifier. With zero knowledge we aim to make so that this advantage does not transfer to the verifier, no matter what clever things it may do. From this we can conclude that being zero knowledge is strictly a property of the prover in the interaction, in the same way that soundness is a property of verifier. Secondly, in a sense, we can express the zero knowledge requirement as the fact that any verifier $V'$, when interacting with prover on input $x$, will not be able to compute anything that it wouldn't have been able to compute on input $x$ alone. In order to formalize this, we turn to the idea of a simulation of the interaction of $P, V'$. \\
 In particular, the idea is that a language $L$ is zero knowledge if it has an interactive proof system $P, V$ such that, for every possible verifier $V'$, there exists a probabilistic polynomial time Turing machine $M_{V'}$ that for any $x \in L$ satisfies that $\left<P, V\right>(x)$ and $M_{V'}(x)$ are similary distributed\footnote{More on this later, essentially the level of similarity of the two distributions yields the definition of \textit{perfect}, \textit{statistical} and \textit{computational} zero knowledge}.
 Using this intuition and playing around with the loose parts of it, we can start defining the interesting classes of zero knowledge proofs.
 \subsection{Perfect Zero Knowledge}
@@ -563,7 +565,7 @@ The first and stricter class of zero knowledge proofs are the so called perfect 
 
 As always, the bound on how often the simulator is allowed to fail can be made negligible.
 It is interesting to note how the identical distribution requirement mentioned is a notion that is mostly used in information
-theoric contexts, and as such this scheme is in a sense perfectly secure. To be more precise, this implies that even
+theoretic contexts, and as such this scheme is in a sense perfectly secure. To be more precise, this implies that even
 a possibly cheating computationally unbounded verifier cannot, quite amusingly, detect if it is in a simulation or in a real interaction.
 Furthermore, we can make the observation that, for any verifier $V'$, its execution is completely determined by the contents of its random tape and the messages that
 are sent on the communication tape by $P$. Knowing this we can define a random variable $\text{view}^{P}_{V'}(x)$ to describe the transcript of the interaction between $P$ and $V'$, including the contents of $V'$ random tape and all the messages sent from $P$ to $V'$.
@@ -630,7 +632,7 @@ With this definition, let us give now an example of a Perfect Zero Knowledge Pro
         \end{itemize}
         Now, for the arguably more challenging section of the proof let us prove that the above protocol is indeed zero knowledge.
         We show a simulator\footnote{In fact, a family of simulators dependant on verifiers} that satisfies the zero knowledge condition.
-        Let $V'$ be an arbitrary polynomial time randomized ITM. We define the following simulator $M_V'$, that runs on input $x \equiv (G_1, G_2)$:
+        Let $V'$ be an arbitrary polynomial time randomized ITM. We define the following simulator $M_{V'}$, that runs on input $x \equiv (G_1, G_2)$:
         \begin{enumerate}
             \item First of all, let $q(|x|)$ be a polynomial bound on the running time of $V'$. We will be simulating $V'$ on $M_V'$, and to do so we will first allocate a string of $q(|x|)$ random bits to be used\footnote{An alternative would be interactively answering $V'$ queries for random bits, but this is conceptually easier}. We call such bits $r$.
             \item The simulator randomly selects $j \in \set{1, 2 }$, and permutation $\pi \in S_{V_j}$, computes the graph $H = \pi(G_j)$.
@@ -776,7 +778,7 @@ Formally, we define a bit commitment scheme as follows:
     \end{itemize}
 \end{definition}
 As you can see, the unambiguity requirement is much more involved than the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
-In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoric flavour\footnote{This commitment scheme is referred to as perfectly binding. There is also a corresponding, mutually exclusive, \enquote{dual}-like notion of perfectly hiding  schemes \cite{brassardMinimumDisclosureProofs1988}, in which the secrecy
+In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoretic flavour\footnote{This commitment scheme is referred to as perfectly binding. There is also a corresponding, mutually exclusive, \enquote{dual}-like notion of perfectly hiding  schemes \cite{brassardMinimumDisclosureProofs1988}, in which the secrecy
     requirement is information theoric and the unambiguity is computational. This can be used to provide Perfect ZK Arguments for
     languages in $\npol$ \cite{naorPerfectZeroKnowledgeArguments1998}, but they are relatively more advanced and as such will not be discussed here}.
 In particular, note that once $S$ has committed a value, in order to provide verification, it can send its private input and the random coin it used to $R$, which can then
