@@ -39,7 +39,7 @@
 \begin{abstract}
     In this paper we will survey the theory underlying Zero Knowledge Proofs,
     developing the idea of interactive proving protocols, which will then be formalized first in Interactive Proofs
-    and then in more complex knowledge witholding schemes, such as Perfect and Computational Zero Knowledge Proofs.
+    and then in more complex knowledge withholding schemes, such as Perfect and Computational Zero Knowledge Proofs.
     In the process, we will have shown interactive proofs for Graph Non Isomorphism (a co-$\npol$ problem),
     and zero knowledge proofs for both Graph Isomorphism and Graph 3-Colorability.
     Finally, we will detail some applications of the theory, showing various \enquote{flavours} of ZKP for the Discrete Logarithm problem that will culminate in
@@ -93,14 +93,14 @@ In the following Section \ref{zkp} we will finally introduce Zero Knowledge Proo
 formulation. We will continue by providing an example of a Perfect Zero Knowledge Proof for deciding Graph Isomorphism,
 and conclude the section by introducing bit commitments, and showing that if one way permutations\footnote{In fact this holds for one way functions as well, but the permutation proof is simpler} exist
 then every language in $\npol$ has a Zero Knowledge Proof. This is done in Subsection \ref{np} by providing a
-computational Zero Knowledge Proof for the $\npol$-complete problem of Graph 3-coloring.
+computational Zero Knowledge Proof for the $\npol$-complete problem of Graph 3-colouring.
 In Section \ref{applications} we will then look at some applications, in three different contexts. First we will
 show how we can use a ZKP for the Discrete Logarithm in order to digitally sign a message (Schnorr signatures). Secondly,
 we will show how fundamentally similar proofs can be used in order to implement an authentication scheme in which the
 server never receives the user's password. Finally, we will show an extremely simple example of a Zero Knowledge Range
 proof, which is a strategy by which a party can prove that a certain value that it knows is within a suitable range, while
 maintaining anonymity to what that value actually is. This family of proofs have a far-reaching implication, as they allow
-to implement complex systems upholding invariants while maintaining anonymity, such as payment systems or goverment sanctioned
+to implement complex systems upholding invariants while maintaining anonymity, such as payment systems or government sanctioned
 age verification. Finally, Section \ref{implementation} will refer the reader to the Sage implementation of the proofs described
 in the paper.
 
@@ -183,10 +183,10 @@ First of all, we will use the notation $x \sample A$ to say that $x$ is uniforml
     occurring with probability $\theta$. Then the total number of successes, which we denote as $X = \sum_i X_i$, follows a binomial distribution which means:
     \[ \prob{X = k} = \binom{n}{k} \theta^k (1 - \theta)^{n - k} \]
 \end{definition}
-In particular, we have that in those $n$ trials we expect $\expect{X} = n\theta$ events to occurr. This is useful, expecially since
+In particular, we have that in those $n$ trials we expect $\expect{X} = n\theta$ events to occur. This is useful, especially since
 we have that the probability of an event occurring every time is $\prob{X = n} = \theta^n$. This will be useful especially
 to  estimate the probability of some algorithm succeeding multiple times when it is not supposed to.
-Note in particular that if an algorithm spuriosly succeeds with probability $\theta \in [0, 1)$ then $\prob{X = n}$ is a
+Note in particular that if an algorithm spuriously succeeds with probability $\theta \in [0, 1)$ then $\prob{X = n}$ is a
 negligible function of $n$. \par
 
 The following definition will be used for having a compact notation for selecting permutations.
@@ -216,7 +216,10 @@ Finally, we introduce the following useful notation, for the graph obtained by p
 \end{definition}
 
 \subsection{Computational Setting}
-The computational model used in this paper is that of Turing Machines (TMs)\cite{turingComputableNumbersApplication1937}. We will not discuss the inner definition of deterministic and non deterministic TMs, as, within the category, changes in definition do not create more than polynomial slowdowns, and as such for all intents and purposes can be considered the same \cite{aroraComputationalComplexityModern2009}.
+The computational model used in this paper is that of Turing Machines (TMs)\cite{turingComputableNumbersApplication1937}.
+We will not discuss the inner definition of deterministic and non deterministic TMs, as, within the category,
+changes in definition do not create more than polynomial slowdowns, and as such for all intents and purposes
+can be considered the same\cite{aroraComputationalComplexityModern2009}.
 
 In particular, we will be providing a uniform probability based definition for the complexity classes. The traditional (and equivalent) definitions are in Appendix \ref{complex}.
 
@@ -338,17 +341,17 @@ The notion of a proof has extremely overloaded meaning, as it used in many dispa
 \label{proofreq}
 In order to start visualizing the concept of ZKP, we can start with a couple of toy examples that are helpful. Here and in the rest of the text we will refer to the prover as Peggy and to the verifier as Victor.
 \begin{example}
-    Assume that Victor is completely colorblind\footnote{i.e. that he cannot distinguish object based on color alone}.
-    Peggy wants to prove to Victor that she is not colorblind, so she devises an experiment.
+    Assume that Victor is completely colourblind\footnote{i.e. that he cannot distinguish object based on colour alone}.
+    Peggy wants to prove to Victor that she is not colourblind, so she devises an experiment.
     Peggy takes two balls completely identical, save for their colour, and gives them to Victor, one in his left and one in his right hand.
     Peggy asks Victor to put the balls behind his back, and to decide whether to swap them or not, without telling her.
     She then asks Victor to show the two balls.
     Peggy concludes by telling Victor whether he swapped the balls or not.\\
     This is a zero knowledge proof in the sense that:
     \begin{enumerate}
-        \item If Peggy were colorblind, she would not be able to tell whether Victor switched the balls or not, and so the best she could do is guess, getting it right $\frac{1}{2}$ of the time\footnote{And as such repeating the experiment $n$ times will bring her probability of always guessing right to $\frac{1}{2^n}$}.
-        \item If Peggy is not colorblind, she will be able to answer correctly every time, and thus convince Victor
-        \item Victor does not learn anything else about his environment, apart from the fact that Peggy is not colorblind.
+        \item If Peggy were colourblind, she would not be able to tell whether Victor switched the balls or not, and so the best she could do is guess, getting it right $\frac{1}{2}$ of the time\footnote{And as such repeating the experiment $n$ times will bring her probability of always guessing right to $\frac{1}{2^n}$}.
+        \item If Peggy is not colourblind, she will be able to answer correctly every time, and thus convince Victor
+        \item Victor does not learn anything else about his environment, apart from the fact that Peggy is not colourblind.
     \end{enumerate}
 \end{example}
 
@@ -370,7 +373,7 @@ In order to start visualizing the concept of ZKP, we can start with a couple of 
 \end{example}
 
 This illustrates the general idea of Zero Knowledge Proofs. The proof part is devised as an experiment or challenge from the verifier to the prover, that the prover can only answer by having the necessary piece of information or \enquote{power}. The prover cannot fool the verifier consistently and an honest prover and honest verifier will agree on the fact. Furthermore no new information is learned by the verifier. Also, if external observers were to have witnessed the exchange they would not be convinced of the fact (as Peggy and Victor could have coordinated their answers).
-Note however that in this case a simpler protocol can actually fulfill the requirement. For example, Peggy could
+Note however that in this case a simpler protocol can actually fulfil the requirement. For example, Peggy could
 go into the cave, showing Victor which entrance she took, and come out from the other entrance. This in effect amounts
 to removing the need of an interaction between Peggy and Victor, which is something that is quite desirable in real world
 applications. In particular we will see this in Section \ref{applications}, with regards to Schnorr signatures. Note that this transformation
@@ -379,19 +382,19 @@ also removes the probability aspect, which instead is something that in general 
 We seek to formalize the ideas from these two examples next.
 
 \subsection{Parties in play}
-In the sequel, we will have two parties interacting, the \textit{prover} and the \textit{verifier} that, as before, will be colloquially referred to as Peggy and Victor. In mathematical notation we will have $P, V$ always referring, respectively, to prover and verifier. As in math, we aim to have the verification procedure be as efficient as possible, while most of the computational burden will be placed on the prover. This mirrors the definition of $\npol$ we used above, as the class of all problems whose solution can be efficiently verified. Furthermore, it is crucial to understand that the verifier inherently does not trust the prover (otherwise there would not be need for the proof to be provided), and as such Victor will be skeptical of everything that Peggy says. The general situation will be Peggy and Victor having access to some common input, plus each one possibly having access to some additional private input, which will often be related from the shared input.
+In the sequel, we will have two parties interacting, the \textit{prover} and the \textit{verifier} that, as before, will be colloquially referred to as Peggy and Victor. In mathematical notation we will have $P, V$ always referring, respectively, to prover and verifier. As in maths, we aim to have the verification procedure be as efficient as possible, while most of the computational burden will be placed on the prover. This mirrors the definition of $\npol$ we used above, as the class of all problems whose solution can be efficiently verified. Furthermore, it is crucial to understand that the verifier inherently does not trust the prover (otherwise there would not be need for the proof to be provided), and as such Victor will be skeptical of everything that Peggy says. The general situation will be Peggy and Victor having access to some common input, plus each one possibly having access to some additional private input, which will often be related from the shared input.
 
 \subsection{Soundness}
-The condition of soundness asserts that an honest verifier cannot be tricked into accepting a false statement by a possibly cheating prover. In the first example, this is equivalent to stating that, if Peggy is indeed colorblind, then she cannot convince Victor that she is not. In the second one, if Peggy were not to know the password to the gate, then she would not be able to convince Victor who will then not be fooled. It is important to note that in the above example we actually allow for a dishonest prover to be able to successfully fool Victor with a bounded above probability\footnote{And this probability can be made negligible thanks to repeating the experiment multiple times}.
+The condition of soundness asserts that an honest verifier cannot be tricked into accepting a false statement by a possibly cheating prover. In the first example, this is equivalent to stating that, if Peggy is indeed colourblind, then she cannot convince Victor that she is not. In the second one, if Peggy were not to know the password to the gate, then she would not be able to convince Victor who will then not be fooled. It is important to note that in the above example we actually allow for a dishonest prover to be able to successfully fool Victor with a bounded above probability\footnote{And this probability can be made negligible thanks to repeating the experiment multiple times}.
 \subsection{Completeness}
-Conversely, the condition of completeness states that an honest prover will be able to convince an honest verifier of the veracity of the claim, if the claim is indeed true. So, moving back to the first example, Peggy will be able to prove she is not colorblind if that is indeed true and Victor acts honestly satisfying the protocol. While in the examples Victor is always positively convinced at the end of the interaction, this is not a strict requirement, instead (similarly as in Soundness) we just require the interaction to succeed with a strictly bounded below probability\footnote{And again this probability can be increased by repeating the experiment and taking the majority answer}. As an example of when this might be the case, consider the following \begin{example}
+Conversely, the condition of completeness states that an honest prover will be able to convince an honest verifier of the veracity of the claim, if the claim is indeed true. So, moving back to the first example, Peggy will be able to prove she is not colourblind if that is indeed true and Victor acts honestly satisfying the protocol. While in the examples Victor is always positively convinced at the end of the interaction, this is not a strict requirement, instead (similarly as in Soundness) we just require the interaction to succeed with a strictly bounded below probability\footnote{And again this probability can be increased by repeating the experiment and taking the majority answer}. As an example of when this might be the case, consider the following \begin{example}
     Peggy claims that coffee tastes differently when brewed by an espresso machine compared to one made in a cup. Victor wants to verify that claim, so he brews a coffee choosing randomly between the two options (in way that Peggy does not see which is which). Peggy then tastes the coffee, and gives her opinion on how it was brewed. The experiment is repeated $n$ times\footnote{According to \cite{chambersChemIDplus0000302272XFSBVAOIAHNAPCNPVHKAFCSAN}, and assuming Peggy weighs around 70kg, we would not recommend for $n$ to be greater than 75-100}, and Victor is convinced if Peggy is right more than $c$ times, where $c$ depends on how certain we want to be of Peggy's ability.
 \end{example}
 
-This is the exact subject of hypothesis testing, in particular it reduces to the exact problem of finding whether a coin is biased. This can be modeled by a binomial distribution with mean $\mu = n/2$ and standard deviation $\sigma = \frac{\sqrt{n}}{2}$. In particular, if we apply the central limit theorem (and as such have $n > 30$) we can model it as a normal distribution, then using the $3\sigma$ rule\footnote{i.e. that three standard deviations include 99.7\% of the data} we can see that if $|c - \frac{n}{2}| \geq 3\frac{\sqrt{n}}{2}$ then we can affirm that with a more than 99\% chance Peggy can distinguish the two. For example, if we set $n = 100$ and Peggy guesses right more than $c = 65 = \frac{100}{2} + 3 \frac{\sqrt{100}}{2}$ times (or less than 35 times) then we can be almost certain that Peggy is truthful (and in the other case that she can distinguish it but for some reasons she is convinced the espresso machine coffee is brewed in cup, and vice versa).
+This is the exact subject of hypothesis testing, in particular it reduces to the exact problem of finding whether a coin is biased. This can be modelled by a binomial distribution with mean $\mu = n/2$ and standard deviation $\sigma = \frac{\sqrt{n}}{2}$. In particular, if we apply the central limit theorem (and as such have $n > 30$) we can model it as a normal distribution, then using the $3\sigma$ rule\footnote{i.e. that three standard deviations include 99.7\% of the data} we can see that if $|c - \frac{n}{2}| \geq 3\frac{\sqrt{n}}{2}$ then we can affirm that with a more than 99\% chance Peggy can distinguish the two. For example, if we set $n = 100$ and Peggy guesses right more than $c = 65 = \frac{100}{2} + 3 \frac{\sqrt{100}}{2}$ times (or less than 35 times) then we can be almost certain that Peggy is truthful (and in the other case that she can distinguish it but for some reasons she is convinced the espresso machine coffee is brewed in cup, and vice versa).
 
 \subsection{Zero Knowledge}
-Formalizing the notion of zero knowledge requires a bit more work. We would like to be able to say that in any interaction with the prover the verifier does not gain any knowledge that it did not posses already. That shifts the conversation to what it means to gain knowledge. Let us consider for example the interaction of a prover and a verifier with a common input of a suitably large graph. If the prover reveals to the verifier whether the graph is connected or Eulerian or the average degree of its vertexes then in a sense the verifier does not gain any knowledge, as these are all easily (polynomial time) computable without any additional information. Instead if the prover reveals whether the graph is Hamiltonian, or the chromatic number of the graph, or a $k$-coloring of it\footnote{And of course assuming $\pol \neq \npol$ and that the corresponding problems cannot be solved in polynomial time} then the verifier gains knowledge, as it would have not been able to answer that question itself using an efficient procedure. This gives us a hint of what gaining knowledge can entail. In particular, we say that the verifier gains knowledge from an interaction with the prover if, after the interaction, it can efficiently compute something which it would have not been able to do before. How to rigorously express this is non trivial, and we defer the discussion to the following sections.
+Formalizing the notion of zero knowledge requires a bit more work. We would like to be able to say that in any interaction with the prover the verifier does not gain any knowledge that it did not posses already. That shifts the conversation to what it means to gain knowledge. Let us consider for example the interaction of a prover and a verifier with a common input of a suitably large graph. If the prover reveals to the verifier whether the graph is connected or Eulerian or the average degree of its vertexes then in a sense the verifier does not gain any knowledge, as these are all easily (polynomial time) computable without any additional information. Instead if the prover reveals whether the graph is Hamiltonian, or the chromatic number of the graph, or a $k$-colouring of it\footnote{And of course assuming $\pol \neq \npol$ and that the corresponding problems cannot be solved in polynomial time} then the verifier gains knowledge, as it would have not been able to answer that question itself using an efficient procedure. This gives us a hint of what gaining knowledge can entail. In particular, we say that the verifier gains knowledge from an interaction with the prover if, after the interaction, it can efficiently compute something which it would have not been able to do before. How to rigorously express this is non trivial, and we defer the discussion to the following sections.
 
 \section{Proof Systems}
 \label{interactiveproofs}
@@ -401,10 +404,10 @@ In our drive to formalize the intuition that we gained in the previous sections,
 First of all, we can start by extending the traditional randomized Turing Machine. It is of note that in interactive Turing Machines (ITMs) we are almost never interested in the execution of a single machine, but rather in the interconnected operation of the two machines. As such, it makes it easier to describe the behaviour of a pair of ITMs rather than of a single one. First of all, with this model we aim to preserve the following notions:
 \begin{itemize}
     \item Exclusivity, so that, before termination, exactly one of the two machines is executing at any point in time
-    \item Privacy, so each of the two machines can withold some information from the other\footnote{In particular we require that each machine is able to keep the contents of its random tape private. There are some cases in which this requirement might be lifted, in so called public coin protocols, but we will not discuss them here}
+    \item Privacy, so each of the two machines can withhold some information from the other\footnote{In particular we require that each machine is able to keep the contents of its random tape private. There are some cases in which this requirement might be lifted, in so called public coin protocols, but we will not discuss them here}
     \item Communication, each of the two machines can choose to let some information (often related to their private information) to the other, using communication tapes
 \end{itemize}
-To fulfill those goals, we define a pair of interactive machines as follows:
+To fulfil those goals, we define a pair of interactive machines as follows:
 \begin{definition}
     A pair of interactive Turing Machines $A, B$ have the following characteristics:
     \begin{itemize}
@@ -423,7 +426,7 @@ It is to be noted that there is an alternative and ultimately equivalent model t
 Using the above definition, we can go and define notation for the output of an execution of a pair of ITMs.
 
 \begin{definition}
-    Let $A, B$ be interconnected randomized Turing machines, such that both $A$ and $B$ always terminate in finitely many steps. Then we define $\left<A, B \right>(x)$ to be a random variable modeling the output of machine $B$ after interacting with machine $A$ on common input $x$ (with the computation path string uniformly and independently selected).
+    Let $A, B$ be interconnected randomized Turing machines, such that both $A$ and $B$ always terminate in finitely many steps. Then we define $\left<A, B \right>(x)$ to be a random variable modelling the output of machine $B$ after interacting with machine $A$ on common input $x$ (with the computation path string uniformly and independently selected).
 \end{definition}
 
 Note that the definition is asymmetric, as it only accounts for the output of $B$, however, for all our intents or purposes, this should suffice.
@@ -579,7 +582,7 @@ prover as well. In essence, the existence of the simulator shows that all the ve
 by a $\bpp$ machine, and since the verifier is $\bpp$ to start with, it gains Zero Knowledge.
 We formalize this by saying that a language $L$ is zero knowledge if it has an interactive proof system $P, V$ such
 that, for every possible verifier $V'$, there exists a probabilistic polynomial time Turing machine $M_{V'}$ that
-for any $x \in L$ satisfies that $\left<P, V\right>(x)$ and $M_{V'}(x)$ are similary
+for any $x \in L$ satisfies that $\left<P, V\right>(x)$ and $M_{V'}(x)$ are similarly
 distributed\footnote{More on this later, essentially the level of similarity of the two distributions yields
     the definition of \textit{perfect}, \textit{statistical} and \textit{computational} zero knowledge}.
 Using this intuition and playing around with the loose parts of it, we can start defining the interesting classes of zero knowledge proofs.
@@ -821,7 +824,7 @@ Formally, we define a bit commitment scheme as follows:
 \end{definition}
 As you can see, the unambiguity requirement is much more involved than the secrecy one, and it is that requirement that ensures the commitment property of the scheme.
 In fact, something interesting to note is that the secrecy requirement is computational, while the unambiguity one has an information theoretic flavour\footnote{This commitment scheme is referred to as perfectly binding. There is also a corresponding, mutually exclusive, \enquote{dual}-like notion of perfectly hiding  schemes \cite{brassardMinimumDisclosureProofs1988}, in which the secrecy
-    requirement is information theoric and the unambiguity is computational. This can be used to provide Perfect ZK Arguments for
+    requirement is information theoretic and the unambiguity is computational. This can be used to provide Perfect ZK Arguments for
     languages in $\npol$ \cite{naorPerfectZeroKnowledgeArguments1998}, but they are relatively more advanced and as such will not be discussed here}.
 In particular, note that once $S$ has committed a value, in order to provide verification, it can send its private input and the random coin it used to $R$, which can then
 run $S$'s algorithm to verify the certificate in polynomial time. \par
@@ -867,9 +870,9 @@ Now that we have defined our machinery, we can make use of the structure of prob
 In particular, as detailed in Appendix \ref{complex}, there is a class of problems in $\npol$ known as the $\npol$-complete problems.
 These are problems that are efficiently reducible to any other problem in $\npol$, i.e. such that the existence of an efficient solution for any of them will imply efficient solutions to each problem in $\npol$.
 It follows that by finding a ZKP for a single one of these problems, we can show that any problem in the class has a Zero Knowledge Proof.
-In particular, the language that we will tackle is that of Graph Three Coloring.
+In particular, the language that we will tackle is that of Graph Three Colouring.
 \begin{definition}
-    Let $G = (V, E)$ be a finite graph. A \textbf{3-coloring} for the graph is a function $\pi: V \to \set{1, 2, 3}$
+    Let $G = (V, E)$ be a finite graph. A \textbf{3-colouring} for the graph is a function $\pi: V \to \set{1, 2, 3}$
     such that for all $(u, v) \in E \implies \pi(u) \neq \pi(v)$
 \end{definition}
 \begin{definition}
@@ -887,7 +890,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
             \procedure{Proof that $G$ is 3-colorable}{%
                 \textbf{Prover} \> \> \textbf{Verifier} \pclb
                 \pcintertext[center]{$G = (V, E)$, bit commitment scheme $C_r(s)$}
-                \pi \text{ a 3-coloring of } G \> \> \\
+                \pi \text{ a 3-colouring of } G \> \> \\
                 \sigma \sample S_3 \> \>  \\
                 \phi \coloneqq \sigma \circ \pi \> \> \\
                 s_i \sample \bin^n, \forall i \in V \> \> \\
@@ -904,13 +907,13 @@ from one scheme to the other is trivial and only requires using the bit commitme
                 \> \> \pcreturn \pctrue
             }
         }
-        \caption{A zero knowledge proof for Graph 3-Coloring}
+        \caption{A zero knowledge proof for Graph 3-Colouring}
         \label{graph3col}
     \end{figure}
 
 
     Let the common input be $G = (V, E)$, where $V = \set{1, \dots, n }$.
-    This graph is 3-colorable, with coloring $\pi$, which is unknown to the verifier\footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}.
+    This graph is 3-colourable, with colouring $\pi$, which is unknown to the verifier\footnote{As always, such $\pi$ could be either computed by a superior prover, or given as auxiliary input}.
     \begin{enumerate}
         \item The prover randomly uniformly selects $\sigma \in S_3$. It sets $\phi \equiv \sigma \circ \pi$.
               For each $i \in V$, it generates a random string $s_i \in \bin^n$ and computes $c_i \equiv C_{s_i}(\phi(i))$.
@@ -920,22 +923,22 @@ from one scheme to the other is trivial and only requires using the bit commitme
         \item On the messages $(\alpha, i)$, $(\beta, j)$, with $\alpha, \beta \in \bin^n$ and $i, j \in  \set{1, 2, 3}$, the verifier checks that $c_u = C_\alpha(i)$ and that
               $c_v = C_\beta(j)$. If not it rejects. Finally, it accepts if $i \neq j$, and if as such the edges are differently coloured.
     \end{enumerate}
-    A small discussion is, of course, in order. The fundamental idea is that the prover creates $n$ boxes, each containing a color.
+    A small discussion is, of course, in order. The fundamental idea is that the prover creates $n$ boxes, each containing a colour.
     It locks these boxes and sends them to the verifier. The verifier then chooses two of these boxes, such that they are connected by an edge in the original graph.
-    It asks the prover to open the boxes, and after having verified that they haven't been tampered with, the verifier concludes that the coloring is valid if the two boxes it chose have different colors.
-    Intuitively, the verifier only ever learns that two vertexes have different colours, that of course is a requirement for any coloring.
+    It asks the prover to open the boxes, and after having verified that they haven't been tampered with, the verifier concludes that the colouring is valid if the two boxes it chose have different colours.
+    Intuitively, the verifier only ever learns that two vertexes have different colours, that of course is a requirement for any colouring.
     In particular, note the role of the permutation $\sigma$. The idea is that, on every run, the prover will select a different sigma, and as such
-    repeating the protocol will possibly yield different colorings for two vertexes. This way, a cheating verifier cannot alternatively ask for the coloring
-    of each vertex in the graph, and so it cannot piece back the original coloring.
+    repeating the protocol will possibly yield different colourings for two vertexes. This way, a cheating verifier cannot alternatively ask for the colouring
+    of each vertex in the graph, and so it cannot piece back the original colouring.
     \begin{theorem}
         The above protocol is a computational zero knowledge proof for \texttt{3COL}.
     \end{theorem}
     \begin{proof}
         First of all, we will verify that the above protocol is an interactive proof system for \texttt{3COL}.
         \begin{itemize}
-            \item Completeness: If $G$ is indeed 3-colorable with coloring $\pi$, then the above protocol always accepts.
-            \item Soundness: Let us suppose that $G$ is not 3-colorable. Then the $n$ committed values cannot
-                  correspond to a 3-coloring, and as such there must be at least one edge $(v, v')$ such that
+            \item Completeness: If $G$ is indeed 3-colourable with colouring $\pi$, then the above protocol always accepts.
+            \item Soundness: Let us suppose that $G$ is not 3-colourable. Then the $n$ committed values cannot
+                  correspond to a 3-colouring, and as such there must be at least one edge $(v, v')$ such that
                   $c_v, c_{v'}$ are commitment of the same value $k \in \set{1, 2, 3}$. So no matter what the
                   prover commits, the verifier will reject with probability at least $\frac{1}{|E|}$. Since we can bound
                   the number of edges with $|E| \leq \binom{n}{2}$, we have a polynomial bound of $\frac{2}{n(n+1)}$.
@@ -960,10 +963,10 @@ from one scheme to the other is trivial and only requires using the bit commitme
         So, adding the capability of outputting $\bot$ does not \enquote{add} any extra power to the definition, and as such we
         can use it here to simplify our life (requiring as always that it is not output too often).
         We first show that. We note that the $\bot$ symbol is only output when
-        the two edges that were selected by the verifier $V'$ have been assigned the same color.
+        the two edges that were selected by the verifier $V'$ have been assigned the same colour.
         Intuitively, we would like to use the fact that commitments are computationally indistinguishable
         in order to show that the verifier cannot do much better than to randomly pick two edges (in which
-        case the probability of getting two edges with the color is $\frac{1}{3}$). This is easy to show,
+        case the probability of getting two edges with the colour is $\frac{1}{3}$). This is easy to show,
         as any $V'$ that is able to distinguish commitments will directly yield an algorithm that violates
         the secrecy property of the scheme\footnote{The full argument is not too complex, but long and not
             insightful, using a classical reduction proof as many of those seen in cryptography}.
@@ -977,7 +980,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
         of vertices in $G$. First of all, recall that both the view of the interaction of the machine $P$ with $V$
         and the output of the simulator are distributed over tuples of the form $(r, (\alpha_1, \dots , \alpha_n), (s_u, e_u, s_v, e_v))$ where (at least in the view
         of the actual interaction)
-        we have $r$ as the random tape of the verifier, $\alpha_i$ as the commitment of the vertex colors, $e_i$ the color of the $i$ vertex and $s_i$ the
+        we have $r$ as the random tape of the verifier, $\alpha_i$ as the commitment of the vertex colours, $e_i$ the colour of the $i$ vertex and $s_i$ the
         random string used for committing it. First of all note that $r$ is in both cases uniformly distributed over $\bin^q(n)$ where again we
         use $q$ as a polynomial bound on the runtime of $V'$. It suffices now to show that if the two distributions are
         not computationally indistinguishable, then we will reach a contradiction with the properties of the commitment scheme.
@@ -991,7 +994,7 @@ from one scheme to the other is trivial and only requires using the bit commitme
 \end{example}
 
 A couple of things are worth noting. First of all, the proof above has a weak soundness bound, and as such
-a one round protocol has only a moderate chance of convicing the verifier. However, as always repeating the
+a one round protocol has only a moderate chance of convincing the verifier. However, as always repeating the
 algorithm $k * |E|$ times yields a proof with error probability bounded by $e^{-k}$, and the sequential composition lemma will
 also guarantee that this is zero knowledge. Secondly, the main significance of this proof relies on the fact that
 \texttt{3COL} is a $\npol$-complete language, and as such it is polynomial time reducible from any other problem in $\npol$.
@@ -1138,7 +1141,7 @@ in which the user communicates a username and a password to a (trusted) server, 
 On the other end, SRP only requires that
 the user itself maintains a secret key, is resistant to dictionary attacks, and crucially requires no trusted party.
 In particular, one of its most attractive features is that it can work as a drop in replacement that does not require users
-to change their workflows.
+to change their workflow.
 SRP is based on Diffie Hellman, and as such it has some of the same cryptography requirement, namely the intractability
 of the discrete logarithm and the existence of one way functions.
 The protocol consists of two steps: the registration step and the authentication step.
@@ -1169,7 +1172,7 @@ The protocol consists of two steps: the registration step and the authentication
             K \coloneqq H(S) \> \>
         }
     }
-    \caption{Secure Remote Passoword protocol}
+    \caption{Secure Remote Password protocol}
     \label{srp}
 \end{figure}
 
@@ -1198,7 +1201,7 @@ Once this is done, the user can authenticate using the following protocol:
 \end{itemize}
 Finally, the proof that the authentication succeeded is shown by the two parties comparing the final key.
 Technically speaking, SRP is a Zero Knowledge Password Proof, which is a more narrow class of Zero Knowledge proof,
-however you can see how the ideas that were developed in the previous sections are still easily transferrable.
+however you can see how the ideas that were developed in the previous sections are still easily transferable.
 In particular, the prover is the user, that shows that it has knowledge of a value $x$ such that the equation
 below holds for any random $a, b, u$, and for $v = g^x$:
 \[ (kv + g^b - kg^x)^{a + ux} =_? (g^a v^u)^b \]
@@ -1282,7 +1285,7 @@ with most of the Zero Knowledge Proofs presented in the text. In particular, the
     \item Probabilistic Matrix Multiplication checking (Figure \ref{matrixmultiplication})
     \item Graph Non Isomorphism Interactive protocol (Figure \ref{graphnonisomorphism})
     \item Graph Isomorphism Perfect Zero Knowledge Proof (Figure \ref{graphisomorphismzkp})
-    \item Graph 3-Coloring Computational Zero Knowledge Proof (Figure \ref{graph3col})
+    \item Graph 3-Colouring Computational Zero Knowledge Proof (Figure \ref{graph3col})
     \item Discrete Logarithm Interactive Zero Knowledge Proof (Figure \ref{discretelog})
     \item Discrete Logarithm Non Interactive Zero Knowledge Proof (Figure \ref{discretelognoninteractive})
     \item Schnorr Signature protocol (Figure \ref{schnorrsig})
@@ -1317,7 +1320,7 @@ the documentation is usually very helpful and it simplified the examples massive
 engineering, there were some hurdles. First of all, whenever I was programming I found an impedance mismatch of
 sorts between the mathematics and the software. Often it is very small things, but translating the abstractions of
 Mathematics to Sage was not a frictionless effort. For example, as you can see in the Graph Isomorphism worksheet,
-the label set of a graph needed some relabeling in order to correctly behave with randomly selected permutations.
+the label set of a graph needed some relabelling in order to correctly behave with randomly selected permutations.
 In every example that uses a Hash Function (Non Interactive Discrete Log, Schnorr Signature, Secure Remote Password)
 I needed to essentially hack my way around in converting an hash back to an integer,
 which does not make me particularly proud.
@@ -1334,13 +1337,13 @@ random number generator that comes with Sage, which, as far as I know, is not cr
 many implications. First of all, suitable attacks could fix the seed, and thus render the prover deterministic, which could
 then be used to break the Zero Knowledge Property. This can be done since, if the verifier knows the random bits of the
 prover, then it can simulate its following actions perfectly, and as such gain knowledge by predicting every branch and
-then comparing it with the prover's actual message. Secondly, let us consider the Graph 3 Coloring
+then comparing it with the prover's actual message. Secondly, let us consider the Graph 3 Colouring
 protocol. In this protocol we have to use bit commitments, and I emulated the construction based on one way permutations
 that we detailed before. In order to model a one way function, I simply used a standard RNG to generate a string of bits.
 There are two implications of this. Since I have used a one way function instead of a one way permutation,
 it might be the case that there are collisions, and as such the unambiguity requirement might be violated (which makes
 the proof system weaker). Also, there probably are attacks on such a generator, which would allow a verifier to peek
-the bit committed value before the reveal phase, allowing him to at least partially gather the three coloring .
+the bit committed value before the reveal phase, allowing him to at least partially gather the three colouring .
 
 
 
@@ -1415,7 +1418,7 @@ A couple of things to note. First of all, it is important to note that at times 
 For example, since the equation $2^k \equiv 3 \mod 15$ has no solution\footnote{As $2^2 \equiv 4, 2^3 \equiv 8, 2^4 \equiv 1 \mod 15$, and the cycle repeats}
 then there is no $\log_2 3$ in $(\ZZ_{15})^\times$. In case $\mathbb{G}$ is a cyclic group, and $g$ is a generator then
 every element $h \in \mathbb{G}$ has a $\log_g h$. While the real valued logarithm is generally easy to compute (for integers there
-are strategies using a method similary to binary search, for real values Newton Methods yield good approximations), there are no
+are strategies using a method similar to binary search, for real values Newton Methods yield good approximations), there are no
 general techniques that, for every group $\mathbb{G}$, efficiently solve the problem. In fact, it is generally believed (and one
 of the core assumptions of a number of protocols such as Diffie Hellman), that there exist groups where the discrete log problem
 is not only hard to solve in the worst case, but actually seems to be extremely complicated to solve in the average\footnote{It can be shown
